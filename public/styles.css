@@ -38,3 +38,107 @@ footer {
     margin: 1em 0;
     border-radius: 5px;
 }
+/* Reset some default browser styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Container styling */
+.container {
+    width: 90%;
+    max-width: 800px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Title styling */
+h2 {
+    margin-bottom: 20px;
+    color: #005f73;
+}
+
+h3 {
+    margin-top: 40px;
+    color: #0a9396;
+}
+
+/* Doctor card styling */
+.doctor-list {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+}
+
+.doctor-card {
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #e0fbfc;
+    border-left: 4px solid #0a9396;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.doctor-card:hover {
+    transform: scale(1.02);
+}
+
+.doctor-card p {
+    margin: 10px 0;
+}
+
+/* Form styling */
+.doctor-form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.doctor-form label {
+    font-weight: bold;
+    color: #005f73;
+}
+
+.doctor-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.doctor-form input[type="text"]:focus {
+    border-color: #0a9396;
+    outline: none;
+}
+
+.doctor-form button {
+    padding: 10px 20px;
+    background-color: #0a9396;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.doctor-form button:hover {
+    background-color: #007f87;
+}
