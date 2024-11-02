@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doctor Information</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
+    <header>
+        <h1>Medical Aid Charity</h1>
+        <p>Your help makes a difference!</p>
+    </header>
+
+    <main class="container">
         <h2>Doctor Information</h2>
 
         <div class="doctor-list">
@@ -34,6 +39,10 @@
 
             <button type="submit">Add Doctor</button>
         </form>
-    </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Medical Aid Charity. All rights reserved.</p>
+    </footer>
 </body>
 </html>
