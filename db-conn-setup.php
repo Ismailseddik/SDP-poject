@@ -27,7 +27,7 @@ function run_query($commandquery, $echo = false): bool
 {
     return run_queries([$commandquery], $echo)[0];
 }
-
+//
 function run_select_query($commandquery, $echo = false): mysqli_result|bool
 {
     global $conn;
