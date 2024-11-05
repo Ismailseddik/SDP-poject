@@ -14,7 +14,9 @@ class DoctorRank{
     $this->id = $data['id'];
     $this->rank = $data['rank']; 
     }
-
+    public function getId(): ?int{
+        return $this->id;
+    }
     public function __toString(): string
     {
         $str = '<pre>';
