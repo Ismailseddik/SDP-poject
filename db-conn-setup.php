@@ -1,6 +1,6 @@
 <?php
 $configs = require "config.php";
-$conn = new mysqli($configs->DB_HOST, $configs->DB_USER,$configs->DB_PASS ,$configs->DB_NAME,$configs->DB_PORT);
+$conn = new mysqli($configs->DB_HOST, $configs->DB_USER);
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -95,5 +95,3 @@ function run_select_query($commandquery, $echo = false): mysqli_result|bool
 
 // }
 // Close the connection
-
-
