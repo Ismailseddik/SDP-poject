@@ -10,6 +10,7 @@ class Person{
     private ?String $last_name;
     private ?DateTime $birth_date;
     private ?int $address_id;
+    private ?bool $isDeleted;
     public function __construct(array $data)
     {
         $this->id = $data['id'];
@@ -17,6 +18,7 @@ class Person{
         $this->last_name = $data['last_name'];
         $this->birth_date = isset($data['birth_date']) ? new DateTime($data['birth_date']): null;
         $this->address_id = $data['address_id'];
+        $this->isDeleted = $data['isDeleted'];
     }
 
 
@@ -36,9 +38,62 @@ class Person{
         if($rows->num_rows > 0){
             return new self($rows->fetch_assoc());
         }else{
-            return null ;
+            return false ;
         }
 
+}   public static function add_person($first_name,$last_name, $birth_date ,$address_id): bool
+{
+    $birth_date_formatted = $birth_date->format('Y-m-d');
+    $query = "INSERT INTO `person` (first_name, last_name,  birth_date , address_id)
+              VALUES ('$first_name', '$last_name',  '$birth_date_formatted' ,'$address_id')";
+    
+    return run_query($query, true);
 }
+
+
+    public static function update_person(int $person_id, ?string $first_name = null, ?string $last_name = null, ?DateTime $birth_date = null, ?int $address_id = null): bool{
+        $set_parts = []; 
+
+    if ($first_name !== null) {
+    
+        $set_parts[] = "`first_name` = '" . $first_name . "'";
+    }
+    if ($last_name !== null) {
+   
+        $set_parts[] = "`last_name` = '" . $last_name . "'";
+    }
+    if ($birth_date !== null) {
+        
+        $set_parts[] = "`birth_date` = '" . $birth_date->format('Y-m-d') . "'";
+    }
+    if ($address_id !== null) {
+       
+        $set_parts[] = "`address_id` = " . $address_id;
+        
+    }
+    
+    foreach ($set_parts as $sets) {
+        echo "$sets";
+    }
+    
+    if (empty($set_parts)) {
+        return false; 
+    }
+
+    
+    $set_clause = implode(', ', $set_parts);
+
+    $query = "UPDATE `person` SET $set_clause WHERE `id` = $person_id";
+    
+    return run_query($query, true);
+    }
+
+    public static function delete_person($person_id){
+     
+        $query = "UPDATE `person` SET isDeleted = 1 WHERE id ='$person_id'";
+        return run_query($query, true);
+
+    }
+
 
 }
