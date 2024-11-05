@@ -22,7 +22,11 @@ class Person
         $this->isDeleted = $data['isDeleted'];
     }
 
+    public function getId(): ?int
+    {
 
+        return $this->id;
+    }
     public function __toString(): string
     {
         $str = '<pre>';
@@ -73,18 +77,11 @@ class Person
 
             $set_parts[] = "`address_id` = " . $address_id;
         }
-
-        foreach ($set_parts as $sets) {
-            echo "$sets";
-        }
-
         if (empty($set_parts)) {
             return false;
         }
 
-
         $set_clause = implode(', ', $set_parts);
-
         $query = "UPDATE `person` SET $set_clause WHERE `id` = $person_id";
 
         return run_query($query, true);
