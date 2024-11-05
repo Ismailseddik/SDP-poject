@@ -27,7 +27,7 @@ function run_query($commandquery, $echo = false): bool
 {
     return run_queries([$commandquery], $echo)[0];
 }
-//
+// runs a select query and returns an object of the table you want to access the data like $row['first_name'];
 function run_select_query($commandquery, $echo = false): mysqli_result|bool
 {
     global $conn;
