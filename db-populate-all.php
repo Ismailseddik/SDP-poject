@@ -5,13 +5,10 @@ run_queries([
 
     "DROP DATABASE IF EXISTS $configs->DB_NAME",
     
-    "CREATE DATABASE $configs->DB_NAME",
+"CREATE DATABASE $configs->DB_NAME",
     
-    "USE $configs->DB_NAME",
+"USE $configs->DB_NAME",
     
-    "USE `macsdb`;",
-
-
 
 "CREATE TABLE `address` (
   `id` int(11) NOT NULL,
