@@ -3,7 +3,7 @@ require_once "db-conn-setup.php";
 
 run_queries([
 
-    "DROP DATABASE IF EXISTS $configs->DB_NAME",
+"DROP DATABASE IF EXISTS $configs->DB_NAME",
     
 "CREATE DATABASE $configs->DB_NAME",
     
@@ -114,7 +114,8 @@ run_queries([
   `first_name` varchar(100) NOT NULL,
   `last_name` varchar(100) NOT NULL,
   `birth_date` date NOT NULL,
-  `address_id` int(11) NOT NULL
+  `address_id` int(11) NOT NULL,
+  `isDeleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
 

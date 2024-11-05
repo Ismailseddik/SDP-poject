@@ -45,6 +45,20 @@ function run_select_query($commandquery, $echo = false): mysqli_result|bool
     return $result;
 }
 
+// function run_add_query($commandquery, $echo = false): bool
+// {
+//     global $conn;
+//     $result = $conn->query($commandquery);
+
+//     if ($echo) {
+//         echo '<pre>' . $commandquery . '</pre>';
+//         echo $result === TRUE ? "Record added successfully<br/>" : "Error: " . $conn->error;
+//         echo "<hr/>";
+//     }
+
+//     return $result === TRUE;
+// }
+
 // $conn->close();
 
 
