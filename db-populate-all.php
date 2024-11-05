@@ -35,7 +35,7 @@ run_queries([
   `isAvailable` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
-
+"INSERT INTO `doctor` (`id`, `person_id`, `speciality_id`, `rank_id`, `isAvailable`) VALUES ('1', '1', '1', '1', '1');",
 
 "CREATE TABLE `doctor_rank` (
   `id` int(11) NOT NULL,
@@ -141,12 +141,12 @@ run_queries([
 
 "CREATE TABLE `speciality` (
   `id` int(11) NOT NULL,
-  `name` varchar(150) NOT NULL
+  `speciality_name` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
 
 
-"INSERT INTO `speciality` (`id`, `name`) VALUES
+"INSERT INTO `speciality` (`id`, `speciality_name`) VALUES
 (1, 'Cardiology.');",
 
 
