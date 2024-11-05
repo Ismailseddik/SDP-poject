@@ -69,45 +69,70 @@ class Doctor{
     public static function add_doctor(String $doctor_first_name,String $doctor_last_name,DateTime $doctor_birth_date, int $doctor_address_id,String $doctor_rank_name, String $doctor_speciality_name): Doctor|bool {
         
         global $conn;
-
+        //add doctor names,birthdate,andaddressid to person so it can be retrieved later from doctor table
         if (!Person::add_person($doctor_first_name, $doctor_last_name, $doctor_birth_date, $doctor_address_id)) {
             return false;
         }
+        //get an object of person to use it to get id of person
         $person = Person::get_person_by_id($conn->insert_id);
         if (!$person) {
             return false;
         }
        
 
-
+        //add doctor rank 
         if(!DoctorRank::add_doctor_rank($doctor_rank_name)){
             return false;
         };
+        //get doctor rank id
         $doctor_rank = DoctorRank::get_doctor_rank($conn->insert_id);
         if (!$doctor_rank) {
             return false;
         }
        
-
+        //add doctor speciality
         if(!Speciality::add_speciality($doctor_speciality_name)){
             return false;
         };
+
+        //get doctor speciality
         $doctor_speciality  = Speciality::get_speciality_by_id($conn->insert_id);
         if (!$doctor_speciality) {
             return false;
         }
 
-
-
         $person_id = $person->getId();
         $doctor_rank_id = $doctor_rank->getId();
         $doctor_speciality_id = $doctor_speciality->getId();
-        
+
+        //insert doctor table with person id , rank id and speciality id so data can be retrieved later using get_doctor_details
         $query = 
         "INSERT INTO `doctor` (person_id, rank_id, speciality_id) 
          VALUES ('$person_id','$doctor_rank_id',' $doctor_speciality_id')";
     
         return run_query($query,true);
        
+    }
+
+    public static function get_all_doctors_details(){
+        $query = "
+        SELECT 
+            doctor.id AS doctor_id,
+            person.first_name AS doctor_first_name,
+            person.last_name AS doctor_last_name,
+            doctor_rank.rank AS doctor_rank,
+            speciality.speciality_name AS doctor_speciality,
+            doctor.isAvailable AS doctor_available
+        FROM doctor
+        JOIN person ON doctor.person_id = person.id
+        JOIN doctor_rank ON doctor.rank_id = doctor_rank.id
+        JOIN speciality ON doctor.speciality_id = speciality.id
+    ";
+    $doctors = [];
+    $rows = run_select_query($query)->fetch_all(MYSQLI_ASSOC);
+       foreach($rows as $row){
+        $doctors[] = new Doctor($row);
+        }
+        return $doctors;
     }
 }
