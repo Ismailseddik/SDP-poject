@@ -75,6 +75,7 @@ class Person{
         $set_parts[] = "`address_id` = " . $address_id;
         
     }
+    
     if (empty($set_parts)) {
         return false; 
     }

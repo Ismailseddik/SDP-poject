@@ -40,6 +40,7 @@ class Speciality{
     $query = "INSERT INTO `speciality` (speciality_name) VALUES ('$speciality_name')";
     
     return run_query($query, true);
+    
     }
 
 

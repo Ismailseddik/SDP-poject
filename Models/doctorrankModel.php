@@ -54,5 +54,6 @@ class DoctorRank{
     $query = "DELETE FROM `doctor_rank` WHERE id = '$rankid'";
         return run_query($query, true);
 
+        
     }
 }
