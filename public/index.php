@@ -3,7 +3,7 @@ require_once '../config.php';
 
 // Simple routing based on query parameters 'view' and 'action'
 $view = $_GET['view'] ?? 'patient'; // Default to 'patient' view
-$action = $_GET['action'] ?? 'list'; // Default action to 'list' for all controllers
+$action = $_GET['action'] ?? 'listDoctors'; // Default action for doctor is 'listDoctors'
 
 switch ($view) {
     case 'doctor':
