@@ -32,6 +32,7 @@ class Doctor
     }
 
     public function getFirstName() { return $this->doctor_first_name; }
+    public function getId() {return $this->id;}
     public function getLastName() { return $this->doctor_last_name; }
     public function getSpeciality() { return $this->doctor_speciality; }
     public function getRank() { return $this->doctor_rank; }

@@ -25,7 +25,7 @@
                         <p><strong>Specialty:</strong> <?= htmlspecialchars($doctor->getSpeciality() ?? "N/A") ?></p>
                         <p><strong>Rank:</strong> <?= htmlspecialchars($doctor->getRank() ?? "N/A") ?></p>
                         <p><strong>Available:</strong> <?= htmlspecialchars($doctor->isAvailable()) ?></p>
-                        <a href="index.php?view=doctor&action=viewDoctorDetails&doctor_id=<?= htmlspecialchars($doctor->id ?? 0) ?>">View Details</a>
+                        <a href="index.php?view=doctor&action=viewDoctorDetails&doctor_id=<?= htmlspecialchars($doctor->getId() ?? 0) ?>">View Details</a>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
