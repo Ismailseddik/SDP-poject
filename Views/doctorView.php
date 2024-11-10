@@ -40,7 +40,7 @@
     </main>
 
     <!-- Footer section -->
-    <footer style="display: block; background-color: #f1f1f1;">
+    <footer>
         <p>&copy; 2024 Medical Aid Charity. All rights reserved.</p>
     </footer>
 
