@@ -9,23 +9,26 @@ ob_end_clean();
 class Doctor
 {
     private ?int $id;
-    private int $person_id;
+    private ?int $person_id;
     private ?string $doctor_first_name;
     private ?string $doctor_last_name;
-    private int $speciality_id;
+    private ?int $speciality_id;
     private ?string $doctor_speciality;
-    private int $rank_id;
+    private ?int $rank_id;
     private ?string $doctor_rank;
     private bool $isAvailable;
 
     public function __construct(array $data)
     {
-        $this->id = $data["doctor_id"];
-        $this->doctor_first_name = $data["doctor_first_name"];
-        $this->doctor_last_name = $data["doctor_last_name"];
-        $this->doctor_rank = $data["doctor_rank"];
-        $this->doctor_speciality = $data["doctor_speciality"];
-        $this->isAvailable = $data["doctor_available"];
+        $this->id = $data["doctor_id"] ?? null;
+        $this->person_id = $data["person_id"] ?? null;  // Initialize person_id
+        $this->doctor_first_name = $data["doctor_first_name"] ?? null;
+        $this->doctor_last_name = $data["doctor_last_name"] ?? null;
+        $this->speciality_id = $data["speciality_id"] ?? null;  // Initialize speciality_id
+        $this->doctor_speciality = $data["doctor_speciality"] ?? null;
+        $this->rank_id = $data["rank_id"] ?? null;  // Initialize rank_id
+        $this->doctor_rank = $data["doctor_rank"] ?? null;
+        $this->isAvailable = $data["doctor_available"] ?? false;
     }
 
     public function getFirstName() { return $this->doctor_first_name; }
@@ -52,13 +55,16 @@ class Doctor
         $doctors = [];
         $rows = run_select_query($query);
         
-        // Check if the query ran successfully and fetched data
-        if ($rows && $rows->num_rows > 0) {
+        if (!$rows) {
+            echo "Error: Query execution failed in get_all_doctors_details."; 
+            return [];
+        } elseif ($rows->num_rows === 0) {
+            echo "Debug: Query executed but returned no results in get_all_doctors_details."; 
+        } else {
+            echo "Debug: Query successful, fetching doctors in get_all_doctors_details."; 
             foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) {
                 $doctors[] = new Doctor($row);
             }
-        } else {
-            echo "Error: No doctor data found or query failed."; // Simple debugging message if query fails or returns empty
         }
 
         return $doctors;
@@ -101,7 +107,6 @@ class Doctor
     ): bool {
         global $conn;
 
-        // Add person record and get person ID
         if (!Person::add_person($doctor_first_name, $doctor_last_name, $doctor_birth_date, $doctor_address_id)) {
             echo "Error: Unable to add person record.";
             return false;
@@ -112,7 +117,6 @@ class Doctor
             return false;
         }
 
-        // Add doctor rank and retrieve ID
         if (!DoctorRank::add_doctor_rank($doctor_rank_name)) {
             echo "Error: Unable to add doctor rank.";
             return false;
@@ -123,7 +127,6 @@ class Doctor
             return false;
         }
 
-        // Add doctor specialty and retrieve ID
         if (!Speciality::add_speciality($doctor_speciality_name)) {
             echo "Error: Unable to add doctor specialty.";
             return false;
@@ -138,7 +141,6 @@ class Doctor
         $doctor_rank_id = $doctor_rank->getId();
         $doctor_speciality_id = $doctor_speciality->getId();
 
-        // Insert into doctor table with person ID, rank ID, and specialty ID
         $query = "
             INSERT INTO `doctor` (person_id, rank_id, speciality_id) 
             VALUES ('$person_id', '$doctor_rank_id', '$doctor_speciality_id')

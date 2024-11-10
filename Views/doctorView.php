@@ -7,12 +7,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <?php
-    // Enable error reporting for debugging
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-    ?>
-
     <header>
         <h1>Medical Aid Charity</h1>
         <p>Your help makes a difference!</p>
@@ -27,19 +21,16 @@
             <?php if (!empty($doctors)): ?>
                 <?php foreach ($doctors as $doctor): ?>
                     <div class="doctor-card">
-                        <p><strong>Name:</strong> <?= htmlspecialchars($doctor->getFirstName() . ' ' . $doctor->getLastName()) ?></p>
-                        <p><strong>Specialty:</strong> <?= htmlspecialchars($doctor->getSpeciality()) ?></p>
-                        <p><strong>Rank:</strong> <?= htmlspecialchars($doctor->getRank()) ?></p>
+                        <p><strong>Name:</strong> <?= htmlspecialchars($doctor->getFirstName() ?? "N/A") . ' ' . htmlspecialchars($doctor->getLastName() ?? "N/A") ?></p>
+                        <p><strong>Specialty:</strong> <?= htmlspecialchars($doctor->getSpeciality() ?? "N/A") ?></p>
+                        <p><strong>Rank:</strong> <?= htmlspecialchars($doctor->getRank() ?? "N/A") ?></p>
                         <p><strong>Available:</strong> <?= htmlspecialchars($doctor->isAvailable()) ?></p>
-                        <a href="index.php?view=doctor&action=viewDoctorDetails&doctor_id=<?= $doctor->getId() ?>">View Details</a>
+                        <a href="index.php?view=doctor&action=viewDoctorDetails&doctor_id=<?= htmlspecialchars($doctor->id ?? 0) ?>">View Details</a>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
                 <p>No doctors available.</p>
             <?php endif; ?>
-
-            <!-- Debugging output for doctors array -->
-            <pre><?php var_dump($doctors); ?></pre>
         </section>
 
         <!-- Link to Add New Doctor Form -->

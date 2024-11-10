@@ -28,6 +28,11 @@ class DoctorController
     private function listDoctors()
     {
         $doctors = Doctor::get_all_doctors_details();
+        if (empty($doctors)) {
+            echo "Debug: No doctors found in listDoctors() controller method.";
+        } else {
+            echo "Debug: Found " . count($doctors) . " doctors in listDoctors() controller method.";
+        }
         include '../views/doctorView.php';
     }
 
