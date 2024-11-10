@@ -1,43 +1,52 @@
 <?php
 require_once '../config.php';
 
-// Simple routing based on query parameters 'view' and 'action'
-$view = $_GET['view'] ?? 'patient'; // Default to 'patient' view
-$action = $_GET['action'] ?? 'listDoctors'; // Default action for doctor is 'listDoctors'
+// Get 'view' and 'action' parameters from the URL, if present
+$view = $_GET['view'] ?? 'patient';
+$action = $_GET['action'] ?? null;
 
+// Dynamically set defaults based on view
 switch ($view) {
     case 'doctor':
         require '../controllers/DoctorController.php';
-        $doctorController = new DoctorController();
-        $doctorController->index($action); // Pass the action parameter to DoctorController's index
+        $controller = new DoctorController();
+        $action = $action ?? 'listDoctors'; // Default action for doctors
         break;
 
     case 'donor':
         require '../controllers/DonorController.php';
-        $donorController = new DonorController();
-        $donorController->index($action); // Pass the action parameter to DonorController's index
+        $controller = new DonorController();
+        $action = $action ?? 'listDonors'; // Default action for donors
         break;
 
     case 'donation':
         require '../controllers/DonationController.php';
-        $donationController = new DonationController();
-        $donationController->index($action); // Pass the action parameter to DonationController's index
+        $controller = new DonationController();
+        $action = $action ?? 'listDonations'; // Default action for donations
         break;
 
     case 'aidType':
         require '../controllers/AidTypeController.php';
-        $aidTypeController = new AidTypeController();
-        $aidTypeController->index($action); // Pass the action parameter to AidTypeController's index
+        $controller = new AidTypeController();
+        $action = $action ?? 'listAidTypes'; // Default action for aid types
         break;
 
     case 'medicalApplication':
         require '../controllers/MedicalApplicationController.php';
-        $medicalApplicationController = new MedicalApplicationController();
-        $medicalApplicationController->index($action); // Pass the action parameter to MedicalApplicationController's index
+        $controller = new MedicalApplicationController();
+        $action = $action ?? 'listApplications'; // Default action for medical applications
+        break;
+
+    case 'patient':
+        require '../controllers/PatientController.php';
+        $controller = new PatientController();
+        $action = $action ?? 'listPatients'; // Default action for patients
         break;
 
     default:
-        require '../controllers/PatientController.php';
-        $patientController = new PatientController();
-        $patientController->index($action); // Pass the action parameter to PatientController's index
+        echo "Error: View not recognized.";
+        exit;
 }
+
+// Call the controller's index method with the action
+$controller->index($action);
