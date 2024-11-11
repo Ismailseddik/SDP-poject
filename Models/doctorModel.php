@@ -113,4 +113,26 @@ class Doctor
 
         return run_query($query, true);
     }
+    public static function get_all_doctors_details()
+    {
+        $query = "
+        SELECT 
+            doctor.id AS doctor_id,
+            person.first_name AS doctor_first_name,
+            person.last_name AS doctor_last_name,
+            doctor_rank.rank AS doctor_rank,
+            speciality.speciality_name AS doctor_speciality,
+            doctor.isAvailable AS doctor_available
+        FROM doctor
+        JOIN person ON doctor.person_id = person.id
+        JOIN doctor_rank ON doctor.rank_id = doctor_rank.id
+        JOIN speciality ON doctor.speciality_id = speciality.id
+    ";
+        $doctors = [];
+        $rows = run_select_query($query)->fetch_all(MYSQLI_ASSOC);
+        foreach ($rows as $row) {
+            $doctors[] = new Doctor($row);
+        }
+        return $doctors;
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 require_once '../Models/doctorModel.php';
 
 class DoctorController
@@ -24,8 +25,9 @@ class DoctorController
     // Function to display a list of doctors and show the add form
     private function listDoctors()
     {
-        $doctorModel = new Doctor();
-        $doctors = $doctorModel->get_all();
+        //$doctorModel = new Doctor();
+        //$doctors = $doctorModel->get_all();
+        $doctors = Doctor::get_all_doctors_details();
         include '../views/doctorView.php'; // Same view for listing and adding
     }
 
@@ -50,17 +52,17 @@ class DoctorController
 
             // Basic validation
             if (!empty($fname) && !empty($lname) && !empty($specialty) && !empty($available_times)) {
-                $doctorModel = new Doctor();
+                // $doctorModel = new Doctor();
 
-                // Pass date as DateTime object or format it for database compatibility
-                $result = $doctorModel->addDoctor($fname, $lname, $specialty, $available_times, $birthDateObj->format('Y-m-d'));
+                // // Pass date as DateTime object or format it for database compatibility
+                // $result = $doctorModel->addDoctor($fname, $lname, $specialty, $available_times, $birthDateObj->format('Y-m-d'));
 
-                if ($result) {
-                    header('Location: index.php?view=doctor&action=listDoctors');
-                    exit();
-                } else {
-                    echo "Error: Unable to add doctor. Please try again.";
-                }
+                // if ($result) {
+                //     header('Location: index.php?view=doctor&action=listDoctors');
+                //     exit();
+                // } else {
+                //     echo "Error: Unable to add doctor. Please try again.";
+                // }
             } else {
                 echo "Error: All fields are required.";
             }
