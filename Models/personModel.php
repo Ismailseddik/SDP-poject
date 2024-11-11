@@ -61,30 +61,32 @@ class Person
     {
         $set_parts = [];
 
-        if ($first_name !== null) {
-
-            $set_parts[] = "`first_name` = '" . $first_name . "'";
-        }
-        if ($last_name !== null) {
-
-            $set_parts[] = "`last_name` = '" . $last_name . "'";
-        }
-        if ($birth_date !== null) {
-
-            $set_parts[] = "`birth_date` = '" . $birth_date->format('Y-m-d') . "'";
-        }
-        if ($address_id !== null) {
-
-            $set_parts[] = "`address_id` = " . $address_id;
-        }
-        if (empty($set_parts)) {
-            return false;
-        }
-
-        $set_clause = implode(', ', $set_parts);
-        $query = "UPDATE `person` SET $set_clause WHERE `id` = $person_id";
-
-        return run_query($query, true);
+    if ($first_name !== null) {
+    
+        $set_parts[] = "`first_name` = '" . $first_name . "'";
+    }
+    if ($last_name !== null) {
+   
+        $set_parts[] = "`last_name` = '" . $last_name . "'";
+    }
+    if ($birth_date !== null) {
+        
+        $set_parts[] = "`birth_date` = '" . $birth_date->format('Y-m-d') . "'";
+    }
+    if ($address_id !== null) {
+       
+        $set_parts[] = "`address_id` = " . $address_id;
+        
+    }
+    
+    if (empty($set_parts)) {
+        return false; 
+    }
+    
+    $set_clause = implode(', ', $set_parts);
+    $query = "UPDATE `person` SET $set_clause WHERE `id` = $person_id";
+    
+    return run_query($query, true);
     }
 
     public static function delete_person($person_id)
