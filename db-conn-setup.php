@@ -1,13 +1,17 @@
 <?php
 $configs = require "config.php";
-$conn = new mysqli($configs->DB_HOST, $configs->DB_USER,$configs -> DB_PASS, $configs->DB_NAME, $configs->DB_PORT);
 
+// Ensure the correct database name and port are selected
+$conn = new mysqli($configs->DB_HOST, $configs->DB_USER, $configs->DB_PASS, $configs->DB_NAME, $configs->DB_PORT);
+
+// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
 echo "Connected successfully<br/><hr/>";
 
+// Function to run multiple queries
 function run_queries($queries, $echo = false): array
 {
     global $conn;
@@ -22,12 +26,14 @@ function run_queries($queries, $echo = false): array
     }
     return $ret;
 }
-//checks if the query ran successfully or not
+
+// Function to run a single query
 function run_query($commandquery, $echo = false): bool
 {
     return run_queries([$commandquery], $echo)[0];
 }
-// runs a select query and returns an object of the table you want to access the data like $row['first_name'];
+
+// Function to run a select query and return result
 function run_select_query($commandquery, $echo = false): mysqli_result|bool
 {
     global $conn;
@@ -45,53 +51,3 @@ function run_select_query($commandquery, $echo = false): mysqli_result|bool
     return $result;
 }
 
-// function run_add_query($commandquery, $echo = false): bool
-// {
-//     global $conn;
-//     $result = $conn->query($commandquery);
-
-//     if ($echo) {
-//         echo '<pre>' . $commandquery . '</pre>';
-//         echo $result === TRUE ? "Record added successfully<br/>" : "Error: " . $conn->error;
-//         echo "<hr/>";
-//     }
-
-//     return $result === TRUE;
-// }
-
-// $conn->close();
-
-
-
-// $sqlFile = 'C:\Users\Tarek\OneDrive\Desktop\SDP-poject\mydb.sql';
-// $sql = file_get_contents($sqlFile);
-
-// // Split SQL commands by semicolon
-// $sqlCommands = explode(';', $sql);
-
-// 
-// foreach ($sqlCommands as $command) {
-//     $command = trim($command);
-//     if (!empty($command)) {
-//         if ($conn->query($command) === TRUE) {
-//             echo "Query executed successfully:\n";
-//             echo '<pre>' . $command . '</pre>';
-//             echo "<hr/>";
-//         } else {
-//             echo "Error executing query: " . $conn->error . "\n";
-//         }
-//     }
-// }
-
-// function returnConnection()
-// {
-//    $host="localhost";
-//      $username="root";
-//      $password="";
-//      $db_name="macsdb";
-// $conn = new mysqli($host, $username, $password,$db_name,3307);
-
-//   return $conn;
-
-// }
-// Close the connection

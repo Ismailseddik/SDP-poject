@@ -1,69 +1,86 @@
 <?php
-require_once '../Models/doctorModel.php';
+
+require_once __DIR__ . '/../models/doctorModel.php';
 
 class DoctorController
 {
-    // Central function to handle various actions
     public function index($action = null)
     {
         switch ($action) {
             case 'listDoctors':
                 $this->listDoctors();
                 break;
-
+            case 'showAddDoctorForm':
+                $this->showAddDoctorForm();
+                break;
             case 'addDoctor':
                 $this->addDoctor();
                 break;
-
+            case 'viewDoctorDetails':
+                $this->viewDoctorDetails();
+                break;
             default:
-                $this->listDoctors(); // Default to listing doctors
+                echo "Error: Action not recognized.";
                 break;
         }
     }
 
-    // Function to display a list of doctors and show the add form
     private function listDoctors()
     {
-        $doctorModel = new Doctor();
-        $doctors = $doctorModel->get_all();
-        include '../views/doctorView.php'; // Same view for listing and adding
+        $doctors = Doctor::get_all_doctors_details();
+        if (empty($doctors)) {
+            echo "Debug: No doctors found in listDoctors() controller method.";
+        } else {
+            echo "Debug: Found " . count($doctors) . " doctors in listDoctors() controller method.";
+        }
+        include '../views/doctorView.php';
     }
 
-    // Function to add a new doctor to the database
+    private function showAddDoctorForm()
+    {
+        include '../views/doctorAddView.php';
+    }
+
     private function addDoctor()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Get form data
-            $fname = $_POST['doctor_fname'] ?? '';
-            $lname = $_POST['doctor_lname'] ?? '';
-            $specialty = $_POST['doctor_specialty'] ?? '';
-            $available_times = $_POST['doctor_available_times'] ?? '';
-            $birth_date = $_POST['doctor_birthdate'] ?? '';
+            $doctor_first_name = $_POST['doctor_first_name'] ?? '';
+            $doctor_last_name = $_POST['doctor_last_name'] ?? '';
+            $doctor_birth_date = DateTime::createFromFormat('Y-m-d', $_POST['doctor_birth_date'] ?? '');
+            $doctor_address_id = (int)($_POST['doctor_address_id'] ?? 0);
+            $doctor_rank_name = $_POST['doctor_rank_name'] ?? '';
+            $doctor_speciality_name = $_POST['doctor_speciality_name'] ?? '';
 
-            // Convert birth date to DateTime object
-            $birthDateObj = DateTime::createFromFormat('Y-m-d', $birth_date);
+            $result = Doctor::add_doctor(
+                $doctor_first_name,
+                $doctor_last_name,
+                $doctor_birth_date,
+                $doctor_address_id,
+                $doctor_rank_name,
+                $doctor_speciality_name
+            );
 
-            if ($birthDateObj === false) {
-                echo "Error: Invalid date format.";
-                return;
-            }
-
-            // Basic validation
-            if (!empty($fname) && !empty($lname) && !empty($specialty) && !empty($available_times)) {
-                $doctorModel = new Doctor();
-
-                // Pass date as DateTime object or format it for database compatibility
-                $result = $doctorModel->addDoctor($fname, $lname, $specialty, $available_times, $birthDateObj->format('Y-m-d'));
-
-                if ($result) {
-                    header('Location: index.php?view=doctor&action=listDoctors');
-                    exit();
-                } else {
-                    echo "Error: Unable to add doctor. Please try again.";
-                }
+            if ($result) {
+                header('Location: index.php?view=doctor&action=listDoctors');
+                exit();
             } else {
-                echo "Error: All fields are required.";
+                echo "Error: Unable to add doctor. Please try again.";
             }
+        } else {
+            $this->showAddDoctorForm();
+        }
+    }
+
+    private function viewDoctorDetails()
+    {
+        $doctor_id = $_GET['doctor_id'] ?? 0;
+        $doctor = Doctor::get_doctor_details((int)$doctor_id);
+
+        if ($doctor) {
+            include '../views/doctorDetailView.php';
+        } else {
+            echo "Error: Doctor not found.";
         }
     }
 }
+?>
