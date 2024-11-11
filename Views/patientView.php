@@ -99,6 +99,7 @@
                 <li><a href="index.php?view=doctor&action=listDoctors">Doctors</a></li>
                 <li><a href="index.php?view=donor&action=listDonors">Donors</a></li>
                 <li><a href="index.php?view=donation&action=listDonations">Donations</a></li>
+                <li><a href="index.php?view=medicalApplication&action=listApplications">Medical Aid Applications</a></li>
             </ul>
         </nav>
     </header>
