@@ -87,7 +87,7 @@ class DonorController
             ];
 
             // Create a new Donor object with the selected strategy
-            $donor = new Donor($donorData, $donationStrategy);
+            $donor = new Donor($donorData);
             $donor->donate();  // Execute the donation using the chosen strategy
 
             // Redirect to the donor list after donation
