@@ -144,13 +144,31 @@ run_queries([
   `speciality_name` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
+"CREATE TABLE `aid_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
+"CREATE TABLE `application_status` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
 "INSERT INTO `speciality` (`id`, `speciality_name`) VALUES
 (1, 'Cardiology.');",
 
+//-- Insert initial data into the aid_type table
+"INSERT INTO `aid_type` (type) VALUES 
+  ('Financial Aid'),
+  ('Medical Aid'),
+  ('Operational Aid');",
 
-
+"INSERT INTO `application_status` (status) VALUES 
+  ('Pending'),
+  ('Approved'),
+  ('Rejected');",
 
 "ALTER TABLE `address`
   ADD PRIMARY KEY (`id`);",
@@ -203,7 +221,10 @@ run_queries([
 "ALTER TABLE `patient_medical_aid_application`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_patient` (`patient_id`),
-  ADD KEY `fk_app` (`application_id`);",
+  ADD KEY `fk_app` (`application_id`),
+  ADD COLUMN `status_id` int(11) DEFAULT 1,
+  ADD FOREIGN KEY (`status_id`) REFERENCES `application_status`(`id`);",
+
 
 
 "ALTER TABLE `person`
