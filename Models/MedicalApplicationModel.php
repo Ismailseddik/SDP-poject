@@ -68,8 +68,6 @@ class MedicalApplication{
     ";
 
     return run_query($query, true);
-
-
         
     }
 

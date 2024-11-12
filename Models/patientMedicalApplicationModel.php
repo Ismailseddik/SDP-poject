@@ -1,7 +1,7 @@
 <?php
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
-require_once 'Models/medicalApplicationModel.php';
+require_once 'Models/MedicalApplicationModel.php';
 ob_end_clean();
 
 
