@@ -36,7 +36,7 @@ run_queries([
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
 "INSERT INTO `doctor` (`id`, `person_id`, `speciality_id`, `rank_id`, `isAvailable`) VALUES ('1', '1', '1', '1', '1');",
-
+"INSERT INTO `doctor` (`id`, `person_id`, `speciality_id`, `rank_id`, `isAvailable`) VALUES ('2', '2', '1', '1', '1');",
 "CREATE TABLE `doctor_rank` (
   `id` int(11) NOT NULL,
   `rank` varchar(150) NOT NULL
