@@ -3,6 +3,7 @@
 include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
 require_once '../strategies/MonetaryDonation.php';
 require_once '../strategies/OrganDonation.php';
+require_once '../interfaces/DonorTierStrategy.php';
 
 class Donor
 {
@@ -14,7 +15,10 @@ class Donor
     private ?float $amount;
     private DonationStrategy $donationStrategy;
 
-    public function __construct(array $data)
+    private DonorTierStrategy $tierStrategy;
+
+
+    public function __construct(array $data, DonorTierStrategy $tierStrategy = null)
     {
         $this->id = $data['id'] ?? null;
         $this->person_id = $data['person_id'] ?? null;
@@ -22,6 +26,10 @@ class Donor
         $this->last_name = $data['last_name'] ?? null;
         $this->email = $data['email'] ?? null;
         $this->amount = $data['amount'] ?? null;
+        if ($tierStrategy) {
+            $this->tierStrategy = $tierStrategy;
+        }
+
     }
 
     // Getters
@@ -29,6 +37,35 @@ class Donor
     public function getLastName() { return $this->last_name; }
     public function getEmail() { return $this->email; }
     public function getAmount() { return $this->amount; }
+
+    //*************** tiers ****************
+    // Change donor tier dynamically
+    public function setTier(DonorTierStrategy $tierStrategy)
+    {
+        $this->tierStrategy = $tierStrategy;
+    }
+
+    public function getTierBenefits(): string
+    {
+        return $this->tierStrategy->getBenefits();
+    }
+
+    public function getDiscountRate(): float
+    {
+        return $this->tierStrategy->getDiscountRate();
+    }
+
+    public function getTierName(): string
+    {
+        return $this->tierStrategy->getTierName();
+    }
+
+    public function getDonorInfo(): string
+    {
+        return "Donor Name: {$this->first_name}, Tier: {$this->getTierName()}, Benefits: {$this->getTierBenefits()}";
+    }
+    //*************** end of tiers ****************
+
 
     // Set the donation strategy
     public function setDonationStrategy(DonationStrategy $donationStrategy): void
