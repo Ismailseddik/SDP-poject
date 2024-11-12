@@ -4,12 +4,6 @@ include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
 require_once 'Models/MedicalApplicationModel.php';
 ob_end_clean();
 
-
-/*CREATE TABLE `patient_medical_aid_application` (
-    `id` int(11) NOT NULL,
-    `patient_id` int(11) NOT NULL,
-    `application_id` int(11) NOT NULL
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;*/
 class PatientMedicalApplicationModel{
     private ?int $id;
     private ?int $patient_id;
@@ -57,6 +51,7 @@ class PatientMedicalApplicationModel{
             JOIN patient ON patient_medical_aid_application.patient_id = patient.id
             JOIN person AS person_patient ON patient.person_id = person_patient.id
             JOIN person AS person_doctor ON doctor.person_id = person_doctor.id
+            JOIN 
         ";
 
         $applications = [];
