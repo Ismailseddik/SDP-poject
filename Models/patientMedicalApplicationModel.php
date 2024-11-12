@@ -30,7 +30,7 @@ class PatientMedicalApplicationModel{
         $this->doctor_last_name = $data['doctor_last_name'] ?? null;
     }
 
-    // Getters
+ 
     public function getId() { return $this->id; }
     public function getPatientId() { return $this->patient_id; }
     public function getApplicationId() { return $this->application_id; }
@@ -98,7 +98,6 @@ class PatientMedicalApplicationModel{
         return false; 
     }
 
-    // Add a patient-application relationship
     public static function add_patient_application(int $patient_id,int $doctor_id): bool
     {
         global $conn;
