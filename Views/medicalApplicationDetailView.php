@@ -15,8 +15,8 @@
         <h2>Application Details</h2>
 
         <div class="application-card">
-            <p><strong>Patient Name:</strong> <?= htmlspecialchars($application['patient_name']) ?></p>
-            <p><strong>Doctor Name:</strong> <?= htmlspecialchars($application['doctor_name']) ?></p>
+            <p><strong>Patient Name:</strong> <?= htmlspecialchars($application['patient_first_name'].' '. $application['patient_last_name'] ) ?></p>
+            <p><strong>Doctor Name:</strong> <?= htmlspecialchars($application['doctor_first_name'].' '. $application['doctor_last_name'] ) ?></p>
             <p><strong>Status:</strong> <?= htmlspecialchars($application['application_status']) ?></p>
         </div>
 
