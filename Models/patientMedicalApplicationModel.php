@@ -1,7 +1,7 @@
 <?php
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
-require_once 'Models/MedicalApplicationModel.php';
+require_once 'MedicalApplicationModel.php';
 ob_end_clean();
 
 class PatientMedicalApplicationModel{
@@ -51,7 +51,6 @@ class PatientMedicalApplicationModel{
             JOIN patient ON patient_medical_aid_application.patient_id = patient.id
             JOIN person AS person_patient ON patient.person_id = person_patient.id
             JOIN person AS person_doctor ON doctor.person_id = person_doctor.id
-            JOIN 
         ";
 
         $applications = [];
@@ -102,7 +101,7 @@ class PatientMedicalApplicationModel{
             return false;
         }
         $application_id=$conn->insert_id;
-        $query = "INSERT INTO patient_medical_aid_application (patient_id, application_id) VALUES ('$patient_id', '$application_id')";
+        $query = "INSERT INTO `patient_medical_aid_application` (patient_id, application_id) VALUES ('$patient_id', '$application_id')";
         return run_query($query, true);
     }
 }
