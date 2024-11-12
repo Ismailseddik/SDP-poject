@@ -95,13 +95,13 @@ class PatientMedicalApplicationModel{
     public static function add_patient_application(int $patient_id,int $doctor_id): bool
     {
         global $conn;
-
+        $status_id=1;
         if (!MedicalApplication::add_application($doctor_id)) {
             echo "Error: Unable to add application record.";
             return false;
         }
         $application_id=$conn->insert_id;
-        $query = "INSERT INTO `patient_medical_aid_application` (patient_id, application_id) VALUES ('$patient_id', '$application_id')";
+        $query = "INSERT INTO `patient_medical_aid_application` (patient_id, application_id, status_id) VALUES ('$patient_id', '$application_id', '$status_id')";
         return run_query($query, true);
     }
 }

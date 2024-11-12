@@ -63,7 +63,7 @@ class MedicalApplication{
     public static function add_application(int $doctor_id)
     {
         $query = "
-        INSERT INTO ` medical_aid_application` (doctor_id) 
+        INSERT INTO `medical_aid_application` (doctor_id) 
         VALUES ('$doctor_id')
     ";
 
