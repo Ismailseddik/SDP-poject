@@ -15,12 +15,12 @@ class MedicalApplicationController {
             case 'addApplication':
                 $this->addApplication();
                 break;
-            case 'updateStatus':
-                // $this->updateStatus();
-                break;
-            case 'viewApplicationDetails':
-                // $this->viewApplicationDetails();
-                break;
+            // case 'updateStatus':
+            //     // $this->updateStatus();
+            //     break;
+            // case 'viewApplicationDetails':
+            //     // $this->viewApplicationDetails();
+            //     break;
             default:
                 echo "Error: Action not recognized in MedicalApplicationController.";
                 break;
