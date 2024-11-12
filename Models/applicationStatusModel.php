@@ -1,9 +1,4 @@
 <?php
-/*CREATE TABLE `application_status` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `status` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-)*/
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
 ob_clean();
