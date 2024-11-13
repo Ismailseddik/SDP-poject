@@ -1,5 +1,4 @@
 <?php
-require_once '../interfaces/DonorTierStrategy.php';
 
 class PlatinumTierStrategy implements DonorTierStrategy
 {
