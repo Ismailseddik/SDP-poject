@@ -31,14 +31,33 @@ class Doctor
         $this->isAvailable = $data["doctor_available"] ?? false;
     }
 
-    public function getFirstName() { return $this->doctor_first_name; }
-    public function getId() {return $this->id;}
-    public function getLastName() { return $this->doctor_last_name; }
-    public function getSpeciality() { return $this->doctor_speciality; }
-    public function getRank() { return $this->doctor_rank; }
-    public function isAvailable() { return $this->isAvailable ? "Yes" : "No"; }
+    public function getFirstName()
+    {
+        return $this->doctor_first_name;
+    }
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function getLastName()
+    {
+        return $this->doctor_last_name;
+    }
+    public function getSpeciality()
+    {
+        return $this->doctor_speciality;
+    }
+    public function getRank()
+    {
+        return $this->doctor_rank;
+    }
+    public function isAvailable()
+    {
+        return $this->isAvailable ? "Yes" : "No";
+    }
 
-    public static function get_all_doctors_details(): array {
+    public static function get_all_doctors_details(): array
+    {
         $query = "
             SELECT 
                 doctor.id AS doctor_id,
@@ -55,14 +74,14 @@ class Doctor
 
         $doctors = [];
         $rows = run_select_query($query);
-        
+
         if (!$rows) {
-            echo "Error: Query execution failed in get_all_doctors_details."; 
+            echo "Error: Query execution failed in get_all_doctors_details.";
             return [];
         } elseif ($rows->num_rows === 0) {
-            echo "Debug: Query executed but returned no results in get_all_doctors_details."; 
+            echo "Debug: Query executed but returned no results in get_all_doctors_details.";
         } else {
-            echo "Debug: Query successful, fetching doctors in get_all_doctors_details."; 
+            echo "Debug: Query successful, fetching doctors in get_all_doctors_details.";
             foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) {
                 $doctors[] = new Doctor($row);
             }
