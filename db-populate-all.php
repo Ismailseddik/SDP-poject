@@ -36,7 +36,7 @@ run_queries([
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
 "INSERT INTO `doctor` (`id`, `person_id`, `speciality_id`, `rank_id`, `isAvailable`) VALUES ('1', '1', '1', '1', '1');",
-
+"INSERT INTO `doctor` (`id`, `person_id`, `speciality_id`, `rank_id`, `isAvailable`) VALUES ('2', '2', '1', '1', '1');",
 "CREATE TABLE `doctor_rank` (
   `id` int(11) NOT NULL,
   `rank` varchar(150) NOT NULL
@@ -87,7 +87,7 @@ run_queries([
   `doctor_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
-
+"INSERT INTO `medical_aid_application` (`id`, `doctor_id`) VALUES ('1', '1');",
 
 "CREATE TABLE `medical_aid_documents` (
   `id` int(11) NOT NULL,
@@ -101,13 +101,16 @@ run_queries([
   `person_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
+"INSERT INTO `patient` (`id`, `person_id`) VALUES (1, 2);",
 
 "CREATE TABLE `patient_medical_aid_application` (
   `id` int(11) NOT NULL,
   `patient_id` int(11) NOT NULL,
-  `application_id` int(11) NOT NULL
+  `application_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
+"INSERT INTO `patient_medical_aid_application` (`id`, `patient_id`, `application_id`, `status_id`) VALUES ('1', '1', '1', '1');",
 
 "CREATE TABLE `person` (
   `id` int(11) NOT NULL,
@@ -122,6 +125,7 @@ run_queries([
 "INSERT INTO `person` (`id`, `first_name`, `last_name`, `birth_date`, `address_id`) VALUES
 (1, 'ismail', 'seddik', '2001-11-05', 1);",
 
+"INSERT INTO `person` (`id`, `first_name`, `last_name`, `birth_date`, `address_id`, `isDeleted`) VALUES ('2', 'Ahmed', 'Khaled', '2002-02-12', '2', '0');",
 
 "CREATE TABLE `phonenumber` (
   `id` int(11) NOT NULL,
@@ -150,25 +154,26 @@ run_queries([
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
+//-- Insert initial data into the aid_type table
+"INSERT INTO `aid_type` (`type`) VALUES 
+  ('Financial Aid'),
+  ('Medical Aid'),
+  ('Operational Aid');",
+
 "CREATE TABLE `application_status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `status` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
-"INSERT INTO `speciality` (`id`, `speciality_name`) VALUES
-(1, 'Cardiology.');",
-
-//-- Insert initial data into the aid_type table
-"INSERT INTO `aid_type` (type) VALUES 
-  ('Financial Aid'),
-  ('Medical Aid'),
-  ('Operational Aid');",
-
-"INSERT INTO `application_status` (status) VALUES 
+"INSERT INTO `application_status` (`status`) VALUES 
   ('Pending'),
   ('Approved'),
   ('Rejected');",
+
+"INSERT INTO `speciality` (`id`, `speciality_name`) VALUES
+(1, 'Cardiology.');",
+
 
 "ALTER TABLE `address`
   ADD PRIMARY KEY (`id`);",
@@ -222,10 +227,7 @@ run_queries([
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_patient` (`patient_id`),
   ADD KEY `fk_app` (`application_id`),
-  ADD COLUMN `status_id` int(11) DEFAULT 1,
   ADD FOREIGN KEY (`status_id`) REFERENCES `application_status`(`id`);",
-
-
 
 "ALTER TABLE `person`
   ADD PRIMARY KEY (`id`),
@@ -244,8 +246,6 @@ run_queries([
 
 "ALTER TABLE `speciality`
   ADD PRIMARY KEY (`id`);",
-
-
 
 
 "ALTER TABLE `address`

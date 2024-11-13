@@ -111,8 +111,8 @@
         <div class="application-list">
             <?php foreach ($applications as $application): ?>
                 <div class="application-card">
-                    <p><strong>Patient:</strong> <?= htmlspecialchars($application['patient_name']) ?></p>
-                    <p><strong>Doctor:</strong> <?= htmlspecialchars($application['doctor_name']) ?></p>
+                    <p><strong>Patient:</strong> <?= htmlspecialchars($application['patient_first_name'].' '. $application['patient_last_name']) ?></p>
+                    <p><strong>Doctor:</strong> <?= htmlspecialchars($application['doctor_first_name'].' '. $application['doctor_last_name']) ?></p>
                     <p><strong>Status:</strong> <?= htmlspecialchars($application['status']) ?></p>
                 </div>
             <?php endforeach; ?>

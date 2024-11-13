@@ -11,9 +11,9 @@ class Patient
 
     public function __construct(array $data)
     {
-        $this->id = $data['id'] ?? null;
+        $this->id = $data['patient_id'] ?? null;
         $this->person_id = $data['person_id'] ?? null;
-        $this->name = $data['first_name'] . ' ' . $data['last_name'];
+        $this->name = $data['patient_first_name'] . ' ' . $data['patient_last_name'];
         $this->age = $data['age'] ?? 0;
     }
 
@@ -21,15 +21,42 @@ class Patient
     public function getName() { return $this->name; }
     public function getAge() { return $this->age; }
 
+
+
+    public static function get_patient_details(int $patient_id): bool|Patient
+    {
+        $query = "
+        SELECT 
+            patient.id AS patient_id, 
+            person.id,
+            person.first_name AS patient_first_name, 
+            person.last_name AS patient_last_name, 
+            TIMESTAMPDIFF(YEAR, person.birth_date, CURDATE()) AS age
+        FROM patient
+        JOIN person ON patient.person_id = person.id
+        WHERE patient.id = '$patient_id'
+    ";
+
+        $rows = run_select_query($query);
+
+        if ($rows && $rows->num_rows > 0) {
+            return new self($rows->fetch_assoc());
+        } else {
+            echo "Error: Doctor with ID $patient_id not found.";
+            return false;
+        }
+    }
+
+
     // Fetch all patients with associated personal details
     public static function getAllPatients(): array
     {
         $query = "
             SELECT 
-                patient.id, 
-                patient.person_id, 
-                person.first_name, 
-                person.last_name, 
+                patient.id AS patient_id, 
+                person.id,
+                person.first_name AS patient_first_name, 
+                person.last_name AS patient_last_name, 
                 TIMESTAMPDIFF(YEAR, person.birth_date, CURDATE()) AS age
             FROM patient
             JOIN person ON patient.person_id = person.id
