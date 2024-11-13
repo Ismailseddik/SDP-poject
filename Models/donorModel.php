@@ -1,8 +1,8 @@
 <?php
-// Donor.php
+
 include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
-require_once '../strategies/MonetaryDonation.php';
-require_once '../strategies/OrganDonation.php';
+// require_once '../strategies/MonetaryDonation.php';
+// require_once '../strategies/OrganDonation.php';
 
 class Donor
 {
@@ -12,7 +12,8 @@ class Donor
     private ?string $last_name;
     private ?string $email;
     private ?float $amount;
-    private DonationStrategy $donationStrategy;
+    private ?String $tier;
+    // private DonationStrategy $donationStrategy;
 
     public function __construct(array $data)
     {
@@ -20,37 +21,75 @@ class Donor
         $this->person_id = $data['person_id'] ?? null;
         $this->first_name = $data['first_name'] ?? null;
         $this->last_name = $data['last_name'] ?? null;
-        $this->email = $data['email'] ?? null;
         $this->amount = $data['amount'] ?? null;
+        $this->tier = $data['tier'] ?? null;
     }
 
-    // Getters
+    public function __toString(): string
+    {
+        $str = '<pre>';
+        $str .= "ID: $this->id<br/>";
+        $str .= "First Name: $this->first_name <br/>";
+        $str .= "Last Name: $this->last_name<br/>";
+        $str .= "Amount: $this->amount<br/>";
+        $str .= "Tier: $this->tier<br/>";
+
+        return $str . '</pre>';
+    }
+
+    
     public function getFirstName() { return $this->first_name; }
     public function getLastName() { return $this->last_name; }
-    public function getEmail() { return $this->email; }
     public function getAmount() { return $this->amount; }
 
     // Set the donation strategy
-    public function setDonationStrategy(DonationStrategy $donationStrategy): void
-    {
-        $this->donationStrategy = $donationStrategy;
-    }
+    // public function setDonationStrategy(DonationStrategy $donationStrategy): void
+    // {
+    //     $this->donationStrategy = $donationStrategy;
+    // }
 
     // Execute donation using the current strategy
-    public function donate(): void
+    // public function donate(): void
+    // {
+    //     $this->donationStrategy->donate($this->amount, $this);
+    // }
+
+
+    public static function get_donor_details($donor_id): Donor|bool
     {
-        $this->donationStrategy->donate($this->amount, $this);
+        $query = "
+            SELECT donor.id, donor.person_id, person.first_name, person.last_name, donation.amount, donor_tier.tier
+            FROM donor
+            JOIN person ON donor.person_id = person.id
+            JOIN donor_tier ON donor.tier_id = donor_tier.id
+            JOIN donor_donation ON donor.id = donor_donation.donor_id
+            JOIN donation ON donor_donation.donation_id = donation.id
+        ";
+        
+        
+        $rows = run_select_query($query);
+
+        if ($rows && $rows->num_rows > 0) {
+            return new self($rows->fetch_assoc());
+        } else {
+            echo "Error: Donor with ID $donor_id not found.";
+            return false;
+        }
+
+        
     }
-    // Fetch all donors with associated personal details
+
     public static function getAllDonors(): array
     {
         $query = "
-            SELECT donor.id, donor.person_id, person.first_name, person.last_name, donation.amount
+            SELECT donor.id, donor.person_id, person.first_name, person.last_name, donation.amount, donor_tier.tier
             FROM donor
             JOIN person ON donor.person_id = person.id
-            LEFT JOIN donor_donation ON donor.id = donor_donation.donor_id
-            LEFT JOIN donation ON donor_donation.donation_id = donation.id
+            JOIN donor_tier ON donor.tier_id = donor_tier.id
+            JOIN donor_donation ON donor.id = donor_donation.donor_id
+            JOIN donation ON donor_donation.donation_id = donation.id
         ";
+        
         
         $donors = [];
         $rows = run_select_query($query);
@@ -64,8 +103,8 @@ class Donor
         return $donors;
     }
 
-    // Add a new donor with personal details
-    public static function addDonor(string $first_name, string $last_name, string $email, float $amount): bool
+   
+    public static function addDonor(string $first_name, string $last_name, float $amount): bool
     {
         global $conn;
 

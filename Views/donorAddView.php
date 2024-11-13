@@ -70,9 +70,6 @@
             <label for="donor_last_name">Last Name:</label>
             <input type="text" id="donor_last_name" name="donor_last_name" placeholder="Enter Last Name" required>
 
-            <label for="donor_email">Email:</label>
-            <input type="email" id="donor_email" name="donor_email" placeholder="Enter Email" required>
-
             <label for="donor_amount">Donation Amount:</label>
             <input type="number" id="donor_amount" name="donor_amount" placeholder="Enter Donation Amount" required>
 
