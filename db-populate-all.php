@@ -1,5 +1,8 @@
 <?php
 require_once "db-conn-setup.php";
+require_once "config.php";
+
+$configs = require "config.php";
 
 run_queries([
 
