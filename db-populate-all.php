@@ -37,6 +37,7 @@ run_queries([
 
 "INSERT INTO `doctor` (`id`, `person_id`, `speciality_id`, `rank_id`, `isAvailable`) VALUES ('1', '1', '1', '1', '1');",
 "INSERT INTO `doctor` (`id`, `person_id`, `speciality_id`, `rank_id`, `isAvailable`) VALUES ('2', '2', '1', '1', '1');",
+
 "CREATE TABLE `doctor_rank` (
   `id` int(11) NOT NULL,
   `rank` varchar(150) NOT NULL
@@ -44,8 +45,18 @@ run_queries([
 
 
 "INSERT INTO `doctor_rank` (`id`, `rank`) VALUES
-(1, 'Resident ');",
+(1, 'Resident');",
 
+
+"CREATE TABLE `donor_tier` (
+  `id` int(11) NOT NULL,
+  `tier` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+
+"INSERT INTO `donor_tier` (`id`, `tier`) VALUES
+(1, 'Silver'),
+(2, 'Gold'),
+(3, 'Platinum');",
 
 "CREATE TABLE `document` (
   `id` int(11) NOT NULL,
@@ -63,6 +74,7 @@ run_queries([
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
 
+"INSERT INTO `donation` (`id`, `amount`, `donation_type_id`, `donation_date`) VALUES ('1', '200', '1', '2024-11-13 12:52:39.000000');",
 
 "CREATE TABLE `donor` (
   `id` int(11) NOT NULL,
@@ -81,6 +93,7 @@ run_queries([
   `donor_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
+"INSERT INTO `donor_donation` (`id`, `donation_id`, `donor_id`) VALUES ('1', '1', '1');",
 
 "CREATE TABLE `medical_aid_application` (
   `id` int(11) NOT NULL,
@@ -188,6 +201,8 @@ run_queries([
 "ALTER TABLE `doctor_rank`
   ADD PRIMARY KEY (`id`);",
 
+"ALTER TABLE `donor_tier`
+  ADD PRIMARY KEY (`id`);",
 
 "ALTER TABLE `document`
   ADD PRIMARY KEY (`id`);",
@@ -259,6 +274,9 @@ run_queries([
 "ALTER TABLE `doctor_rank`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;",
 
+"ALTER TABLE `donor_tier`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;",
+
 
 "ALTER TABLE `document`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;",
@@ -306,9 +324,6 @@ run_queries([
 "ALTER TABLE `speciality`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;",
 
-
-
-
 "ALTER TABLE `doctor`
   ADD CONSTRAINT `fk_pers` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
   ADD CONSTRAINT `fk_rank` FOREIGN KEY (`rank_id`) REFERENCES `doctor_rank` (`id`),
@@ -316,9 +331,10 @@ run_queries([
 
 
 "ALTER TABLE `donor`
-  ADD CONSTRAINT `FK_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`);",
+  ADD CONSTRAINT `FK_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `FK_tier` FOREIGN KEY (`tier_id`) REFERENCES `donor_tier` (`id`);",
 
-
+  
 "ALTER TABLE `donor_donation`
   ADD CONSTRAINT `fk_donation` FOREIGN KEY (`donation_id`) REFERENCES `donation` (`id`),
   ADD CONSTRAINT `fk_donor` FOREIGN KEY (`donor_id`) REFERENCES `donor` (`id`);",
