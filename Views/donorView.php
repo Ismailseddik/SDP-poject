@@ -134,7 +134,6 @@
                 <?php foreach ($donors as $donor): ?>
                     <div class="donor-card">
                         <p><strong>Name:</strong> <?= htmlspecialchars($donor->getFirstName()) . ' ' . htmlspecialchars($donor->getLastName()) ?></p>
-                        <p><strong>Email:</strong> <?= htmlspecialchars($donor->getEmail()) ?></p>
                         <p><strong>Donation Amount:</strong> $<?= htmlspecialchars(number_format($donor->getAmount(), 2)) ?></p>
                     </div>
                 <?php endforeach; ?>
