@@ -35,11 +35,11 @@ class DonorController
             // Retrieve form data
             $firstName = $_POST['donor_first_name'] ?? '';
             $lastName = $_POST['donor_last_name'] ?? '';
-            $email = $_POST['donor_email'] ?? '';
+            // $email = $_POST['donor_email'] ?? '';
             $amount = (float)($_POST['donor_amount'] ?? 0);
 
             // Call the addDonor method from Donor model to save the new donor
-            $result = Donor::addDonor($firstName, $lastName, $email, $amount);
+            $result = Donor::addDonor($firstName, $lastName,$amount);
 
             if ($result) {
                 // Redirect to donor list after successful addition
@@ -82,13 +82,13 @@ class DonorController
             $donorData = [
                 'first_name' => $_POST['donor_first_name'],
                 'last_name' => $_POST['donor_last_name'],
-                'email' => $_POST['donor_email'],
+                // 'email' => $_POST['donor_email'],
                 'amount' => $amount
             ];
 
             // Create a new Donor object with the selected strategy
             $donor = new Donor($donorData);
-            $donor->donate();  // Execute the donation using the chosen strategy
+            // $donor->donate();  // Execute the donation using the chosen strategy
 
             // Redirect to the donor list after donation
             header('Location: index.php?view=donor&action=listDonors');
