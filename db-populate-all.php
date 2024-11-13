@@ -1,5 +1,8 @@
 <?php
 require_once "db-conn-setup.php";
+require_once "config.php";
+
+$configs = require "config.php";
 
 run_queries([
 
@@ -36,6 +39,7 @@ run_queries([
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
 "INSERT INTO `doctor` (`id`, `person_id`, `speciality_id`, `rank_id`, `isAvailable`) VALUES ('1', '1', '1', '1', '1');",
+"INSERT INTO `doctor` (`id`, `person_id`, `speciality_id`, `rank_id`, `isAvailable`) VALUES ('2', '2', '1', '1', '1');",
 
 "CREATE TABLE `doctor_rank` (
   `id` int(11) NOT NULL,
@@ -44,8 +48,18 @@ run_queries([
 
 
 "INSERT INTO `doctor_rank` (`id`, `rank`) VALUES
-(1, 'Resident ');",
+(1, 'Resident');",
 
+
+"CREATE TABLE `donor_tier` (
+  `id` int(11) NOT NULL,
+  `tier` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+
+"INSERT INTO `donor_tier` (`id`, `tier`) VALUES
+(1, 'Silver'),
+(2, 'Gold'),
+(3, 'Platinum');",
 
 "CREATE TABLE `document` (
   `id` int(11) NOT NULL,
@@ -63,6 +77,7 @@ run_queries([
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
 
+"INSERT INTO `donation` (`id`, `amount`, `donation_type_id`, `donation_date`) VALUES ('1', '200', '1', '2024-11-13 12:52:39.000000');",
 
 "CREATE TABLE `donor` (
   `id` int(11) NOT NULL,
@@ -81,13 +96,14 @@ run_queries([
   `donor_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
+"INSERT INTO `donor_donation` (`id`, `donation_id`, `donor_id`) VALUES ('1', '1', '1');",
 
 "CREATE TABLE `medical_aid_application` (
   `id` int(11) NOT NULL,
   `doctor_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
-
+"INSERT INTO `medical_aid_application` (`id`, `doctor_id`) VALUES ('1', '1');",
 
 "CREATE TABLE `medical_aid_documents` (
   `id` int(11) NOT NULL,
@@ -101,13 +117,16 @@ run_queries([
   `person_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
+"INSERT INTO `patient` (`id`, `person_id`) VALUES (1, 2);",
 
 "CREATE TABLE `patient_medical_aid_application` (
   `id` int(11) NOT NULL,
   `patient_id` int(11) NOT NULL,
-  `application_id` int(11) NOT NULL
+  `application_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
+"INSERT INTO `patient_medical_aid_application` (`id`, `patient_id`, `application_id`, `status_id`) VALUES ('1', '1', '1', '1');",
 
 "CREATE TABLE `person` (
   `id` int(11) NOT NULL,
@@ -122,6 +141,7 @@ run_queries([
 "INSERT INTO `person` (`id`, `first_name`, `last_name`, `birth_date`, `address_id`) VALUES
 (1, 'ismail', 'seddik', '2001-11-05', 1);",
 
+"INSERT INTO `person` (`id`, `first_name`, `last_name`, `birth_date`, `address_id`, `isDeleted`) VALUES ('2', 'Ahmed', 'Khaled', '2002-02-12', '2', '0');",
 
 "CREATE TABLE `phonenumber` (
   `id` int(11) NOT NULL,
@@ -144,12 +164,31 @@ run_queries([
   `speciality_name` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
+"CREATE TABLE `aid_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
+//-- Insert initial data into the aid_type table
+"INSERT INTO `aid_type` (`type`) VALUES 
+  ('Financial Aid'),
+  ('Medical Aid'),
+  ('Operational Aid');",
+
+"CREATE TABLE `application_status` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+
+"INSERT INTO `application_status` (`status`) VALUES 
+  ('Pending'),
+  ('Approved'),
+  ('Rejected');",
 
 "INSERT INTO `speciality` (`id`, `speciality_name`) VALUES
 (1, 'Cardiology.');",
-
-
 
 
 "ALTER TABLE `address`
@@ -165,6 +204,8 @@ run_queries([
 "ALTER TABLE `doctor_rank`
   ADD PRIMARY KEY (`id`);",
 
+"ALTER TABLE `donor_tier`
+  ADD PRIMARY KEY (`id`);",
 
 "ALTER TABLE `document`
   ADD PRIMARY KEY (`id`);",
@@ -203,8 +244,8 @@ run_queries([
 "ALTER TABLE `patient_medical_aid_application`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_patient` (`patient_id`),
-  ADD KEY `fk_app` (`application_id`);",
-
+  ADD KEY `fk_app` (`application_id`),
+  ADD FOREIGN KEY (`status_id`) REFERENCES `application_status`(`id`);",
 
 "ALTER TABLE `person`
   ADD PRIMARY KEY (`id`),
@@ -225,8 +266,6 @@ run_queries([
   ADD PRIMARY KEY (`id`);",
 
 
-
-
 "ALTER TABLE `address`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;",
 
@@ -237,6 +276,9 @@ run_queries([
 
 "ALTER TABLE `doctor_rank`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;",
+
+"ALTER TABLE `donor_tier`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;",
 
 
 "ALTER TABLE `document`
@@ -285,9 +327,6 @@ run_queries([
 "ALTER TABLE `speciality`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;",
 
-
-
-
 "ALTER TABLE `doctor`
   ADD CONSTRAINT `fk_pers` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
   ADD CONSTRAINT `fk_rank` FOREIGN KEY (`rank_id`) REFERENCES `doctor_rank` (`id`),
@@ -295,9 +334,10 @@ run_queries([
 
 
 "ALTER TABLE `donor`
-  ADD CONSTRAINT `FK_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`);",
+  ADD CONSTRAINT `FK_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `FK_tier` FOREIGN KEY (`tier_id`) REFERENCES `donor_tier` (`id`);",
 
-
+  
 "ALTER TABLE `donor_donation`
   ADD CONSTRAINT `fk_donation` FOREIGN KEY (`donation_id`) REFERENCES `donation` (`id`),
   ADD CONSTRAINT `fk_donor` FOREIGN KEY (`donor_id`) REFERENCES `donor` (`id`);",

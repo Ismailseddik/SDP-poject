@@ -132,3 +132,59 @@ h3 {
 .doctor-form button:hover {
     background-color: #007f87;
 }
+/* Application card styling, similar to doctor cards */
+.application-card {
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #e0fbfc;
+    border-left: 4px solid #0a9396;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Application form styling, similar to other forms */
+.application-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.application-form label {
+    font-weight: bold;
+    color: #005f73;
+}
+
+.application-form input[type="number"],
+.application-form select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.application-form input[type="number"]:focus,
+.application-form select:focus {
+    border-color: #0a9396;
+    outline: none;
+}
+
+.button {
+    padding: 10px 20px;
+    background-color: #0a9396;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.button:hover {
+    background-color: #007f87;
+}
+
+.add-button {
+    text-align: right;
+    margin-top: 20px;
+}
