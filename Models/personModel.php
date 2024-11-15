@@ -5,7 +5,6 @@ ob_end_clean();
 
 class Person
 {
-
     private ?int $id;
     private ?String $first_name;
     private ?String $last_name;
