@@ -6,9 +6,8 @@ require_once "doctorrankModel.php";
 require_once "specialityModel.php";
 ob_end_clean();
 
-class Doctor implements IObserver
+class Doctor extends Person implements IObserver
 {
-    private ?int $id;
     private ?int $person_id;
     private ?PatientMedicalApplicationModel $current;
     private ?string $doctor_first_name;
@@ -23,7 +22,6 @@ class Doctor implements IObserver
     {
         $this->id = $data["doctor_id"] ?? null;
         $this->person_id = $data["person_id"] ?? null;  // Initialize person_id
-        // $this->patient_medical_aid_application_id = $data["patient_medical_aid_application_id"] ??null; //implement in DB schema
         $this->doctor_first_name = $data["doctor_first_name"] ?? null;
         $this->doctor_last_name = $data["doctor_last_name"] ?? null;
         $this->speciality_id = $data["speciality_id"] ?? null;  // Initialize speciality_id
@@ -33,36 +31,20 @@ class Doctor implements IObserver
         $this->isAvailable = $data["doctor_available"] ?? false;
     }
 
-    public function getFirstName()
-    {
-        return $this->doctor_first_name;
-    }
-    public function getId()
-    {
-        return $this->id;
-    }
-    public function getLastName()
-    {
-        return $this->doctor_last_name;
-    }
-    public function getSpeciality()
-    {
-        return $this->doctor_speciality;
-    }
-    public function getRank()
-    {
-        return $this->doctor_rank;
-    }
-    public function isAvailable()
-    {
-        return $this->isAvailable ? "Yes" : "No";
-    }
+    public function getFirstName(): string|null { return $this->first_name; }
+    public function getPersonId(): int|null{ return $this->person_id;}
+    public function getId(): int|null {return $this->id;}
+    public function getLastName(): string|null { return $this->last_name; }
+    public function getSpeciality(): string|null { return $this->doctor_speciality; }
+    public function getRank(): string|null { return $this->doctor_rank; }
+    public function isAvailable(): string { return $this->isAvailable ? "Yes" : "No"; }
 
     public static function get_all_doctors_details(): array
     {
         $query = "
             SELECT 
                 doctor.id AS doctor_id,
+                doctor.person_id,
                 person.first_name AS doctor_first_name,
                 person.last_name AS doctor_last_name,
                 doctor_rank.rank AS doctor_rank,
@@ -92,11 +74,12 @@ class Doctor implements IObserver
         return $doctors;
     }
 
-    public static function get_doctor_details(int $doctor_id): Doctor|bool
+    public static function getby_id($doctor_id): Doctor|bool
     {
         $query = "
             SELECT 
                 doctor.id AS doctor_id,
+                doctor.person_id,
                 person.first_name AS doctor_first_name,
                 person.last_name AS doctor_last_name,
                 doctor_rank.rank AS doctor_rank,
@@ -124,16 +107,16 @@ class Doctor implements IObserver
         string $doctor_last_name,
         DateTime $doctor_birth_date,
         int $doctor_address_id,
-        string $doctor_rank_name,
-        string $doctor_speciality_name
+        String $doctor_rank_name,
+        String $doctor_speciality_name
     ): bool {
-        global $conn;
+        $conn=DataBase::getInstance()->getConn();
 
         if (!Person::add_person($doctor_first_name, $doctor_last_name, $doctor_birth_date, $doctor_address_id)) {
             echo "Error: Unable to add person record.";
             return false;
         }
-        $person = Person::get_person_by_id($conn->insert_id);
+        $person = Person::getby_id($conn->insert_id);
         if (!$person) {
             echo "Error: Person ID retrieval failed.";
             return false;
@@ -171,7 +154,7 @@ class Doctor implements IObserver
         return run_query($query, true);
     }
 
-    public function Update($patient_id): void
+    public function update_obeserver($patient_id): void
     {
         $this->current = PatientMedicalApplicationModel::get_applications_by_patient($patient_id);
         

@@ -35,12 +35,13 @@ class DonorController
             // Retrieve form data
             $firstName = $_POST['donor_first_name'] ?? '';
             $lastName = $_POST['donor_last_name'] ?? '';
+            $donor_birth_date = DateTime::createFromFormat('Y-m-d', $_POST['donor_birth_date'] ?? '');
             // $email = $_POST['donor_email'] ?? '';
             $amount = (float)($_POST['donor_amount'] ?? 0);
 
             // Call the addDonor method from Donor model to save the new donor
-            $result = Donor::addDonor($firstName, $lastName,$amount);
-
+            $result = Donor::addDonor($firstName, $lastName,$amount, $donor_birth_date);
+            
             if ($result) {
                 // Redirect to donor list after successful addition
                 header('Location: index.php?view=donor&action=listDonors');

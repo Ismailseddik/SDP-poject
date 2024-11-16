@@ -100,7 +100,7 @@ class PatientMedicalApplicationModel implements ISubject{
 
     public static function add_patient_application(int $patient_id,int $doctor_id): bool
     {
-        global $conn;
+        $conn=DataBase::getInstance()->getConn();
         $status_id=1;
         if (!MedicalApplication::add_application($doctor_id)) {
             echo "Error: Unable to add application record.";
@@ -115,7 +115,7 @@ class PatientMedicalApplicationModel implements ISubject{
     {
         foreach(Doctor::get_all_doctors_details() as $doc){
             if($doc instanceof Doctor){
-                $doc->Update($this->patient_id);
+                $doc->update_obeserver($this->patient_id);
             }
         }
     }    

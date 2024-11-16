@@ -14,7 +14,7 @@ class DonationModel{
         $this->id = $data['id'];
         $this->amount = $data['amount'];
         $this->donation_type_id =$data['donation_type_id'];
-        $this->donation_date = $data['donation_date'];
+        $this->donation_date = isset($data['donation_date']) ? new DateTime($data['donation_date']) : null;
         //$this->aid_type_id = $data['aid_type_id'];
     }
 
@@ -36,5 +36,15 @@ class DonationModel{
             return false;
         }
     }
+
+    public static function add_donation($amount): bool
+    {
+    $query = "INSERT INTO donation (amount, donation_type_id, donation_date) VALUES ($amount, 1, NOW())";
+    
+    return run_query($query, true);
+    }
+    
+        
+
 
 }

@@ -1,5 +1,5 @@
 <?php
 
 interface IObserver{
-    public function Update(int $id):void;
+    public function update_obeserver(int $id):void;
 }  

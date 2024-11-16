@@ -3,14 +3,15 @@
 include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
 // require_once '../strategies/MonetaryDonation.php';
 // require_once '../strategies/OrganDonation.php';
+require_once "personModel.php";
+require_once "donorModel.php";
+require_once "donationModel.php";
+require_once "donorDonationModel.php";
 
-class Donor
+class Donor extends Person
 {
-    private ?int $id;
+   
     private ?int $person_id;
-    private ?string $first_name;
-    private ?string $last_name;
-    private ?string $email;
     private ?float $amount;
     private ?String $tier;
     // private DonationStrategy $donationStrategy;
@@ -45,9 +46,11 @@ class Donor
     }
 
     
-    public function getFirstName() { return $this->first_name; }
-    public function getLastName() { return $this->last_name; }
-    public function getAmount() { return $this->amount; }
+    public function getFirstName(): string|null { return $this->first_name; }
+    public function getPersonId(): int|null { return $this->person_id;}
+
+    public function getLastName(): string|null { return $this->last_name; }
+    public function getAmount(): float|null { return $this->amount; }
 
     //*************** tiers ****************
     // Change donor tier dynamically
@@ -91,7 +94,7 @@ class Donor
     // }
 
 
-    public static function get_donor_details($donor_id): Donor|bool
+    public static function getby_id($donor_id): Donor|bool
     {
         $query = "
             SELECT donor.id, donor.person_id, person.first_name, person.last_name, donation.amount, donor_tier.tier
@@ -140,13 +143,13 @@ class Donor
     }
 
    
-    public static function addDonor(string $first_name, string $last_name, float $amount): bool
+    public static function addDonor(string $first_name, string $last_name, float $amount,DateTime $donor_birth_date): bool
     {
-        global $conn;
+        $conn=DataBase::getInstance()->getConn();
 
+        $person_state = Person::add_person($first_name,$last_name, $donor_birth_date, 1);
         // Insert into person table first
-        $query_person = "INSERT INTO person (first_name, last_name, birth_date, address_id) VALUES ('$first_name', '$last_name', CURDATE(), 1)";
-        if (!run_query($query_person, true)) {
+        if (!$person_state) {
             echo "Error: Failed to add person record.";
             return false;
         }
@@ -165,8 +168,8 @@ class Donor
         $donor_id = $conn->insert_id;
 
         // Insert donation record and associate with donor
-        $query_donation = "INSERT INTO donation (amount, donation_type_id, donation_date) VALUES ($amount, 1, NOW())";
-        if (!run_query($query_donation, true)) {
+        $donation_state = DonationModel::add_donation($amount);
+        if (!$donation_state) {
             echo "Error: Failed to add donation record.";
             return false;
         }
@@ -174,9 +177,10 @@ class Donor
         // Get the new donation_id
         $donation_id = $conn->insert_id;
 
+        
         // Link donation to donor in donor_donation table
-        $query_donor_donation = "INSERT INTO donor_donation (donation_id, donor_id) VALUES ($donation_id, $donor_id)";
-        if (!run_query($query_donor_donation, true)) {
+        $donor_donation_state = DonorDonationModel::add_donor_donation($donation_id,$donor_id);
+        if (!$donor_donation_state ){
             echo "Error: Failed to link donation to donor.";
             return false;
         }

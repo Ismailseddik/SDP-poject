@@ -15,6 +15,11 @@ class DataBase{
         $configs = require "config.php";
         // Ensure the correct database name and port are selected
         $this->conn = new mysqli($configs->DB_HOST, $configs->DB_USER, $configs->DB_PASS, $configs->DB_NAME, $configs->DB_PORT);
+        // Check connection
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
+        }
+        echo "Connected successfully<br/><hr/>";
     }
 
     public function getConn(): mysqli
@@ -27,12 +32,6 @@ class DataBase{
 function run_queries($queries, $echo = false): array
 {
     $conn=DataBase::getInstance()->getConn();
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    echo "Connected successfully<br/><hr/>";
 
     $ret = [];
     foreach ($queries as $commandquery) {
@@ -55,13 +54,7 @@ function run_query($commandquery, $echo = false): bool
 // Function to run a select query and return result
 function run_select_query($commandquery, $echo = false): mysqli_result|bool
 {
-    //global $conn;
     $conn=DataBase::getInstance()->getConn();
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    echo "Connected successfully<br/><hr/>";
 
     $result = $conn->query($commandquery);
     if ($echo) {
