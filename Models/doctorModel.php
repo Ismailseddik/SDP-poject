@@ -125,7 +125,7 @@ class Doctor
         string $doctor_rank_name,
         string $doctor_speciality_name
     ): bool {
-        global $conn;
+        $conn=DataBase::getInstance()->getConn();
 
         if (!Person::add_person($doctor_first_name, $doctor_last_name, $doctor_birth_date, $doctor_address_id)) {
             echo "Error: Unable to add person record.";

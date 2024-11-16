@@ -142,7 +142,7 @@ class Donor
    
     public static function addDonor(string $first_name, string $last_name, float $amount): bool
     {
-        global $conn;
+        $conn=DataBase::getInstance()->getConn();
 
         // Insert into person table first
         $query_person = "INSERT INTO person (first_name, last_name, birth_date, address_id) VALUES ('$first_name', '$last_name', CURDATE(), 1)";

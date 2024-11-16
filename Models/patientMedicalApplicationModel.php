@@ -94,7 +94,7 @@ class PatientMedicalApplicationModel{
 
     public static function add_patient_application(int $patient_id,int $doctor_id): bool
     {
-        global $conn;
+        $conn=DataBase::getInstance()->getConn();
         $status_id=1;
         if (!MedicalApplication::add_application($doctor_id)) {
             echo "Error: Unable to add application record.";

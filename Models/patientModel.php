@@ -77,7 +77,7 @@ class Patient
     // Add a new patient with personal details
     public static function addPatient(string $first_name, string $last_name, int $age): bool
     {
-        global $conn;
+        $conn=DataBase::getInstance()->getConn();
 
         // Calculate birth_date based on the age provided
         $birth_date = date('Y-m-d', strtotime("-$age years"));
