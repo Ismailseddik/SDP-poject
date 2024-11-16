@@ -6,7 +6,7 @@ require_once '../strategies/OrganDonation.php';
 
 class DonorController
 {
-    public function index($action = null)
+    public function index($action = null): void
     {
         switch ($action) {
             case 'listDonors':
@@ -29,7 +29,7 @@ class DonorController
                 break;
         }
     }
-    private function addDonor()
+    private function addDonor(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Retrieve form data
@@ -54,46 +54,52 @@ class DonorController
         }
     }
     // Method to list donors
-    private function listDonors()
+    private function listDonors(): void
     {
         $donors = Donor::getAllDonors();
+        //
+        //error_log(print_r($donors, true)); // Logs the array in your PHP error log
         include '../views/donorView.php';
     }
-    private function showAddDonorForm(){
+    private function showAddDonorForm(): void
+    {
         include '../views/donorAddView.php';
     }
     // Method to show the add donation form
-    private function showAddDonationForm()
+    private function showAddDonationForm(): void
     {
+        $donors = Donor::getAllDonors();
+        //echo $donors[0]->getFirstName();
         include '../views/showAddDonationForm.php';
     }
 
     // Method to handle form submission and add a new donation
-    private function addDonation()
+    private function addDonation(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Get donation type and amount from form
+            // Get donor ID, donation type, and amount from form
+            $donorId = (int)$_POST['donor_id'] ?? 0;
             $donationType = $_POST['donation_type'] ?? 'monetary';
             $amount = (float)($_POST['donor_amount'] ?? 0);
 
-            // Choose the appropriate strategy based on donation type
-            $donationStrategy = ($donationType === 'organ') ? new OrganDonation() : new MonetaryDonation();
+            // Fetch the donor by ID
+            $donor = Donor::getby_id($donorId);
 
-            // Gather donor data from the form
-            $donorData = [
-                'first_name' => $_POST['donor_first_name'],
-                'last_name' => $_POST['donor_last_name'],
-                // 'email' => $_POST['donor_email'],
-                'amount' => $amount
-            ];
+            if ($donor) {
+                // Choose the appropriate strategy
+                $donationStrategy = ($donationType === 'organ') ? new OrganDonation() : new MonetaryDonation();
 
-            // Create a new Donor object with the selected strategy
-            $donor = new Donor($donorData);
-            // $donor->donate();  // Execute the donation using the chosen strategy
+                //$donor->setAmount($donor->getAmount() - $amount); //To be implemented in model
+                // Set the strategy and execute donation
+                $donor->setDonationStrategy($donationStrategy);
+                $donor->donate($amount);
 
-            // Redirect to the donor list after donation
-            header('Location: index.php?view=donor&action=listDonors');
-            exit();
+                // Redirect to donor list after donation
+                header('Location: index.php?view=donor&action=listDonors');
+                exit();
+            } else {
+                echo "Error: Donor not found.";
+            }
         } else {
             // If not a POST request, show the add donation form
             $this->showAddDonationForm();

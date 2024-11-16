@@ -6,7 +6,12 @@ class MonetaryDonation implements DonationStrategy
 {
     public function donate(float $amount, Donor $donor): void
     {
-        echo "Processing a monetary donation of $" . $amount . " for " . $donor->getFirstName() . "\n";
-        // Additional logic for processing monetary donation
+        // Save monetary donation to the database
+        $donationSuccess = DonationModel::add_donation($amount);
+        if ($donationSuccess) {
+            echo "Monetary donation of $" . $amount . " recorded for donor " . $donor->getFirstName() . ".";
+        } else {
+            echo "Failed to process monetary donation for donor " . $donor->getFirstName() . ".";
+        }
     }
 }

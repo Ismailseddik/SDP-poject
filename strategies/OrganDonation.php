@@ -7,5 +7,6 @@ class OrganDonation implements DonationStrategy
     {
         echo "Registering an organ donation for " . $donor->getFirstName() . "\n";
         // Additional logic for processing organ donation
+        //In donationModel we still have no function specific to deal with organs
     }
 }
