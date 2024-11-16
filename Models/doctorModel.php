@@ -6,10 +6,11 @@ require_once "doctorrankModel.php";
 require_once "specialityModel.php";
 ob_end_clean();
 
-class Doctor
+class Doctor implements IObserver
 {
     private ?int $id;
     private ?int $person_id;
+    private ?PatientMedicalApplicationModel $current;
     private ?string $doctor_first_name;
     private ?string $doctor_last_name;
     private ?int $speciality_id;
@@ -22,6 +23,7 @@ class Doctor
     {
         $this->id = $data["doctor_id"] ?? null;
         $this->person_id = $data["person_id"] ?? null;  // Initialize person_id
+        // $this->patient_medical_aid_application_id = $data["patient_medical_aid_application_id"] ??null; //implement in DB schema
         $this->doctor_first_name = $data["doctor_first_name"] ?? null;
         $this->doctor_last_name = $data["doctor_last_name"] ?? null;
         $this->speciality_id = $data["speciality_id"] ?? null;  // Initialize speciality_id
@@ -168,4 +170,11 @@ class Doctor
 
         return run_query($query, true);
     }
+
+    public function Update($patient_id): void
+    {
+        $this->current = PatientMedicalApplicationModel::get_applications_by_patient($patient_id);
+        
+    }
+
 }
