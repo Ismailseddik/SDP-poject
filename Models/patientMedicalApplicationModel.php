@@ -2,10 +2,11 @@
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
 require_once 'MedicalApplicationModel.php';
-
+require_once '../Models/doctorModel.php';
+require_once '../Observers/ISubject.php';
 ob_end_clean();
 
-class PatientMedicalApplicationModel implements ISubject{
+class PatientMedicalApplicationModel{
     private ?int $id;
     private ?int $patient_id;
     private ?int $application_id;
@@ -13,6 +14,7 @@ class PatientMedicalApplicationModel implements ISubject{
     private ?string $patient_last_name;
     private ?string $doctor_first_name;
     private ?string $doctor_last_name;
+    private array $observers = []; // List of observers
     // private ?array $Doctors;
 
     public function __construct(array $data)
@@ -39,7 +41,6 @@ class PatientMedicalApplicationModel implements ISubject{
     public function getDoctorFirstName() { return $this->doctor_first_name; }
     public function getDoctorLastName() { return $this->doctor_last_name; }
 
-   
     public static function get_all_applications(): array|bool
     {
         $query = "
@@ -98,25 +99,25 @@ class PatientMedicalApplicationModel implements ISubject{
         return false; 
     }
 
-    public static function add_patient_application(int $patient_id,int $doctor_id): bool
-    {
-        $conn=DataBase::getInstance()->getConn();
-        $status_id=1;
+    public static function add_patient_application(int $patient_id, int $doctor_id): bool {
+        $conn = DataBase::getInstance()->getConn();
+        $status_id = 1;
+    
         if (!MedicalApplication::add_application($doctor_id)) {
-            echo "Error: Unable to add application record.";
+            error_log("Error: Unable to add application record.");
             return false;
         }
-        $application_id=$conn->insert_id;
-        $query = "INSERT INTO `patient_medical_aid_application` (patient_id, application_id, status_id) VALUES ('$patient_id', '$application_id', '$status_id')";
-        return run_query($query, true);
+    
+        $application_id = $conn->insert_id;
+        $query = "INSERT INTO `patient_medical_aid_application` (patient_id, application_id, status_id) 
+                  VALUES ('$patient_id', '$application_id', '$status_id')";
+    
+        $result = run_query($query, true);
+    
+    
+        return $result;
     }
     
-    public function NotifyObserver(): void
-    {
-        foreach(Doctor::get_all_doctors_details() as $doc){
-            if($doc instanceof Doctor){
-                $doc->update_obeserver($this->patient_id);
-            }
-        }
-    }    
+    
+
 }

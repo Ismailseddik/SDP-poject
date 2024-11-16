@@ -1,8 +1,9 @@
 <?php
 // MedicalApplicationController.php
 require_once '../models/patientMedicalApplicationModel.php';
-
-class MedicalApplicationController {
+require_once '../models/doctorModel.php';
+require_once '../Observers/ISubject.php';
+class MedicalApplicationController implements ISubject{
     public function index($action = null) {
         // Route based on action parameter
         switch ($action) {
@@ -41,25 +42,29 @@ class MedicalApplicationController {
     // Handle adding a new medical aid application
     private function addApplication() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Retrieve form data from POST request
             $patient_id = $_POST['patient_id'];
             $doctor_id = $_POST['doctor_id'];
-            $status_id = $_POST['status_id'] ?? 1; // Default to 'Pending' status
+            $status_id = $_POST['status_id'] ?? 1;
 
-            // Attempt to add a new application
             if (PatientMedicalApplicationModel::add_patient_application($patient_id, $doctor_id)) {
-                // Redirect to the application list if successful
+                // Notify all doctors
+                $this->NotifyObserver($patient_id);
+
                 header('Location: index.php?view=medicalApplication&action=listApplications');
                 exit();
             } else {
                 echo "Error: Unable to add application.";
             }
         } else {
-            // Show the add form if the request is not POST
             $this->showAddApplicationForm();
         }
     }
-
+    public function NotifyObserver(int $patient_id):void {
+        $doctors = Doctor::get_all_doctors_details();
+        foreach ($doctors as $doctor) {
+            $doctor->update_obeserver($patient_id); // Notify each doctor
+        }
+    }
     // Update the status of an existing medical aid application
     // private function updateStatus() {
     //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {

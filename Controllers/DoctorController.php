@@ -25,16 +25,24 @@ class DoctorController
         }
     }
 
-    private function listDoctors()
-    {
+    private function listDoctors() {
         $doctors = Doctor::get_all_doctors_details();
+    
+        // Fetch notifications for each doctor
+        foreach ($doctors as $doctor) {
+            $applications = Doctor::getApplicationsForDoctor($doctor->getId());
+            $doctor->setApplications($applications); // Use the setter to attach applications
+        }
+    
         if (empty($doctors)) {
             echo "Debug: No doctors found in listDoctors() controller method.";
         } else {
             echo "Debug: Found " . count($doctors) . " doctors in listDoctors() controller method.";
         }
+    
         include '../views/doctorView.php';
     }
+    
 
     private function showAddDoctorForm()
     {
