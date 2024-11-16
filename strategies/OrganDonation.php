@@ -1,6 +1,5 @@
 <?php
 // /strategies/OrganDonation.php
-require_once '../interfaces/DonationStrategy.php';
 
 class OrganDonation implements DonationStrategy
 {

@@ -1,10 +1,11 @@
 <?php
 // Patient.php
 include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
+require_once "personModel.php";
 
-class Patient
+class Patient extends Person
 {
-    private ?int $id;
+
     private ?int $person_id;
     private ?string $name;
     private ?int $age;
@@ -18,17 +19,19 @@ class Patient
     }
 
     // Getters
-    public function getName() { return $this->name; }
-    public function getAge() { return $this->age; }
+    public function getName(): string|null { return $this->name; }
+    public function getPersonId(): int|null { return $this->person_id;}
+
+    public function getAge(): int|null { return $this->age; }
 
 
 
-    public static function get_patient_details(int $patient_id): bool|Patient
+    public static function getby_id($patient_id): bool|Patient
     {
         $query = "
         SELECT 
             patient.id AS patient_id, 
-            person.id,
+            patient.person_id,
             person.first_name AS patient_first_name, 
             person.last_name AS patient_last_name, 
             TIMESTAMPDIFF(YEAR, person.birth_date, CURDATE()) AS age
@@ -54,7 +57,7 @@ class Patient
         $query = "
             SELECT 
                 patient.id AS patient_id, 
-                person.id,
+                patient.person_id,
                 person.first_name AS patient_first_name, 
                 person.last_name AS patient_last_name, 
                 TIMESTAMPDIFF(YEAR, person.birth_date, CURDATE()) AS age
@@ -77,7 +80,7 @@ class Patient
     // Add a new patient with personal details
     public static function addPatient(string $first_name, string $last_name, int $age): bool
     {
-        global $conn;
+        $conn=DataBase::getInstance()->getConn();
 
         // Calculate birth_date based on the age provided
         $birth_date = date('Y-m-d', strtotime("-$age years"));

@@ -3,30 +3,32 @@ ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 ob_end_clean();
 
-class Person
+require_once '../Observers/IObserver.php';
+class Person implements IObserver
 {
 
-    private ?int $id;
-    private ?String $first_name;
-    private ?String $last_name;
-    private ?DateTime $birth_date;
-    private ?int $address_id;
-    private ?bool $isDeleted;
+    protected ?int $id;
+    protected ?String $first_name;
+    protected ?String $last_name;
+    protected ?DateTime $birth_date;
+    protected ?int $address_id;
+    protected ?bool $isDeleted;
     public function __construct(array $data)
     {
-        $this->id = $data['id'];
-        $this->first_name = $data['first_name'];
-        $this->last_name = $data['last_name'];
+        $this->id = $data['id'] ?? null;
+        $this->first_name = $data['first_name'] ?? null;
+        $this->last_name = $data['last_name'] ?? null;
         $this->birth_date = isset($data['birth_date']) ? new DateTime($data['birth_date']) : null;
-        $this->address_id = $data['address_id'];
-        $this->isDeleted = $data['isDeleted'];
+        $this->address_id = $data['address_id'] ?? null;
+        $this->isDeleted = $data['isDeleted'] ?? null;
     }
 
-    public function getId(): ?int
-    {
+    public function getId(): int|null{ return $this->id; }
+    public function getFirstName(): string|null { return $this->first_name; }
+    public function getPersonId(): int|null { return $this->id;}
 
-        return $this->id;
-    }
+    public function getLastName(): string|null { return $this->last_name; }
+
     public function __toString(): string
     {
         $str = '<pre>';
@@ -38,9 +40,9 @@ class Person
 
         return $str . '</pre>';
     }
-    public static function get_person_by_id($person_id)
+    public static function getby_id($Id)
     {
-        $rows = run_select_query("SELECT * FROM `person` WHERE id = '$person_id'");
+        $rows = run_select_query("SELECT * FROM `person` WHERE id = '$Id'");
         if ($rows->num_rows > 0) {
             return new self($rows->fetch_assoc());
         } else {
@@ -57,7 +59,7 @@ class Person
     }
 
 
-    public static function update_person(int $person_id, ?string $first_name = null, ?string $last_name = null, ?DateTime $birth_date = null, ?int $address_id = null): bool
+    public static function update(int $id, ?string $first_name = null, ?string $last_name = null, ?DateTime $birth_date = null, ?int $address_id = null): bool
     {
         $set_parts = [];
 
@@ -84,15 +86,22 @@ class Person
     }
     
     $set_clause = implode(', ', $set_parts);
-    $query = "UPDATE `person` SET $set_clause WHERE `id` = $person_id";
+    $query = "UPDATE `person` SET $set_clause WHERE `id` = $id";
     
     return run_query($query, true);
     }
 
-    public static function delete_person($person_id)
+    public static function delete($id)
     {
 
-        $query = "UPDATE `person` SET isDeleted = 1 WHERE id ='$person_id'";
+        $query = "UPDATE `person` SET isDeleted = 1 WHERE id ='$id'";
         return run_query($query, true);
     }
+
+    public function update_obeserver(int $id):void
+    {
+        return;
+    }
+
+    
 }

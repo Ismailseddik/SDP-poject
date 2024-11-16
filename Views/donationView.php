@@ -31,7 +31,7 @@
 
             <label for="donor_amount">Amount:</label>
             <input type="number" id="donor_amount" name="donor_amount" placeholder="Enter Donation Amount" required>
-
+            
             <button type="submit">Donate</button>
         </form>
     </main>

@@ -10,5 +10,6 @@ class DonationController {
         // Load the view
         $content = '../views/donationView.php';
         include '../views/layout.php';
+        
     }
 }

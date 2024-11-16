@@ -2,9 +2,10 @@
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
 require_once 'MedicalApplicationModel.php';
+
 ob_end_clean();
 
-class PatientMedicalApplicationModel{
+class PatientMedicalApplicationModel implements ISubject{
     private ?int $id;
     private ?int $patient_id;
     private ?int $application_id;
@@ -12,6 +13,7 @@ class PatientMedicalApplicationModel{
     private ?string $patient_last_name;
     private ?string $doctor_first_name;
     private ?string $doctor_last_name;
+    // private ?array $Doctors;
 
     public function __construct(array $data)
     {
@@ -22,6 +24,10 @@ class PatientMedicalApplicationModel{
         $this->patient_last_name = $data['patient_last_name'] ?? null;
         $this->doctor_first_name = $data['doctor_first_name'] ?? null;
         $this->doctor_last_name = $data['doctor_last_name'] ?? null;
+        // $this->Doctors = Doctor::get_all_doctors_details() ?? null;
+        
+
+        
     }
 
  
@@ -94,7 +100,7 @@ class PatientMedicalApplicationModel{
 
     public static function add_patient_application(int $patient_id,int $doctor_id): bool
     {
-        global $conn;
+        $conn=DataBase::getInstance()->getConn();
         $status_id=1;
         if (!MedicalApplication::add_application($doctor_id)) {
             echo "Error: Unable to add application record.";
@@ -104,4 +110,13 @@ class PatientMedicalApplicationModel{
         $query = "INSERT INTO `patient_medical_aid_application` (patient_id, application_id, status_id) VALUES ('$patient_id', '$application_id', '$status_id')";
         return run_query($query, true);
     }
+    
+    public function NotifyObserver(): void
+    {
+        foreach(Doctor::get_all_doctors_details() as $doc){
+            if($doc instanceof Doctor){
+                $doc->update_obeserver($this->patient_id);
+            }
+        }
+    }    
 }

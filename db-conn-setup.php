@@ -1,20 +1,38 @@
 <?php
-$configs = require "config.php";
+class DataBase{
 
-// Ensure the correct database name and port are selected
-$conn = new mysqli($configs->DB_HOST, $configs->DB_USER, $configs->DB_PASS, $configs->DB_NAME, $configs->DB_PORT);
+    static private $instance = null;
+    private $conn;
+    static public function getInstance(): DataBase
+    {
+        if (self::$instance == null) {
+            self::$instance = new DataBase();
+        }
+        return self::$instance;
+    }
+    private function __construct()
+    {
+        $configs = require "config.php";
+        // Ensure the correct database name and port are selected
+        $this->conn = new mysqli($configs->DB_HOST, $configs->DB_USER, $configs->DB_PASS, $configs->DB_NAME, $configs->DB_PORT);
+        // Check connection
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
+        }
+        echo "Connected successfully<br/><hr/>";
+    }
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    public function getConn(): mysqli
+    {
+        return $this->conn;
+    }
 }
-
-echo "Connected successfully<br/><hr/>";
 
 // Function to run multiple queries
 function run_queries($queries, $echo = false): array
 {
-    global $conn;
+    $conn=DataBase::getInstance()->getConn();
+
     $ret = [];
     foreach ($queries as $commandquery) {
         $ret += [$conn->query($commandquery)];
@@ -36,7 +54,8 @@ function run_query($commandquery, $echo = false): bool
 // Function to run a select query and return result
 function run_select_query($commandquery, $echo = false): mysqli_result|bool
 {
-    global $conn;
+    $conn=DataBase::getInstance()->getConn();
+
     $result = $conn->query($commandquery);
     if ($echo) {
         echo '<pre>' . $commandquery . '</pre>';
