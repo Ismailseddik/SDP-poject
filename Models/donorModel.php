@@ -3,14 +3,12 @@
 include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
 // require_once '../strategies/MonetaryDonation.php';
 // require_once '../strategies/OrganDonation.php';
+require_once "personModel.php";
 
-class Donor
+class Donor extends Person
 {
-    private ?int $id;
+   
     private ?int $person_id;
-    private ?string $first_name;
-    private ?string $last_name;
-    private ?string $email;
     private ?float $amount;
     private ?String $tier;
     // private DonationStrategy $donationStrategy;
@@ -38,9 +36,11 @@ class Donor
     }
 
     
-    public function getFirstName() { return $this->first_name; }
-    public function getLastName() { return $this->last_name; }
-    public function getAmount() { return $this->amount; }
+    public function getFirstName(): string|null { return $this->first_name; }
+    public function getPersonId(): int|null { return $this->person_id;}
+
+    public function getLastName(): string|null { return $this->last_name; }
+    public function getAmount(): float|null { return $this->amount; }
 
     // Set the donation strategy
     // public function setDonationStrategy(DonationStrategy $donationStrategy): void
@@ -55,7 +55,7 @@ class Donor
     // }
 
 
-    public static function get_donor_details($donor_id): Donor|bool
+    public static function getby_id($donor_id): Donor|bool
     {
         $query = "
             SELECT donor.id, donor.person_id, person.first_name, person.last_name, donation.amount, donor_tier.tier

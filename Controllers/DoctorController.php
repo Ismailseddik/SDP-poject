@@ -74,7 +74,7 @@ class DoctorController
     private function viewDoctorDetails()
     {
         $doctor_id = $_GET['doctor_id'] ?? 0;
-        $doctor = Doctor::get_doctor_details((int)$doctor_id);
+        $doctor = Doctor::getby_id((int)$doctor_id);
 
         if ($doctor) {
             include '../views/doctorDetailView.php';

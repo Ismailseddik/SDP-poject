@@ -6,12 +6,9 @@ require_once "doctorrankModel.php";
 require_once "specialityModel.php";
 ob_end_clean();
 
-class Doctor
+class Doctor extends Person
 {
-    private ?int $id;
     private ?int $person_id;
-    private ?string $doctor_first_name;
-    private ?string $doctor_last_name;
     private ?int $speciality_id;
     private ?string $doctor_speciality;
     private ?int $rank_id;
@@ -22,8 +19,8 @@ class Doctor
     {
         $this->id = $data["doctor_id"] ?? null;
         $this->person_id = $data["person_id"] ?? null;  // Initialize person_id
-        $this->doctor_first_name = $data["doctor_first_name"] ?? null;
-        $this->doctor_last_name = $data["doctor_last_name"] ?? null;
+        $this->first_name = $data["doctor_first_name"] ?? null;
+        $this->last_name = $data["doctor_last_name"] ?? null;
         $this->speciality_id = $data["speciality_id"] ?? null;  // Initialize speciality_id
         $this->doctor_speciality = $data["doctor_speciality"] ?? null;
         $this->rank_id = $data["rank_id"] ?? null;  // Initialize rank_id
@@ -31,17 +28,19 @@ class Doctor
         $this->isAvailable = $data["doctor_available"] ?? false;
     }
 
-    public function getFirstName() { return $this->doctor_first_name; }
-    public function getId() {return $this->id;}
-    public function getLastName() { return $this->doctor_last_name; }
-    public function getSpeciality() { return $this->doctor_speciality; }
-    public function getRank() { return $this->doctor_rank; }
-    public function isAvailable() { return $this->isAvailable ? "Yes" : "No"; }
+    public function getFirstName(): string|null { return $this->first_name; }
+    public function getPersonId(): int|null{ return $this->person_id;}
+    public function getId(): int|null {return $this->id;}
+    public function getLastName(): string|null { return $this->last_name; }
+    public function getSpeciality(): string|null { return $this->doctor_speciality; }
+    public function getRank(): string|null { return $this->doctor_rank; }
+    public function isAvailable(): string { return $this->isAvailable ? "Yes" : "No"; }
 
     public static function get_all_doctors_details(): array {
         $query = "
             SELECT 
                 doctor.id AS doctor_id,
+                doctor.person_id,
                 person.first_name AS doctor_first_name,
                 person.last_name AS doctor_last_name,
                 doctor_rank.rank AS doctor_rank,
@@ -71,11 +70,12 @@ class Doctor
         return $doctors;
     }
 
-    public static function get_doctor_details(int $doctor_id): Doctor|bool
+    public static function getby_id($doctor_id): Doctor|bool
     {
         $query = "
             SELECT 
                 doctor.id AS doctor_id,
+                doctor.person_id,
                 person.first_name AS doctor_first_name,
                 person.last_name AS doctor_last_name,
                 doctor_rank.rank AS doctor_rank,
@@ -112,7 +112,7 @@ class Doctor
             echo "Error: Unable to add person record.";
             return false;
         }
-        $person = Person::get_person_by_id($conn->insert_id);
+        $person = Person::getby_id($conn->insert_id);
         if (!$person) {
             echo "Error: Person ID retrieval failed.";
             return false;
@@ -147,6 +147,46 @@ class Doctor
             VALUES ('$person_id', '$doctor_rank_id', '$doctor_speciality_id')
         ";
 
+        return run_query($query, true);
+    }
+
+    public static function update(int $id, ?string $first_name = null, ?string $last_name = null, ?DateTime $birth_date = null, ?int $address_id = null): bool
+    {
+        $set_parts = [];
+
+    if ($first_name !== null) {
+    
+        $set_parts[] = "`first_name` = '" . $first_name . "'";
+    }
+    if ($last_name !== null) {
+   
+        $set_parts[] = "`last_name` = '" . $last_name . "'";
+    }
+    if ($birth_date !== null) {
+        
+        $set_parts[] = "`birth_date` = '" . $birth_date->format('Y-m-d') . "'";
+    }
+    if ($address_id !== null) {
+       
+        $set_parts[] = "`address_id` = " . $address_id;
+        
+    }
+    
+    if (empty($set_parts)) {
+        return false; 
+    }
+    
+    $set_clause = implode(', ', $set_parts);
+    $query = "UPDATE `person` SET $set_clause WHERE `id` = $id";
+    
+    return run_query($query, true);
+    }
+
+
+    public static function delete($id)
+    {
+
+        $query = "UPDATE `person` SET isDeleted = 1 WHERE id ='$id'";
         return run_query($query, true);
     }
 }

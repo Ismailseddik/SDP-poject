@@ -114,7 +114,10 @@ run_queries([
   `person_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
-"INSERT INTO `patient` (`id`, `person_id`) VALUES (1, 2);",
+"INSERT INTO `patient` (`id`, `person_id`) VALUES 
+(1, 2),
+(2,2);",
+
 
 "CREATE TABLE `patient_medical_aid_application` (
   `id` int(11) NOT NULL,
