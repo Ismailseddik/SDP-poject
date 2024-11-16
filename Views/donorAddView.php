@@ -30,7 +30,7 @@
         }
 
         input[type="text"],
-        input[type="email"],
+        input[type="date"],
         input[type="number"] {
             width: 100%;
             padding: 10px;
@@ -69,6 +69,9 @@
 
             <label for="donor_last_name">Last Name:</label>
             <input type="text" id="donor_last_name" name="donor_last_name" placeholder="Enter Last Name" required>
+
+            <label for="donor_birth_date">Birth Date:</label>
+            <input type="date" id="donor_birth_date" name="donor_birth_date" required>
 
             <label for="donor_amount">Donation Amount:</label>
             <input type="number" id="donor_amount" name="donor_amount" placeholder="Enter Donation Amount" required>
