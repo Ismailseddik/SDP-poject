@@ -21,7 +21,7 @@ switch ($view) {
 
     case 'donation':
         require '../controllers/DonationController.php';
-        $controller = new DonationController();
+        $controller = new DonationController(); //
         $action = $action ?? 'listDonations'; // Default action for donations
         break;
 
