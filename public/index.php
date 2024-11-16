@@ -19,6 +19,12 @@ switch ($view) {
         $action = $action ?? 'listDonors'; // Default action for donors
         break;
 
+    case 'donation':
+        require '../controllers/DonationController.php';
+        $controller = new DonationController(); //
+        $action = $action ?? 'listDonations'; // Default action for donations
+        break;
+
     case 'aidType':
         require '../controllers/AidTypeController.php';
         $controller = new AidTypeController();
