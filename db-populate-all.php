@@ -264,7 +264,7 @@ run_queries([
 
 
 "ALTER TABLE `address`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;",
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;",
 
 
 "ALTER TABLE `doctor`
@@ -272,7 +272,7 @@ run_queries([
 
 
 "ALTER TABLE `doctor_rank`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;",
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;",
 
 "ALTER TABLE `donor_tier`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;",
@@ -287,7 +287,7 @@ run_queries([
 
 
 "ALTER TABLE `donor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;",
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;",
 
 
 "ALTER TABLE `donor_donation`
@@ -311,10 +311,10 @@ run_queries([
 
 
 "ALTER TABLE `person`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;",
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;",
 
 "ALTER TABLE `phonenumber`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;",
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;",
 
 
 "ALTER TABLE `phone_phonenumber`
@@ -322,7 +322,7 @@ run_queries([
 
 
 "ALTER TABLE `speciality`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;",
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;",
 
 "ALTER TABLE `doctor`
   ADD CONSTRAINT `fk_pers` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
