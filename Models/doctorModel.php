@@ -104,8 +104,8 @@ class Doctor extends Person
         string $doctor_last_name,
         DateTime $doctor_birth_date,
         int $doctor_address_id,
-        string $doctor_rank_name,
-        string $doctor_speciality_name
+        String $doctor_rank_name,
+        String $doctor_speciality_name
     ): bool {
         $conn=DataBase::getInstance()->getConn();
 
@@ -151,43 +151,8 @@ class Doctor extends Person
         return run_query($query, true);
     }
 
-    public static function update(int $id, ?string $first_name = null, ?string $last_name = null, ?DateTime $birth_date = null, ?int $address_id = null): bool
-    {
-        $set_parts = [];
-
-    if ($first_name !== null) {
-    
-        $set_parts[] = "`first_name` = '" . $first_name . "'";
-    }
-    if ($last_name !== null) {
-   
-        $set_parts[] = "`last_name` = '" . $last_name . "'";
-    }
-    if ($birth_date !== null) {
-        
-        $set_parts[] = "`birth_date` = '" . $birth_date->format('Y-m-d') . "'";
-    }
-    if ($address_id !== null) {
-       
-        $set_parts[] = "`address_id` = " . $address_id;
-        
-    }
-    
-    if (empty($set_parts)) {
-        return false; 
-    }
-    
-    $set_clause = implode(', ', $set_parts);
-    $query = "UPDATE `person` SET $set_clause WHERE `id` = $id";
-    
-    return run_query($query, true);
-    }
 
 
-    public static function delete($id)
-    {
 
-        $query = "UPDATE `person` SET isDeleted = 1 WHERE id ='$id'";
-        return run_query($query, true);
-    }
+ 
 }
