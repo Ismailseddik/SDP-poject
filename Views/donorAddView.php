@@ -84,6 +84,9 @@
             <label for="donor_amount">Donation Amount:</label>
             <input type="number" id="donor_amount" name="donor_amount" placeholder="Enter Donation Amount" required>
 
+            <label for="organ">Donation Organ:</label>
+            <input type="text" id="organ" name="organ" placeholder="Enter Organ Name" required>
+
             <label for="donationType">Donation Type:</label>
             <select name="donation_type" id="donationType" class="form-control">
                 <option value="Monetary">Monetary</option>

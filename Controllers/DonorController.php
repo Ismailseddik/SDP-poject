@@ -51,7 +51,7 @@ class DonorController
                 return;
             }
             // Call the addDonor method from Donor model to save the new donor
-            $result = Donor::addDonor($firstName, $lastName,$amount, $donor_birth_date, $donation_type_id,$organ);
+            $result = Donor::addDonor($firstName, $lastName,$amount, $donor_birth_date,$organ, $donation_type_id);
             
             if ($result) {
                 // Redirect to donor list after successful addition

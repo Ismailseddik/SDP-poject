@@ -98,7 +98,11 @@ run_queries([
 
 
 "INSERT INTO `donor` (`person_id`, `tier_id`) VALUES
-(1, 1);",
+(1, 1),
+(2,1),
+(3,1),
+(4,1);",
+
 
 
 "CREATE TABLE `donor_donation` (
@@ -107,8 +111,9 @@ run_queries([
   `donor_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
-"INSERT INTO `donor_donation` (`donation_id`, `donor_id`) VALUES ('1', '1');",
-"INSERT INTO `donor_donation` (`donation_id`, `donor_id`) VALUES ('2', '1');",
+"INSERT INTO `donor_donation` (`donation_id`, `donor_id`) VALUES ('1', '2');",
+"INSERT INTO `donor_donation` (`donation_id`, `donor_id`) VALUES ('2', '3');",
+"INSERT INTO `donor_donation` (`donation_id`, `donor_id`) VALUES ('3', '4');",
 "INSERT INTO `donor_donation` (`donation_id`, `donor_id`) VALUES ('3', '1');",
 
 "CREATE TABLE `medical_aid_application` (
@@ -155,7 +160,10 @@ run_queries([
 
 
 "INSERT INTO `person` (`first_name`, `last_name`, `birth_date`, `address_id`) VALUES
-('ismail', 'seddik', '2001-11-05', 1);",
+('ismail', 'seddik', '2001-11-05', 1),
+('tarek', 'khaled', '2001-12-06',1),
+('mohamed', 'ayman', '2000-12-06',1),
+('hesham', 'mohamed', '2001-09-06',1);",
 
 "INSERT INTO `person` (`first_name`, `last_name`, `birth_date`, `address_id`, `isDeleted`) VALUES ('Ahmed', 'Khaled', '2002-02-12', '2', '0');",
 
