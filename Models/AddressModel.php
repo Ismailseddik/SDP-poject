@@ -3,6 +3,11 @@ include_once ($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 
 class Address{
 
+    public static function add_address($name , $parent_id):bool
+    { 
+        $query = "INSERT INTO `address` (`name`, `parent_id`) VALUES ('$name', '$parent_id)";
+        return run_query($query,true);
+    }
     public static function get_address_by_id(int $id, array &$address_list):void
     {
         if($id === 0){return;}

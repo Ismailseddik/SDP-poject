@@ -1,10 +1,15 @@
 <?php
-abstract class AidTypeDecorator extends aidTypeModel
+include_once ($_SERVER["DOCUMENT_ROOT"] . "/Models/pmaAidTypeModel.php");
+// require_once "../Models/pmaAidTypeModel.php";
+abstract class AidTypeDecorator extends pmaAidTypeModel
 {
-
+    protected pmaAidTypeModel $ref;
     public function __construct(array $data) {
         parent::__construct($data); // Calling the parent constructor
     }
 
-    abstract public function provideAidType(): int; // returns the aid type: 1 for financial, 2 for medical, 3 for operational
+    public function provideAidType(): array
+    {
+        return [];
+    } // returns the aid type: 1 for financial, 2 for medical, 3 for operational
 }
