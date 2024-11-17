@@ -6,6 +6,7 @@ class DonationModel{
     private ?float $amount;
     private ?int $donation_type_id;
     private ?DateTime $donation_date;
+    private ?String $organ;
     private ?int $aid_type_id;
     
     public function __construct(array $data) {
@@ -14,10 +15,16 @@ class DonationModel{
         $this->amount = $data['amount'];
         $this->donation_type_id =$data['donation_type_id'];
         $this->donation_date = isset($data['donation_date']) ? new DateTime($data['donation_date']) : null;
+        $this->organ = $data['organ'];
         //$this->aid_type_id = $data['aid_type_id'];
     }
 
     public function getDonationId(): int|null { return $this->id;}
+    public function getAmount(): float|null { return $this->amount; }
+    public function getDonationTypeId(): int|null { return $this->donation_type_id; }
+    public function getDonationDate(): DateTime|null { return $this->donation_date; }
+    public function getOrgan(): String|null { return $this->organ; }
+
     public static function get_donation_details(int $donation_id): DonationModel|bool
     {
         $query = "
@@ -26,7 +33,8 @@ class DonationModel{
                 donation.amount,
                 donation.donation_type_id,
                 donation_type.donation_type,
-                donation.donation_date
+                donation.donation_date,
+                donation.organ
             FROM donation 
             JOIN donation_type ON donation.donation_type_id = donation_type.id
             WHERE donation.id = $donation_id
@@ -49,7 +57,8 @@ class DonationModel{
                 donation.amount,
                 donation.donation_type_id,
                 donation_type.donation_type,
-                donation.donation_date
+                donation.donation_date,
+                donation.organ
             FROM donation 
             JOIN donation_type ON donation.donation_type_id = donation_type.id
         ";
@@ -66,18 +75,30 @@ class DonationModel{
     }
 
 
-    public static function add_donation($amount,$donation_type_id): bool
-    {
-    $query = "INSERT INTO donation (amount, donation_type_id, donation_date) VALUES ($amount, $donation_type_id, NOW())";
+    public static function add_donation(?int $amount = null, int $donation_type_id, ?string $organ = null): bool
+    { 
+        
+        $query = "";
     
-    return run_query($query, true);
+        if ($amount !== null) {
+            $query = "INSERT INTO donation (amount, donation_type_id, donation_date, organ) VALUES ($amount, $donation_type_id, NOW(), NULL)";
+        } else if($organ !==null){
+            
+            $query = "INSERT INTO donation (amount, donation_type_id, donation_date, organ) VALUES (NULL, $donation_type_id, NOW(), '$organ')";
+        }
+    
+        return run_query($query, true);
     }
-
     
-    public static function update_donation($amount,$donation_id): bool
+    public static function update_donation($amount,$donation_id,$organ): bool
     {
-    $query =  $query = "UPDATE `donation` SET amount = '$amount' WHERE id = '$donation_id' ";
-    
+        if ($organ != NULL)
+        {
+            $query =  $query = "UPDATE `donation` SET organ = '$organ' WHERE id = '$donation_id' ";
+        }
+        else {
+            $query =  $query = "UPDATE `donation` SET amount = '$amount' WHERE id = '$donation_id' ";
+        }
     return run_query($query, true);
     }
     

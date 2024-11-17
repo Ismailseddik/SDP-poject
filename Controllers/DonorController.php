@@ -38,6 +38,7 @@ class DonorController
             $donor_birth_date = DateTime::createFromFormat('Y-m-d', $_POST['donor_birth_date'] ?? '');
             // $email = $_POST['donor_email'] ?? '';
             $amount = (float)($_POST['donor_amount'] ?? 0);
+            $organ = $_POST['organ'] ?? null;
             $donationType = $_POST['donation_type'] ?? 'monetary';
 
 
@@ -50,7 +51,7 @@ class DonorController
                 return;
             }
             // Call the addDonor method from Donor model to save the new donor
-            $result = Donor::addDonor($firstName, $lastName,$amount, $donor_birth_date, $donation_type_id);
+            $result = Donor::addDonor($firstName, $lastName,$amount, $donor_birth_date, $donation_type_id,$organ);
             
             if ($result) {
                 // Redirect to donor list after successful addition
@@ -81,7 +82,7 @@ class DonorController
     {
         $donors = Donor::getAllDonors();
         $donations =DonationModel::get_all_donations();
-        echo $donations[1]->getDonationId();
+       // echo $donations[1]->getDonationId();
         //echo $donors[0]->getFirstName();
         include '../views/showAddDonationForm.php';
     }
@@ -95,6 +96,7 @@ class DonorController
             $donationType = $_POST['donation_type'] ?? 'monetary';
             $donationId = (int)$_POST['donation_id'] ?? 0;
             $amount = (float)($_POST['amount'] ?? 0);
+            $organ = $_POST['organ'] ?? '';
 
             // Fetch the donor by ID
             $donor = Donor::getby_id($donorId);
@@ -105,9 +107,13 @@ class DonorController
                 if ($donationType === 'Monetary') {
                     $donationTypeId=1;
                     $donationStrategy = new MonetaryDonation();
+                    $donor->setDonationStrategy($donationStrategy);
+                    $donor->donate($donationId,$amount,NULL);
                 } elseif ($donationType === 'Organ'){
                     $donationTypeId=2;
                     $donationStrategy = new OrganDonation();
+                    $donor->setDonationStrategy($donationStrategy);
+                    $donor->donate($donationId,NULL,$organ);
                 } else {
                     echo "Invalid donation type.";
                     return;
@@ -116,9 +122,12 @@ class DonorController
 
                 //$donor->setAmount($donor->getAmount() - $amount); //To be implemented in model
                 // Set the strategy and execute donation
-                $donor->setDonationStrategy($donationStrategy);
 
-                $donor->donate($donationId,$amount);
+                //Moved UP
+                //$donor->setDonationStrategy($donationStrategy);
+                //$donor->donate($donationId,$amount,$organ);
+
+
                 //DonationModel::update_donation($amount,1);
 
 
