@@ -7,7 +7,6 @@ class DonationModel{
     private ?int $donation_type_id;
     private ?DateTime $donation_date;
     private ?int $aid_type_id;
-
     
     public function __construct(array $data) {
 
@@ -18,6 +17,7 @@ class DonationModel{
         //$this->aid_type_id = $data['aid_type_id'];
     }
 
+    public function getDonationId(): int|null { return $this->id;}
     public static function get_donation_details(int $donation_id): DonationModel|bool
     {
         $query = "
