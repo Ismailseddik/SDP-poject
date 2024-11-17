@@ -6,7 +6,7 @@ require_once "doctorrankModel.php";
 require_once "specialityModel.php";
 ob_end_clean();
 
-class Doctor extends Person implements IObserver
+class Doctor extends Person 
 {
     private ?int $person_id;
     private ?PatientMedicalApplicationModel $current;

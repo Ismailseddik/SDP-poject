@@ -29,6 +29,13 @@ class Person implements IObserver
 
     public function getLastName(): string|null { return $this->last_name; }
 
+    public function getAddress():array
+    {
+        $address_tree = [];
+        Address::get_address_by_id($this->address_id, $address_tree);
+        return $address_tree;
+    } 
+
     public function __toString(): string
     {
         $str = '<pre>';
@@ -57,6 +64,20 @@ class Person implements IObserver
 
         return run_query($query, true);
     }
+
+    // public static function get_all_by_address_name($name){
+    //     $query = "
+    //     SELECT
+    //         person.id,  
+    //         address.id
+    //     From person 
+    //     ";
+
+    //     $rows = run_select_query($query);
+
+
+        
+    // }
 
 
     public static function update(int $id, ?string $first_name = null, ?string $last_name = null, ?DateTime $birth_date = null, ?int $address_id = null): bool
