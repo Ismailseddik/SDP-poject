@@ -1,6 +1,6 @@
 <?php
 ob_start();
-include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 require_once "personModel.php";
 require_once "doctorrankModel.php";
 require_once "specialityModel.php";

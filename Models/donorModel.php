@@ -1,6 +1,6 @@
 <?php
 
-include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 // require_once '../strategies/MonetaryDonation.php';
 // require_once '../strategies/OrganDonation.php';
 require_once "personModel.php";
@@ -180,7 +180,7 @@ class Donor extends Person
 
         
         // Link donation to donor in donor_donation table
-        $donor_donation_state = DonorDonationModel::add_donor_donation($donation_id,$donor_id);
+        $donor_donation_state = donordonations::add_donor_donation($donation_id,$donor_id);
         if (!$donor_donation_state ){
             echo "Error: Failed to link donation to donor.";
             return false;
