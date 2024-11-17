@@ -210,11 +210,6 @@ run_queries([
   `type` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
-"CREATE TABLE `patient_medical_aid_application_aid_type` (
-  `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `patient_application_id` INT NOT NULL,
-  `aid_type_id` INT NOT NULL
-);",
 
 // Insert sample data for aid types
 "INSERT INTO `aid_type` (`type`) VALUES 

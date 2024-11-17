@@ -35,7 +35,7 @@ class MedicalApplicationController implements ISubject{
     private function listApplications() {
         $applications = PatientMedicalApplicationModel::get_all_applications();
         foreach ($applications as &$application) {
-            $application['aid_types'] = PatientMedicalApplicationModel::get_aid_types($application['application_id']);
+            // $application['aid_types'] = PatientMedicalApplicationModel::get_aid_types($application['application_id']);
         }
         include '../views/medicalApplicationView.php'; // Assume this view lists applications
     }
