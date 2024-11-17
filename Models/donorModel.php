@@ -15,7 +15,6 @@ class Donor extends Person
     private ?float $amount;
     private ?String $tier;
     private DonationStrategy $donationStrategy;
-
     private DonorTierStrategy $tierStrategy;
 
 
@@ -97,7 +96,14 @@ class Donor extends Person
     public static function getby_id($donor_id): Donor|bool
     {
         $query = "
-            SELECT donor.id, donor.person_id, person.first_name, person.last_name, donation.amount, donor_tier.tier
+            SELECT 
+                donor.id, 
+                donor.person_id, 
+                person.first_name, 
+                person.last_name, 
+                donation.amount,
+                donation.organ, 
+                donor_tier.tier
             FROM donor
             JOIN person ON donor.person_id = person.id
             JOIN donor_tier ON donor.tier_id = donor_tier.id
@@ -122,7 +128,14 @@ class Donor extends Person
     public static function getAllDonors(): array
     {
         $query = "
-            SELECT donor.id, donor.person_id, person.first_name, person.last_name, donation.amount, donor_tier.tier
+            SELECT 
+                donor.id, 
+                donor.person_id, 
+                person.first_name, 
+                person.last_name, 
+                donation.amount, 
+                donation.organ,
+                donor_tier.tier
             FROM donor
             JOIN person ON donor.person_id = person.id
             JOIN donor_tier ON donor.tier_id = donor_tier.id
@@ -144,7 +157,13 @@ class Donor extends Person
     }
 
    
-    public static function addDonor(string $first_name, string $last_name, float $amount,DateTime $donor_birth_date,$donation_type_id): bool
+    public static function addDonor(
+    string $first_name,
+    string $last_name, 
+    ?float $amount = null,
+    DateTime $donor_birth_date,
+    ?string $organ = null,
+    int $donation_type_id): bool
     {
         $conn=DataBase::getInstance()->getConn();
 
@@ -169,7 +188,7 @@ class Donor extends Person
         $donor_id = $conn->insert_id;
 
         // Insert donation record and associate with donor
-        $donation_state = DonationModel::add_donation($amount,$donation_type_id);
+        $donation_state = DonationModel::add_donation($amount,$donation_type_id,$organ);
         if (!$donation_state) {
             echo "Error: Failed to add donation record.";
             return false;
@@ -180,7 +199,7 @@ class Donor extends Person
 
         
         // Link donation to donor in donor_donation table
-        $donor_donation_state = donordonations::add_donor_donation($donation_id,$donor_id);
+        $donor_donation_state = DonorDonation::add_donor_donation($donation_id,$donor_id);
         if (!$donor_donation_state ){
             echo "Error: Failed to link donation to donor.";
             return false;

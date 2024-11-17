@@ -38,7 +38,7 @@ class DonorController
             $donor_birth_date = DateTime::createFromFormat('Y-m-d', $_POST['donor_birth_date'] ?? '');
             // $email = $_POST['donor_email'] ?? '';
             $amount = (float)($_POST['donor_amount'] ?? 0);
-            $organ = $_POST['organ'] ?? '';
+            $organ = $_POST['organ'] ?? null;
             $donationType = $_POST['donation_type'] ?? 'monetary';
 
 
@@ -51,7 +51,7 @@ class DonorController
                 return;
             }
             // Call the addDonor method from Donor model to save the new donor
-            $result = Donor::addDonor($firstName, $lastName,$amount, $donor_birth_date, $donation_type_id);
+            $result = Donor::addDonor($firstName, $lastName,$amount, $donor_birth_date, $donation_type_id,$organ);
             
             if ($result) {
                 // Redirect to donor list after successful addition

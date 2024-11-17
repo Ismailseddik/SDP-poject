@@ -74,11 +74,11 @@ run_queries([
   `organ`  varchar(150) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
-"INSERT INTO `donation` (`amount`, `donation_type_id`, `donation_date`) VALUES 
-('200', '1', '2024-11-13 12:52:39.000000'),
-('150', '2', '2024-11-14 09:30:00.000000'),
-('300', '2', '2024-11-15 15:45:20.000000'),
-('500', '1', '2024-11-16 10:20:10.000000');",
+"INSERT INTO `donation` (`amount`, `donation_type_id`, `donation_date`, `organ`) VALUES 
+('200', '1', '2024-11-13 12:52:39.000000', 'Kidney'),
+('150', '2', '2024-11-14 09:30:00.000000', 'Pancreas'),
+('300', '2', '2024-11-15 15:45:20.000000', 'Heart'),
+('500', '1', '2024-11-16 10:20:10.000000', 'Liver');",
 
 "CREATE TABLE `donation_type` (
   `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
