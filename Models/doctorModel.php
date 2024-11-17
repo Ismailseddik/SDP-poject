@@ -17,6 +17,17 @@ class Doctor extends Person implements IObserver
     private ?int $rank_id;
     private ?string $doctor_rank;
     private bool $isAvailable;
+    protected array $applications = []; // Add the applications property
+
+    // Other methods...
+
+    public function setApplications(array $applications): void {
+        $this->applications = $applications;
+    }
+
+    public function getApplications(): array {
+        return $this->applications;
+    }
 
     public function __construct(array $data)
     {
@@ -154,10 +165,46 @@ class Doctor extends Person implements IObserver
         return run_query($query, true);
     }
 
-    public function update_obeserver($patient_id): void
-    {
-        $this->current = PatientMedicalApplicationModel::get_applications_by_patient($patient_id);
-        
+    public function update_obeserver(int $patient_id): void {
+        // Fetch the application data for the given patient
+        $application = PatientMedicalApplicationModel::get_applications_by_patient($patient_id);
+    
+        if ($application) {
+            // Generate a notification message
+            $message = "You have a new medical aid application for Patient ID: $patient_id (Application ID: " . $application->getApplicationId() . ").";
+    
+            // Store the notification for this doctor (e.g., log or save in persistent storage)
+            error_log("Notification for Doctor ID {$this->getId()}: $message");
+    
+            // Optional: Perform further actions, such as sending an email or updating a dashboard
+        } else {
+            error_log("No application found for Patient ID: $patient_id.");
+        }
     }
 
+    public static function getApplicationsForDoctor(int $doctor_id): array {
+        $query = "
+            SELECT 
+                patient_medical_aid_application.id AS application_id,
+                person.first_name AS patient_first_name,
+                person.last_name AS patient_last_name,
+                patient_medical_aid_application.status_id
+            FROM patient_medical_aid_application
+            JOIN medical_aid_application ON patient_medical_aid_application.application_id = medical_aid_application.id
+            JOIN patient ON patient_medical_aid_application.patient_id = patient.id
+            JOIN person ON patient.person_id = person.id
+            WHERE medical_aid_application.doctor_id = '$doctor_id'
+        ";
+
+        $applications = [];
+        $rows = run_select_query($query);
+
+        if ($rows && $rows->num_rows > 0) {
+            while ($row = $rows->fetch_assoc()) {
+                $applications[] = $row;
+            }
+        }
+
+        return $applications;
+    }
 }
