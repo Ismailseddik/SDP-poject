@@ -24,6 +24,7 @@ class DonationModel{
     public function getDonationTypeId(): int|null { return $this->donation_type_id; }
     public function getDonationDate(): DateTime|null { return $this->donation_date; }
     public function getOrgan(): String|null { return $this->organ; }
+
     public static function get_donation_details(int $donation_id): DonationModel|bool
     {
         $query = "
@@ -74,19 +75,20 @@ class DonationModel{
     }
 
 
-    public static function add_donation($amount,$donation_type_id,$organ): bool
-    {
-        if($organ !== null ){
-            $query = "INSERT INTO donation (donation_type_id, donation_date) VALUES ($donation_type_id, NOW(),$organ)";
-        }
-        if($amount !== null){
-            $query = "INSERT INTO donation (amount, donation_type_id, donation_date) VALUES ($amount, $donation_type_id, NOW())";
-
-        }
+    public static function add_donation(?int $amount = null, int $donation_type_id, ?string $organ = null): bool
+    { 
         
-    return run_query($query, true);
+        $query = "";
+    
+        if ($amount !== null) {
+            $query = "INSERT INTO donation (amount, donation_type_id, donation_date, organ) VALUES ($amount, $donation_type_id, NOW(), NULL)";
+        } else if($organ !==null){
+            
+            $query = "INSERT INTO donation (amount, donation_type_id, donation_date, organ) VALUES (NULL, $donation_type_id, NOW(), '$organ')";
+        }
+    
+        return run_query($query, true);
     }
-
     
     public static function update_donation($amount,$donation_id,$organ): bool
     {

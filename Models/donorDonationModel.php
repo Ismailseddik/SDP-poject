@@ -40,7 +40,7 @@ class DonorDonation{
 
         $query = "
         SELECT 
-            donar_donation.id AS donor_donation_id, 
+            donor_donation.id AS donor_donation_id, 
             donation.amount AS donation_amount, 
             donation.organ AS donation_organ, 
             donation.donation_type_id,

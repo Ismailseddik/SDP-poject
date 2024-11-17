@@ -14,6 +14,7 @@ class Donor extends Person
     private ?int $person_id;
     private ?float $amount;
     private ?String $tier;
+    private ?String $organ;
     private DonationStrategy $donationStrategy;
     private DonorTierStrategy $tierStrategy;
 
@@ -25,6 +26,7 @@ class Donor extends Person
         $this->first_name = $data['first_name'] ?? null;
         $this->last_name = $data['last_name'] ?? null;
         $this->amount = $data['amount'] ?? null;
+        $this->organ = $data['organ'] ?? null;
         if ($tierStrategy) {
             $this->tierStrategy = $tierStrategy;
         }
@@ -39,6 +41,7 @@ class Donor extends Person
         $str .= "First Name: $this->first_name <br/>";
         $str .= "Last Name: $this->last_name<br/>";
         $str .= "Amount: $this->amount<br/>";
+        $str .= "Organ: $this->organ<br/>";
         $str .= "Tier: $this->tier<br/>";
 
         return $str . '</pre>';
@@ -50,6 +53,7 @@ class Donor extends Person
 
     public function getLastName(): string|null { return $this->last_name; }
     public function getAmount(): float|null { return $this->amount; }
+    public function getOrgan(): float|null { return $this->organ; }
 
     //*************** tiers ****************
     // Change donor tier dynamically
@@ -162,7 +166,7 @@ class Donor extends Person
     string $last_name, 
     ?float $amount = null,
     DateTime $donor_birth_date,
-    ?string $organ = null,
+    ?String $organ = null,
     int $donation_type_id): bool
     {
         $conn=DataBase::getInstance()->getConn();

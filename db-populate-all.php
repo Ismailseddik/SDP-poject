@@ -68,10 +68,10 @@ run_queries([
 
 "CREATE TABLE `donation` (
   `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `amount` float NULL,
+  `amount` float,
   `donation_type_id` int(11) NOT NULL,
   `donation_date` datetime NOT NULL,
-  `organ`  varchar(150) NULL
+  `organ`  varchar(150)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
 "INSERT INTO `donation` (`amount`, `donation_type_id`, `donation_date`, `organ`) VALUES 
