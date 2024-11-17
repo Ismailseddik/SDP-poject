@@ -37,8 +37,8 @@ class DonorController
             $lastName = $_POST['donor_last_name'] ?? '';
             $donor_birth_date = DateTime::createFromFormat('Y-m-d', $_POST['donor_birth_date'] ?? '');
             // $email = $_POST['donor_email'] ?? '';
-            $amount = (float)($_POST['donor_amount'] ?? 0);
-            $organ = $_POST['organ'] ?? null;
+            $amount = (float)($_POST['donor_amount'] ?? NULL);
+            $organ = $_POST['organ'] ?? '';
             $donationType = $_POST['donation_type'] ?? 'monetary';
 
 
