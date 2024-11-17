@@ -108,7 +108,6 @@
         <h2>Donations</h2>
 
         <section class="donation-list">
-            <h3>Donations</h3>
             <?php if (!empty($donations) && !empty($donors)): ?>
                 <?php
                 // Ensure the number of donors and donations match

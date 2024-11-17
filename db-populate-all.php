@@ -191,7 +191,13 @@ run_queries([
   `type` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
+"CREATE TABLE `patient_medical_aid_application_aid_type` (
+  `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `patient_application_id` INT NOT NULL,
+  `aid_type_id` INT NOT NULL
+);",
 
+// Insert sample data for aid types
 "INSERT INTO `aid_type` (`type`) VALUES 
   ('Financial Aid'),
   ('Medical Aid'),
@@ -228,6 +234,9 @@ run_queries([
 "ALTER TABLE `medical_aid_application`
   ADD FOREIGN KEY (`doctor_id`) REFERENCES `doctor` (`id`);",
 
+"ALTER TABLE `patient_medical_aid_application_aid_type`
+  ADD FOREIGN KEY (`patient_application_id`) REFERENCES `patient_medical_aid_application`(`id`),
+  ADD FOREIGN KEY (`aid_type_id`) REFERENCES `aid_type`(`id`)",
 
 "ALTER TABLE `medical_aid_documents`
   ADD FOREIGN KEY (`application_id`) REFERENCES `medical_aid_application` (`id`),
@@ -252,11 +261,11 @@ run_queries([
   ADD FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
   ADD FOREIGN KEY (`phone_id`) REFERENCES `phonenumber` (`id`);",
 
+
+
 "COMMIT;",
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */
-
-
 ],true);

@@ -31,6 +31,9 @@ class MedicalApplicationController implements ISubject{
     // Display a list of all medical aid applications
     private function listApplications() {
         $applications = PatientMedicalApplicationModel::get_all_applications();
+        foreach ($applications as &$application) {
+            $application['aid_types'] = PatientMedicalApplicationModel::get_aid_types($application['application_id']);
+        }
         include '../views/medicalApplicationView.php'; // Assume this view lists applications
     }
 
@@ -45,8 +48,13 @@ class MedicalApplicationController implements ISubject{
             $patient_id = $_POST['patient_id'];
             $doctor_id = $_POST['doctor_id'];
             $status_id = $_POST['status_id'] ?? 1;
+            $aid_types = $_POST['aid_types'] ?? [];
 
             if (PatientMedicalApplicationModel::add_patient_application($patient_id, $doctor_id)) {
+                // if (!PatientMedicalApplicationModel::add_aid_types($application_id, $aid_types)) {
+                //     echo "Error: Unable to add aid types.";
+                //     return;
+                // }
                 // Notify all doctors
                 $this->NotifyObserver($patient_id);
 
