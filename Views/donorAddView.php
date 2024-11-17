@@ -51,7 +51,14 @@
             border-radius: 4px;
             cursor: pointer;
         }
-
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
         button:hover {
             background-color: #45a049;
         }
@@ -73,8 +80,15 @@
             <label for="donor_birth_date">Birth Date:</label>
             <input type="date" id="donor_birth_date" name="donor_birth_date" required>
 
+
             <label for="donor_amount">Donation Amount:</label>
             <input type="number" id="donor_amount" name="donor_amount" placeholder="Enter Donation Amount" required>
+
+            <label for="donationType">Donation Type:</label>
+            <select name="donation_type" id="donationType" class="form-control">
+                <option value="Monetary">Monetary</option>
+                <option value="Organ">Organ</option>
+            </select>
 
             <button type="submit">Add Donor</button>
         </form>

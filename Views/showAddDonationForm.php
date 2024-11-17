@@ -29,8 +29,6 @@
             color: #555;
         }
 
-        input[type="text"],
-        input[type="email"],
         input[type="number"],
         select {
             width: 100%;
@@ -59,36 +57,56 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>Add New Donation</h1>
-    </header>
+<header>
+    <h1>Add New Donation</h1>
+</header>
 
-    <main class="container">
-        <form action="index.php?view=donor&action=addDonation" method="POST">
-            <label for="donor_first_name">First Name:</label>
-            <input type="text" id="donor_first_name" name="donor_first_name" placeholder="Enter First Name" required>
-
-            <label for="donor_last_name">Last Name:</label>
-            <input type="text" id="donor_last_name" name="donor_last_name" placeholder="Enter Last Name" required>
-
-            <label for="donor_email">Email:</label>
-            <input type="email" id="donor_email" name="donor_email" placeholder="Enter Email" required>
-
-            <label for="donor_amount">Amount Donated:</label>
-            <input type="number" id="donor_amount" name="donor_amount" placeholder="Enter Amount" required>
-
-            <label for="donation_type">Donation Type:</label>
-            <select id="donation_type" name="donation_type" required>
-                <option value="monetary">Monetary</option>
-                <option value="organ">Organ</option>
+<main class="container">
+    <h2>Add New Donation</h2>
+    <form method="POST" action="index.php?view=donor&action=addDonation">
+        <label for="donor">Select Donor:</label>
+        <?php if (empty($donors)): ?>
+            <p>No donors available. Please add donors before making a donation.</p>
+        <?php else: ?>
+            <select name="donor_id" id="donor" class="form-control">
+                <option value="">Select Donor</option>
+                <?php foreach ($donors as $donor): ?>
+                    <option value="<?= htmlspecialchars($donor->getId()); ?>">
+                        <?= htmlspecialchars($donor->getFirstName() . ' ' . $donor->getLastName()); ?>
+                    </option>
+                <?php endforeach; ?>
             </select>
+        <?php endif; ?>
 
-            <button type="submit">Add Donation</button>
-        </form>
-    </main>
+        <label for="donor">Select Donation:</label>
+        <?php if (empty($donations)): ?>
+            <p>No donations available. Please add donations before making a donation.</p>
+        <?php else: ?>
+            <select name="donation_id" id="donation" class="form-control">
+                <option value="">Select Donation</option>
+                <?php foreach ($donations as $donation): ?>
+                    <option value="<?= htmlspecialchars($donation->getDonationId()); ?>">
+                        <?= htmlspecialchars($donation->getDonationId()); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        <?php endif; ?>
+        <label for="amount">Amount Donated:</label>
+        <input type="number" name="amount" id="amount" class="form-control" placeholder="Enter Amount" required />
 
-    <footer>
-        <p>&copy; 2024 Medical Aid Charity. All rights reserved.</p>
-    </footer>
+        <label for="donationType">Donation Type:</label>
+        <select name="donation_type" id="donationType" class="form-control">
+            <option value="Monetary">Monetary</option>
+            <option value="Organ">Organ</option>
+        </select>
+
+        <button type="submit" class="btn btn-success mt-3">Add Donation</button>
+    </form>
+
+</main>
+
+<footer>
+    <p>&copy; 2024 Medical Aid Charity. All rights reserved.</p>
+</footer>
 </body>
 </html>

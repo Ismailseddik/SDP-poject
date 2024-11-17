@@ -14,7 +14,7 @@ class Donor extends Person
     private ?int $person_id;
     private ?float $amount;
     private ?String $tier;
-    // private DonationStrategy $donationStrategy;
+    private DonationStrategy $donationStrategy;
 
     private DonorTierStrategy $tierStrategy;
 
@@ -54,44 +54,44 @@ class Donor extends Person
 
     //*************** tiers ****************
     // Change donor tier dynamically
-    public function setTier(DonorTierStrategy $tierStrategy)
-    {
-        $this->tierStrategy = $tierStrategy;
-    }
-
-    public function getTierBenefits(): string
-    {
-        return $this->tierStrategy->getBenefits();
-    }
-
-    public function getDiscountRate(): float
-    {
-        return $this->tierStrategy->getDiscountRate();
-    }
-
-    public function getTierName(): string
-    {
-        return $this->tierStrategy->getTierName();
-    }
-
-    public function getDonorInfo(): string
-    {
-        return "Donor Name: {$this->first_name}, Tier: {$this->getTierName()}, Benefits: {$this->getTierBenefits()}";
-    }
+//    public function setTier(DonorTierStrategy $tierStrategy)
+//    {
+//        $this->tierStrategy = $tierStrategy;
+//    }
+//
+//    public function getTierBenefits(): string
+//    {
+//        return $this->tierStrategy->getBenefits();
+//    }
+//
+//    public function getDiscountRate(): float
+//    {
+//        return $this->tierStrategy->getDiscountRate();
+//    }
+//
+//    public function getTierName(): string
+//    {
+//        return $this->tierStrategy->getTierName();
+//    }
+//
+//    public function getDonorInfo(): string
+//    {
+//        return "Donor Name: {$this->first_name}, Tier: {$this->getTierName()}, Benefits: {$this->getTierBenefits()}";
+//    }
     //*************** end of tiers ****************
 
 
     // Set the donation strategy
-    // public function setDonationStrategy(DonationStrategy $donationStrategy): void
-    // {
-    //     $this->donationStrategy = $donationStrategy;
-    // }
+     public function setDonationStrategy(DonationStrategy $donationStrategy): void
+     {
+         $this->donationStrategy = $donationStrategy;
+     }
 
-    // Execute donation using the current strategy
-    // public function donate(): void
-    // {
-    //     $this->donationStrategy->donate($this->amount, $this);
-    // }
+     //Execute donation using the current strategy
+     public function donate(int $donation_id, float $donation_amount): void
+     {
+         $this->donationStrategy->donate(($this->amount+$donation_amount), $this,$donation_id);
+     }
 
 
     public static function getby_id($donor_id): Donor|bool
