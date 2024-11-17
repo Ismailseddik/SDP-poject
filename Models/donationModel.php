@@ -22,8 +22,13 @@ class DonationModel{
     {
         $query = "
             SELECT 
-            *    
-            FROM donation
+                donation.id,
+                donation.amount,
+                donation.donation_type_id,
+                donation_type.donation_type,
+                donation.donation_date
+            FROM donation 
+            JOIN donation_type ON donation.donation_type_id = donation_type.id
             WHERE donation.id = $donation_id
         ";
 
@@ -36,6 +41,30 @@ class DonationModel{
             return false;
         }
     }
+    public static function get_all_donations(): array
+    {
+        $query = "
+            SELECT 
+                donation.id,
+                donation.amount,
+                donation.donation_type_id,
+                donation_type.donation_type,
+                donation.donation_date
+            FROM donation 
+            JOIN donation_type ON donation.donation_type_id = donation_type.id
+        ";
+        $donations = [];
+        $rows = run_select_query($query);
+
+        if ($rows && $rows->num_rows > 0) {
+            foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) {
+                $donations[] = new DonationModel($row);
+            }
+        }
+
+        return $donations;
+    }
+
 
     public static function add_donation($amount,$donation_type_id): bool
     {

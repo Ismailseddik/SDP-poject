@@ -5,7 +5,7 @@ require_once 'MedicalApplicationModel.php';
 require_once '../Models/doctorModel.php';
 require_once '../Observers/ISubject.php';
 ob_end_clean();
-
+  // id | typeid | patient_medical id | 
 class PatientMedicalApplicationModel{
     private ?int $id;
     private ?int $patient_id;
@@ -101,6 +101,8 @@ class PatientMedicalApplicationModel{
             JOIN application_status ON patient_medical_aid_application.status_id = application_status.id
             WHERE patient_medical_aid_application.patient_id = '$patient_id'
         ";
+      
+        
         // id x | patient id x | id(patient) | person_id | id(person) | first name x | last name x | address id | birth date | is deleted | application id x | doctor id | id(doc) | person_id |  id(person) | first name x | last name x | address id | birth date | is deleted  | speciality id | rank id | isAvailable | status id |
         $result = run_select_query($query);
 
