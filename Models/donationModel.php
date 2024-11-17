@@ -43,6 +43,14 @@ class DonationModel{
     
     return run_query($query, true);
     }
+
+    
+    public static function update_donation($amount,$donation_id): bool
+    {
+    $query =  $query = "UPDATE `donation` SET amount = '$amount' WHERE id = '$donation_id' ";
+    
+    return run_query($query, true);
+    }
     
         
 
