@@ -3,7 +3,7 @@ ob_start();
 include_once ($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 ob_end_clean();
 
-class DonorDonationModel{
+class donordonations{
 
     private ?int $id;
     private ?int $donation_id;
@@ -49,7 +49,7 @@ class DonorDonationModel{
 
         if ($rows && $rows->num_rows > 0) {
             foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) {
-                $donations[] = new DonorDonationModel ($row);
+                $donations[] = new donordonations($row);
             }
         }
 
@@ -57,8 +57,28 @@ class DonorDonationModel{
         
 
     }
+    /*
+    
+"CREATE TABLE `donor_donation` (
+  `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `donation_id` int(11) NOT NULL,
+  `donor_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
-    public static function get_donations_donor($donor_donation_id){
+"CREATE TABLE `donor` (
+  `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `person_id` int(11) NOT NULL,
+  `tier_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+
+"CREATE TABLE `donation` (
+  `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `amount` float NOT NULL,
+  `donation_type_id` int(11) NOT NULL,
+  `donation_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+     */
+    public static function get_donations_donor($donor_id){
 
         $query = "
         SELECT donor_donation.id AS donor_donation_id , donation.amount AS donation_amount , donation.donation_type_id, person.first_name , person.last_name
@@ -67,20 +87,46 @@ class DonorDonationModel{
         JOIN donor ON donor_donation.donor_id = donor.id
         JOIN person ON donor.person_id = person.id
         JOIN donor_tier ON donor.tier_id = donor_tier.id
-        WHERE donor_donation.id = $donor_donation_id
+        WHERE donor_donation.donor_id = $donor_id
         ";
         /* donor_donation_id | donation_id | id | donation_amount | donation_type_id | donation_date |donar_id | id | person_id | first_name | last_name | tier_id */
         
+        $donordonations = [];
         $rows = run_select_query($query);
 
         if ($rows && $rows->num_rows > 0) {
-            return new self($rows->fetch_assoc());
-        } else {
-            echo "Error: Donor_Donation with ID $donor_donation_id not found.";
-            return false;
+            foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) {
+                $donordonations[] = new donordonations($row);
+            }
         }
-    
+
+        return $donordonations;
     }
+    
+
+    // public static function get_donations_donor($donor_donation_id){
+
+    //     $query = "
+    //     SELECT donor_donation.id AS donor_donation_id , donation.amount AS donation_amount , donation.donation_type_id, person.first_name , person.last_name
+    //     FROM donor_donation
+    //     JOIN donation ON donor_donation.donation_id = donation.id
+    //     JOIN donor ON donor_donation.donor_id = donor.id
+    //     JOIN person ON donor.person_id = person.id
+    //     JOIN donor_tier ON donor.tier_id = donor_tier.id
+    //     WHERE donor_donation.id = $donor_donation_id
+    //     ";
+    //     /* donor_donation_id | donation_id | id | donation_amount | donation_type_id | donation_date |donar_id | id | person_id | first_name | last_name | tier_id */
+        
+    //     $rows = run_select_query($query);
+
+    //     if ($rows && $rows->num_rows > 0) {
+    //         return new self($rows->fetch_assoc());
+    //     } else {
+    //         echo "Error: Donor_Donation with ID $donor_donation_id not found.";
+    //         return false;
+    //     }
+    
+    // }
 
     public static function add_donor_donation($donation_id,$donor_id){
         $query = "INSERT INTO `donor_donation` (donation_id,donor_id)

@@ -1,9 +1,9 @@
 <?php
 ob_start();
-include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 require_once 'MedicalApplicationModel.php';
-require_once '../Models/doctorModel.php';
-require_once '../Observers/ISubject.php';
+require_once 'doctorModel.php';
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Observers\IObserver.php");
 ob_end_clean();
   // id | typeid | patient_medical id | 
 class PatientMedicalApplicationModel{
