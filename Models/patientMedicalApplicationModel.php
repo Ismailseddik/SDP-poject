@@ -14,7 +14,6 @@ class PatientMedicalApplicationModel{
     private ?string $patient_last_name;
     private ?string $doctor_first_name;
     private ?string $doctor_last_name;
-    private array $observers = []; // List of observers
     // private ?array $Doctors;
 
     public function __construct(array $data)

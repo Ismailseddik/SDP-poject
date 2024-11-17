@@ -10,8 +10,6 @@ class Doctor extends Person implements IObserver
 {
     private ?int $person_id;
     private ?PatientMedicalApplicationModel $current;
-    private ?string $doctor_first_name;
-    private ?string $doctor_last_name;
     private ?int $speciality_id;
     private ?string $doctor_speciality;
     private ?int $rank_id;
@@ -33,8 +31,8 @@ class Doctor extends Person implements IObserver
     {
         $this->id = $data["doctor_id"] ?? null;
         $this->person_id = $data["person_id"] ?? null;  // Initialize person_id
-        $this->doctor_first_name = $data["doctor_first_name"] ?? null;
-        $this->doctor_last_name = $data["doctor_last_name"] ?? null;
+        $this->first_name = $data["doctor_first_name"] ?? null;
+        $this->last_name = $data["doctor_last_name"] ?? null;
         $this->speciality_id = $data["speciality_id"] ?? null;  // Initialize speciality_id
         $this->doctor_speciality = $data["doctor_speciality"] ?? null;
         $this->rank_id = $data["rank_id"] ?? null;  // Initialize rank_id
