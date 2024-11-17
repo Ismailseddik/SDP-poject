@@ -66,13 +66,19 @@ run_queries([
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
 
-
 "CREATE TABLE `donation` (
   `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `amount` float NOT NULL,
+  `amount` float,
   `donation_type_id` int(11) NOT NULL,
-  `donation_date` datetime NOT NULL
+  `donation_date` datetime NOT NULL,
+  `organ`  varchar(150)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+
+"INSERT INTO `donation` (`amount`, `donation_type_id`, `donation_date`, `organ`) VALUES 
+('200', '1', '2024-11-13 12:52:39.000000', 'Kidney'),
+('150', '2', '2024-11-14 09:30:00.000000', 'Pancreas'),
+('300', '2', '2024-11-15 15:45:20.000000', 'Heart'),
+('500', '1', '2024-11-16 10:20:10.000000', 'Liver');",
 
 "CREATE TABLE `donation_type` (
   `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -83,7 +89,6 @@ run_queries([
 ('Organ Donation'),
 ('Monetary Donation');",
 
-"INSERT INTO `donation` (`amount`, `donation_type_id`, `donation_date`) VALUES ('200', '1', '2024-11-13 12:52:39.000000');",
 
 "CREATE TABLE `donor` (
   `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -93,7 +98,11 @@ run_queries([
 
 
 "INSERT INTO `donor` (`person_id`, `tier_id`) VALUES
-(1, 1);",
+(1, 1),
+(2,1),
+(3,1),
+(4,1);",
+
 
 
 "CREATE TABLE `donor_donation` (
@@ -102,7 +111,10 @@ run_queries([
   `donor_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
-"INSERT INTO `donor_donation` (`donation_id`, `donor_id`) VALUES ('1', '1');",
+"INSERT INTO `donor_donation` (`donation_id`, `donor_id`) VALUES ('1', '2');",
+"INSERT INTO `donor_donation` (`donation_id`, `donor_id`) VALUES ('2', '3');",
+"INSERT INTO `donor_donation` (`donation_id`, `donor_id`) VALUES ('3', '4');",
+"INSERT INTO `donor_donation` (`donation_id`, `donor_id`) VALUES ('3', '1');",
 
 "CREATE TABLE `medical_aid_application` (
   `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -159,7 +171,10 @@ run_queries([
 
 
 "INSERT INTO `person` (`first_name`, `last_name`, `birth_date`, `address_id`) VALUES
-('ismail', 'seddik', '2001-11-05', 1);",
+('ismail', 'seddik', '2001-11-05', 1),
+('tarek', 'khaled', '2001-12-06',1),
+('mohamed', 'ayman', '2000-12-06',1),
+('hesham', 'mohamed', '2001-09-06',1);",
 
 "INSERT INTO `person` (`first_name`, `last_name`, `birth_date`, `address_id`, `isDeleted`) VALUES ('Ahmed', 'Khaled', '2002-02-12', '2', '0');",
 
@@ -195,7 +210,13 @@ run_queries([
   `type` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
+"CREATE TABLE `patient_medical_aid_application_aid_type` (
+  `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `patient_application_id` INT NOT NULL,
+  `aid_type_id` INT NOT NULL
+);",
 
+// Insert sample data for aid types
 "INSERT INTO `aid_type` (`type`) VALUES 
   ('Financial Aid'),
   ('Medical Aid'),
@@ -232,6 +253,9 @@ run_queries([
 "ALTER TABLE `medical_aid_application`
   ADD FOREIGN KEY (`doctor_id`) REFERENCES `doctor` (`id`);",
 
+"ALTER TABLE `patient_medical_aid_application_aid_type`
+  ADD FOREIGN KEY (`patient_application_id`) REFERENCES `patient_medical_aid_application`(`id`),
+  ADD FOREIGN KEY (`aid_type_id`) REFERENCES `aid_type`(`id`)",
 
 "ALTER TABLE `medical_aid_documents`
   ADD FOREIGN KEY (`application_id`) REFERENCES `medical_aid_application` (`id`),
@@ -259,11 +283,11 @@ run_queries([
   ADD FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
   ADD FOREIGN KEY (`phone_id`) REFERENCES `phonenumber` (`id`);",
 
+
+
 "COMMIT;",
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */
-
-
 ],true);

@@ -24,7 +24,6 @@ class AidTypeModel{
         $str = '<pre>';
         $str .= "ID: $this->id<br/>";
         $str .= "Aid Type: $this->type<br/>";
-    
         return $str . '</pre>';
     }
 

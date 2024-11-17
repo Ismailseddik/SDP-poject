@@ -1,11 +1,11 @@
 <?php
 ob_start();
-include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 require_once 'MedicalApplicationModel.php';
-require_once '../Models/doctorModel.php';
-require_once '../Observers/ISubject.php';
+require_once 'doctorModel.php';
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Observers\IObserver.php");
 ob_end_clean();
-
+  // id | typeid | patient_medical id | 
 class PatientMedicalApplicationModel{
     private ?int $id;
     private ?int $patient_id;
@@ -101,6 +101,8 @@ class PatientMedicalApplicationModel{
             JOIN application_status ON patient_medical_aid_application.status_id = application_status.id
             WHERE patient_medical_aid_application.patient_id = '$patient_id'
         ";
+      
+        
         // id x | patient id x | id(patient) | person_id | id(person) | first name x | last name x | address id | birth date | is deleted | application id x | doctor id | id(doc) | person_id |  id(person) | first name x | last name x | address id | birth date | is deleted  | speciality id | rank id | isAvailable | status id |
         $result = run_select_query($query);
 
@@ -110,7 +112,33 @@ class PatientMedicalApplicationModel{
 
         return false; 
     }
-
+    public static function add_aid_types(int $application_id, array $aid_types): bool {
+        foreach ($aid_types as $aid_type_id) {
+            $query = "INSERT INTO `patient_medical_aid_application` (application_id, aid_type_id, status_id)
+                      VALUES ('$application_id', '$aid_type_id', 1)";
+            if (!run_query($query, true)) {
+                error_log("Error: Unable to insert aid type ID $aid_type_id for application ID $application_id.");
+                return false;
+            }
+        }
+        return true;
+    }
+    public static function get_aid_types(int $application_id): array {
+        $query = "
+            SELECT 
+                aid_type.type AS aid_type_name
+            FROM 
+                patient_medical_aid_application
+            JOIN 
+                aid_type ON patient_medical_aid_application.aid_type_id = aid_type.id
+            WHERE 
+                patient_medical_aid_application.application_id = '$application_id'
+        ";
+    
+        $result = run_select_query($query);
+        return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
+    }
+    
     public static function add_patient_application(int $patient_id, int $doctor_id): bool {
         $conn = DataBase::getInstance()->getConn();
         $status_id = 1;
