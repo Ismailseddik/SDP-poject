@@ -41,7 +41,9 @@ class DonorController
             $organ = $_POST['organ'] ?? '';
             $donationType = $_POST['donation_type'] ?? 'monetary';
 
-
+            if ($amount==0){
+                $amount=NULL;
+            }
             if ($donationType === 'Monetary') {
                 $donation_type_id=1;
             } elseif ($donationType === 'Organ') {
@@ -52,7 +54,7 @@ class DonorController
             }
             // Call the addDonor method from Donor model to save the new donor
             $result = Donor::addDonor($firstName, $lastName,$amount, $donor_birth_date,$organ, $donation_type_id);
-            
+
             if ($result) {
                 // Redirect to donor list after successful addition
                 header('Location: index.php?view=donor&action=listDonors');
