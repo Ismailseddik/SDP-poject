@@ -107,15 +107,56 @@
     <main class="container">
         <h2>Donations</h2>
 
-        <div class="donation-list">
-            <?php foreach ($donations as $donation): ?>
-                <div class="donation-card">
-                    <p><strong>Donor:</strong> <?= htmlspecialchars($donation['donor_name']) ?></p>
-                    <p><strong>Amount:</strong> $<?= htmlspecialchars($donation['amount']) ?></p>
-                    <p><strong>Date:</strong> <?= htmlspecialchars($donation['date']) ?></p>
-                </div>
-            <?php endforeach; ?>
-        </div>
+        <section class="donation-list">
+            <?php if (!empty($donations) && !empty($donors)): ?>
+                <?php
+                // Ensure the number of donors and donations match
+                $numDonations = count($donations);
+                $numDonors = count($donors);
+                ?>
+                <?php foreach ($donations as $index => $donation): ?>
+                    <div class="donation-card">
+                        <p><strong>Donation ID:</strong> <?= htmlspecialchars($donation->getDonationId() ?? "N/A") ?></p>
+
+                        <?php
+                        // Match donor by index
+                        $donorName = "Unknown Donor";
+                        if ($index < $numDonors) { // Ensure donor exists for this index
+                            $donor = $donors[$index];
+                            $donorName = htmlspecialchars($donor->getFirstName() . ' ' . $donor->getLastName());
+                        }
+                        ?>
+                        <p><strong>Donor Name:</strong> <?= $donorName ?></p>
+
+                        <?php if ($donation->getAmount() !== null): ?>
+                            <p><strong>Donation Amount:</strong> $<?= htmlspecialchars($donation->getAmount()) ?></p>
+                        <?php elseif ($donation->getOrgan() !== null): ?>
+                            <p><strong>Donation Organ:</strong> <?= htmlspecialchars($donation->getOrgan()) ?></p>
+                        <?php else: ?>
+                            <p><strong>Donation Details:</strong> Unknown</p>
+                        <?php endif; ?>
+
+                        <p><strong>Donation Date:</strong> <?= htmlspecialchars($donation->getDonationDate()?->format('Y-m-d') ?? "N/A") ?></p>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No donations or donors available.</p>
+            <?php endif; ?>
+        </section>
+
+
+
+
+<!--        <h3>Make a New Donation</h3>-->
+<!--        <form class="donation-form" action="addDonation.php" method="POST">-->
+<!--            <label for="donor_name">Donor Name:</label>-->
+<!--            <input type="text" id="donor_name" name="donor_name" placeholder="Enter Donor Name" required>-->
+<!---->
+<!--            <label for="donor_amount">Amount:</label>-->
+<!--            <input type="number" id="donor_amount" name="donor_amount" placeholder="Enter Donation Amount" required>-->
+<!--            -->
+<!--            <button type="submit">Donate</button>-->
+<!--        </form>-->
     </main>
 
     <footer>
