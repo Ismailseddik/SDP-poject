@@ -103,6 +103,7 @@ class Donor extends Person
             JOIN donor_tier ON donor.tier_id = donor_tier.id
             JOIN donor_donation ON donor.id = donor_donation.donor_id
             JOIN donation ON donor_donation.donation_id = donation.id
+            WHERE donor.id = $donor_id
         ";
         
         
@@ -143,7 +144,7 @@ class Donor extends Person
     }
 
    
-    public static function addDonor(string $first_name, string $last_name, float $amount,DateTime $donor_birth_date): bool
+    public static function addDonor(string $first_name, string $last_name, float $amount,DateTime $donor_birth_date,$donation_type_id): bool
     {
         $conn=DataBase::getInstance()->getConn();
 
@@ -168,7 +169,7 @@ class Donor extends Person
         $donor_id = $conn->insert_id;
 
         // Insert donation record and associate with donor
-        $donation_state = DonationModel::add_donation($amount);
+        $donation_state = DonationModel::add_donation($amount,$donation_type_id);
         if (!$donation_state) {
             echo "Error: Failed to add donation record.";
             return false;

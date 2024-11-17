@@ -29,8 +29,7 @@ class DonorDonationModel{
         $str .= "Name: $this->donor_name <br/>";
         $str .= "Amount: $this->donation_amount<br/>";
         $str .= "Donation Type Id: $this->donation_type_id<br/>";
-        
-
+    
         return $str . '</pre>';
     }
 

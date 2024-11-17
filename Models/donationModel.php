@@ -22,8 +22,13 @@ class DonationModel{
     {
         $query = "
             SELECT 
-            *    
-            FROM donation
+                donation.id,
+                donation.amount,
+                donation.donation_type_id,
+                donation_type.donation_type,
+                donation.donation_date
+            FROM donation 
+            JOIN donation_type ON donation.donation_type_id = donation_type.id
             WHERE donation.id = $donation_id
         ";
 
@@ -36,10 +41,42 @@ class DonationModel{
             return false;
         }
     }
-
-    public static function add_donation($amount): bool
+    public static function get_all_donations(): array
     {
-    $query = "INSERT INTO donation (amount, donation_type_id, donation_date) VALUES ($amount, 1, NOW())";
+        $query = "
+            SELECT 
+                donation.id,
+                donation.amount,
+                donation.donation_type_id,
+                donation_type.donation_type,
+                donation.donation_date
+            FROM donation 
+            JOIN donation_type ON donation.donation_type_id = donation_type.id
+        ";
+        $donations = [];
+        $rows = run_select_query($query);
+
+        if ($rows && $rows->num_rows > 0) {
+            foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) {
+                $donations[] = new DonationModel($row);
+            }
+        }
+
+        return $donations;
+    }
+
+
+    public static function add_donation($amount,$donation_type_id): bool
+    {
+    $query = "INSERT INTO donation (amount, donation_type_id, donation_date) VALUES ($amount, $donation_type_id, NOW())";
+    
+    return run_query($query, true);
+    }
+
+    
+    public static function update_donation($amount,$donation_id): bool
+    {
+    $query =  $query = "UPDATE `donation` SET amount = '$amount' WHERE id = '$donation_id' ";
     
     return run_query($query, true);
     }
