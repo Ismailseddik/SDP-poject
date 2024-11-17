@@ -10,11 +10,11 @@ class PatientMedicalApplicationModel{
     private ?int $id;
     private ?int $patient_id;
     private ?int $application_id;
-    private ?string $patient_first_name;
-    private ?string $patient_last_name;
-    private ?string $doctor_first_name;
-    private ?string $doctor_last_name;
-    // private ?array $Doctors;
+    private ?String $patient_first_name;
+    private ?String $patient_last_name;
+    private ?String $doctor_first_name;
+    private ?String $doctor_last_name;
+    private ?String $application_status;
 
     public function __construct(array $data)
     {
@@ -25,10 +25,7 @@ class PatientMedicalApplicationModel{
         $this->patient_last_name = $data['patient_last_name'] ?? null;
         $this->doctor_first_name = $data['doctor_first_name'] ?? null;
         $this->doctor_last_name = $data['doctor_last_name'] ?? null;
-        // $this->Doctors = Doctor::get_all_doctors_details() ?? null;
-        
-
-        
+        $this->application_status = $data['status'] ?? null;
     }
 
     public function __toString(): string
@@ -39,9 +36,9 @@ class PatientMedicalApplicationModel{
         $str .= "application_id: $this->application_id<br/>";
         $str .= "patient_first_name: $this->patient_first_name<br/>";
         $str .= "patient_last_name: $this->patient_last_name<br/>";
-        $str .= "doctor first name:  $this->doctor_first_name ";
-         $str .= "doctor last name:$this->doctor_last_name";
-
+        $str .= "doctor first name:  $this->doctor_first_name<br/>";
+        $str .= "doctor last name: $this->doctor_last_name<br/>";
+        $str .= "Application Status: $this->application_status<br/>";
         return $str . '</pre>';
     }
     public function getId() { return $this->id; }
@@ -62,13 +59,15 @@ class PatientMedicalApplicationModel{
                 person_patient.first_name AS patient_first_name,
                 person_patient.last_name AS patient_last_name,
                 person_doctor.first_name AS doctor_first_name,
-                person_doctor.last_name AS doctor_last_name
+                person_doctor.last_name AS doctor_last_name,
+                application_status.status
             FROM patient_medical_aid_application
             JOIN medical_aid_application ON patient_medical_aid_application.application_id = medical_aid_application.id
             JOIN doctor ON medical_aid_application.doctor_id = doctor.id
             JOIN patient ON patient_medical_aid_application.patient_id = patient.id
             JOIN person AS person_patient ON patient.person_id = person_patient.id
             JOIN person AS person_doctor ON doctor.person_id = person_doctor.id
+            JOIN application_status ON patient_medical_aid_application.status_id = application_status.id
         ";
 
         $applications = [];
@@ -91,13 +90,15 @@ class PatientMedicalApplicationModel{
                 person_patient.first_name AS patient_first_name,
                 person_patient.last_name AS patient_last_name,
                 person_doctor.first_name AS doctor_first_name,
-                person_doctor.last_name AS doctor_last_name
+                person_doctor.last_name AS doctor_last_name,
+                application_status.status
             FROM patient_medical_aid_application
             JOIN medical_aid_application ON patient_medical_aid_application.application_id = medical_aid_application.id
             JOIN doctor ON medical_aid_application.doctor_id = doctor.id
             JOIN patient ON patient_medical_aid_application.patient_id = patient.id
             JOIN person AS person_patient ON patient.person_id = person_patient.id
             JOIN person AS person_doctor ON doctor.person_id = person_doctor.id
+            JOIN application_status ON patient_medical_aid_application.status_id = application_status.id
             WHERE patient_medical_aid_application.patient_id = '$patient_id'
         ";
         // id x | patient id x | id(patient) | person_id | id(person) | first name x | last name x | address id | birth date | is deleted | application id x | doctor id | id(doc) | person_id |  id(person) | first name x | last name x | address id | birth date | is deleted  | speciality id | rank id | isAvailable | status id |

@@ -103,6 +103,7 @@ class Donor extends Person
             JOIN donor_tier ON donor.tier_id = donor_tier.id
             JOIN donor_donation ON donor.id = donor_donation.donor_id
             JOIN donation ON donor_donation.donation_id = donation.id
+            WHERE donor.id = $donor_id
         ";
         
         
