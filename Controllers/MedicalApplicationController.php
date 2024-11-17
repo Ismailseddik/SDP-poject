@@ -16,6 +16,9 @@ class MedicalApplicationController implements ISubject{
             case 'addApplication':
                 $this->addApplication();
                 break;
+            case 'addAidtype':
+                $this->addAidtype();
+                break;
             // case 'updateStatus':
             //     // $this->updateStatus();
             //     break;
@@ -58,6 +61,25 @@ class MedicalApplicationController implements ISubject{
         } else {
             $this->showAddApplicationForm();
         }
+    }
+    private function addAidtype(){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Get the form data
+            $medicalApplicationId = $_POST['patient_application_id'];
+            $selectedAidTypes = $_POST['aid_type'];
+        
+            // Validate the data (optional, but recommended)
+            // ...
+        
+            // Process the selected aid types
+            foreach ($selectedAidTypes as $aidType) {
+                pmaAidTypeModel::add_entry((int)$medicalApplicationId,(int)$aidType);
+            }
+        
+            // Redirect to a success page or display a success message
+
+        }
+        
     }
     public function NotifyObserver(int $patient_id):void {
         $doctors = Doctor::get_all_doctors_details();
