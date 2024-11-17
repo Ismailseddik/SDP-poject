@@ -92,6 +92,31 @@ h3 {
     margin: 10px 0;
 }
 
+/* Donation card styling */
+.donation-list {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+}
+
+.donation-card {
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #e0fbfc;
+    border-left: 4px solid #0a9396;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.donation-card:hover {
+    transform: scale(1.02);
+}
+
+.donation-card p {
+    margin: 10px 0;
+}
+
+
 /* Form styling */
 .doctor-form {
     margin-top: 20px;

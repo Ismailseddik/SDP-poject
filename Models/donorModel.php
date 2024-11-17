@@ -88,9 +88,9 @@ class Donor extends Person
      }
 
      //Execute donation using the current strategy
-     public function donate(int $donation_id, float $donation_amount): void
+     public function donate(int $donation_id, float $donation_amount=NULL, String $organ=NULL): void
      {
-         $this->donationStrategy->donate(($this->amount+$donation_amount), $this,$donation_id);
+         $this->donationStrategy->donate($this,$donation_id,$donation_amount!=NULL?($this->amount+$donation_amount):NULL,$organ);
      }
 
 
