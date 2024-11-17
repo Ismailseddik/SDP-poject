@@ -30,7 +30,19 @@ class PatientMedicalApplicationModel implements ISubject{
         
     }
 
- 
+    public function __toString(): string
+    {
+        $str = '<pre>';
+        $str .= "ID: $this->id<br/>";
+        $str .= "patient_id: $this->patient_id <br/>";
+        $str .= "application_id: $this->application_id<br/>";
+        $str .= "patient_first_name: $this->patient_first_name<br/>";
+        $str .= "patient_last_name: $this->patient_last_name<br/>";
+        $str .= "doctor first name:  $this->doctor_first_name ";
+         $str .= "doctor last name:$this->doctor_last_name";
+
+        return $str . '</pre>';
+    }
     public function getId() { return $this->id; }
     public function getPatientId() { return $this->patient_id; }
     public function getApplicationId() { return $this->application_id; }
@@ -88,7 +100,7 @@ class PatientMedicalApplicationModel implements ISubject{
             JOIN person AS person_doctor ON doctor.person_id = person_doctor.id
             WHERE patient_medical_aid_application.patient_id = '$patient_id'
         ";
-
+        // id x | patient id x | id(patient) | person_id | id(person) | first name x | last name x | address id | birth date | is deleted | application id x | doctor id | id(doc) | person_id |  id(person) | first name x | last name x | address id | birth date | is deleted  | speciality id | rank id | isAvailable | status id |
         $result = run_select_query($query);
 
         if ($result && $result->num_rows > 0) {
