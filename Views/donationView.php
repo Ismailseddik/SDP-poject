@@ -116,17 +116,6 @@
                 </div>
             <?php endforeach; ?>
         </div>
-
-        <h3>Make a New Donation</h3>
-        <form class="donation-form" action="addDonation.php" method="POST">
-            <label for="donor_name">Donor Name:</label>
-            <input type="text" id="donor_name" name="donor_name" placeholder="Enter Donor Name" required>
-
-            <label for="donor_amount">Amount:</label>
-            <input type="number" id="donor_amount" name="donor_amount" placeholder="Enter Donation Amount" required>
-            
-            <button type="submit">Donate</button>
-        </form>
     </main>
 
     <footer>
