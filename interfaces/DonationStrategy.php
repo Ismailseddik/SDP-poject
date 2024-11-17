@@ -2,5 +2,5 @@
 // DonationStrategy.php
 interface DonationStrategy
 {
-    public function donate(float $amount, Donor $donor): void;
+    public function donate(Donor $donor, int $donation_id,float $amount=NULL, String $organ=NULL): void;
 }

@@ -1,6 +1,6 @@
 <?php
 // Patient.php
-include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 require_once "personModel.php";
 
 class Patient extends Person

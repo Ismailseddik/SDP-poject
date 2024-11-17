@@ -6,7 +6,7 @@ require_once '../strategies/OrganDonation.php';
 
 class DonorController
 {
-    public function index($action = null)
+    public function index($action = null): void
     {
         switch ($action) {
             case 'listDonors':
@@ -29,7 +29,7 @@ class DonorController
                 break;
         }
     }
-    private function addDonor()
+    private function addDonor(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Retrieve form data
@@ -37,11 +37,24 @@ class DonorController
             $lastName = $_POST['donor_last_name'] ?? '';
             $donor_birth_date = DateTime::createFromFormat('Y-m-d', $_POST['donor_birth_date'] ?? '');
             // $email = $_POST['donor_email'] ?? '';
-            $amount = (float)($_POST['donor_amount'] ?? 0);
+            $amount = (float)($_POST['donor_amount'] ?? NULL);
+            $organ = $_POST['organ'] ?? '';
+            $donationType = $_POST['donation_type'] ?? 'monetary';
 
+            if ($amount==0){
+                $amount=NULL;
+            }
+            if ($donationType === 'Monetary') {
+                $donation_type_id=1;
+            } elseif ($donationType === 'Organ') {
+                $donation_type_id=2;
+            } else {
+                echo "Invalid donation type.";
+                return;
+            }
             // Call the addDonor method from Donor model to save the new donor
-            $result = Donor::addDonor($firstName, $lastName,$amount, $donor_birth_date);
-            
+            $result = Donor::addDonor($firstName, $lastName,$amount, $donor_birth_date,$organ, $donation_type_id);
+
             if ($result) {
                 // Redirect to donor list after successful addition
                 header('Location: index.php?view=donor&action=listDonors');
@@ -54,46 +67,78 @@ class DonorController
         }
     }
     // Method to list donors
-    private function listDonors()
+    private function listDonors(): void
     {
         $donors = Donor::getAllDonors();
+        $donations =DonationModel::get_all_donations();
+        //
+        //error_log(print_r($donors, true)); // Logs the array in your PHP error log
         include '../views/donorView.php';
     }
-    private function showAddDonorForm(){
+    private function showAddDonorForm(): void
+    {
         include '../views/donorAddView.php';
     }
     // Method to show the add donation form
-    private function showAddDonationForm()
+    private function showAddDonationForm(): void
     {
+        $donors = Donor::getAllDonors();
+        $donations =DonationModel::get_all_donations();
+       // echo $donations[1]->getDonationId();
+        //echo $donors[0]->getFirstName();
         include '../views/showAddDonationForm.php';
     }
 
     // Method to handle form submission and add a new donation
-    private function addDonation()
+    private function addDonation(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Get donation type and amount from form
+            // Get donor ID, donation type, and amount from form
+            $donorId = (int)$_POST['donor_id'] ?? 0;
             $donationType = $_POST['donation_type'] ?? 'monetary';
-            $amount = (float)($_POST['donor_amount'] ?? 0);
+            $donationId = (int)$_POST['donation_id'] ?? 0;
+            $amount = (float)($_POST['amount'] ?? 0);
+            $organ = $_POST['organ'] ?? '';
 
-            // Choose the appropriate strategy based on donation type
-            $donationStrategy = ($donationType === 'organ') ? new OrganDonation() : new MonetaryDonation();
+            // Fetch the donor by ID
+            $donor = Donor::getby_id($donorId);
+//            $donationId = DonationModel::get_donation_details();
+            $donationTypeId=NULL;
+            if ($donor) {
+                // Choose the appropriate strategy
+                if ($donationType === 'Monetary') {
+                    $donationTypeId=1;
+                    $donationStrategy = new MonetaryDonation();
+                    $donor->setDonationStrategy($donationStrategy);
+                    $donor->donate($donationId,$amount,NULL);
+                } elseif ($donationType === 'Organ'){
+                    $donationTypeId=2;
+                    $donationStrategy = new OrganDonation();
+                    $donor->setDonationStrategy($donationStrategy);
+                    $donor->donate($donationId,NULL,$organ);
+                } else {
+                    echo "Invalid donation type.";
+                    return;
+                }
+                //$donationStrategy = ($donationType === 'organ') ? new OrganDonation() : new MonetaryDonation();
 
-            // Gather donor data from the form
-            $donorData = [
-                'first_name' => $_POST['donor_first_name'],
-                'last_name' => $_POST['donor_last_name'],
-                // 'email' => $_POST['donor_email'],
-                'amount' => $amount
-            ];
+                //$donor->setAmount($donor->getAmount() - $amount); //To be implemented in model
+                // Set the strategy and execute donation
 
-            // Create a new Donor object with the selected strategy
-            $donor = new Donor($donorData);
-            // $donor->donate();  // Execute the donation using the chosen strategy
+                //Moved UP
+                //$donor->setDonationStrategy($donationStrategy);
+                //$donor->donate($donationId,$amount,$organ);
 
-            // Redirect to the donor list after donation
-            header('Location: index.php?view=donor&action=listDonors');
-            exit();
+
+                //DonationModel::update_donation($amount,1);
+
+
+                // Redirect to donor list after donation
+                header('Location: index.php?view=donor&action=listDonors');
+                exit();
+            } else {
+                echo "Error: Donor not found.";
+            }
         } else {
             // If not a POST request, show the add donation form
             $this->showAddDonationForm();

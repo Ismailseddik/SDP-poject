@@ -1,18 +1,18 @@
 <?php
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Observers\IObserver.php");
 ob_end_clean();
-
-require_once '../Observers/IObserver.php';
 class Person implements IObserver
 {
 
-    protected ?int $id;
-    protected ?String $first_name;
-    protected ?String $last_name;
-    protected ?DateTime $birth_date;
-    protected ?int $address_id;
-    protected ?bool $isDeleted;
+    protected ?int $id = null;
+    protected ?string $first_name = null;
+    protected ?string $last_name = null;
+    protected ?DateTime $birth_date = null;
+    protected ?int $address_id = null;
+    protected ?bool $isDeleted = false;
+    
     public function __construct(array $data)
     {
         $this->id = $data['id'] ?? null;
