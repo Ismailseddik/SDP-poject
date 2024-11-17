@@ -74,6 +74,14 @@ run_queries([
   `donation_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
+"CREATE TABLE `donation_type` (
+  `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `donation_type`  varchar(150) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+
+"INSERT INTO `donation_type` (`donation_type`) VALUES
+('Organ Donation'),
+('Monetary Donation');",
 
 "INSERT INTO `donation` (`amount`, `donation_type_id`, `donation_date`) VALUES ('200', '1', '2024-11-13 12:52:39.000000');",
 
@@ -202,6 +210,8 @@ run_queries([
   ADD FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
   ADD FOREIGN KEY (`tier_id`) REFERENCES `donor_tier` (`id`);",
 
+"ALTER TABLE `donation`
+  ADD FOREIGN KEY (`donation_type_id`) REFERENCES `donation_type` (`id`);",
   
 "ALTER TABLE `donor_donation`
   ADD FOREIGN KEY (`donation_id`) REFERENCES `donation` (`id`),
