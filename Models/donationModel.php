@@ -37,9 +37,9 @@ class DonationModel{
         }
     }
 
-    public static function add_donation($amount): bool
+    public static function add_donation($amount,$donation_type_id): bool
     {
-    $query = "INSERT INTO donation (amount, donation_type_id, donation_date) VALUES ($amount, 1, NOW())";
+    $query = "INSERT INTO donation (amount, donation_type_id, donation_date) VALUES ($amount, $donation_type_id, NOW())";
     
     return run_query($query, true);
     }
