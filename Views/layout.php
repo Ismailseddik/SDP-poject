@@ -91,16 +91,6 @@
         }
     </style>
 <body>
-    <header>
-        <h1>Medical Aid Charity Application</h1>
-        <nav>
-            <a href="index.php?view=patient">Patient</a> |
-            <a href="index.php?view=doctor">Doctor</a> |
-            <a href="index.php?view=donor">Donor</a> |
-            <a href="index.php?view=donation">Donation</a> | |
-            <a href="index.php?view=medicalApplication">Medical Application</a>
-        </nav>
-    </header>
 
     <main>
         <?php include($content); ?>

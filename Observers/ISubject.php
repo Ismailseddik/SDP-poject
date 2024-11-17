@@ -1,5 +1,5 @@
 <?php
 
 interface ISubject{
-    public  function NotifyObserver():void;
+    public  function NotifyObserver(int $id):void;
 }  
