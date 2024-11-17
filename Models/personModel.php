@@ -3,7 +3,6 @@ ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 include_once($_SERVER["DOCUMENT_ROOT"] . "\Observers\IObserver.php");
 ob_end_clean();
-// require_once '../Observers/IObserver.php';
 class Person implements IObserver
 {
 
