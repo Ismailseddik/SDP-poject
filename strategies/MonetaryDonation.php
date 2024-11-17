@@ -4,10 +4,10 @@ require_once '../interfaces/DonationStrategy.php';
 
 class MonetaryDonation implements DonationStrategy
 {
-    public function donate(float $amount, Donor $donor): void
+    public function donate(float $amount, Donor $donor, int $donation_id): void
     {
         // Save monetary donation to the database
-        $donationSuccess = DonationModel::add_donation($amount);
+        $donationSuccess = DonationModel::update_donation($amount,$donation_id);
         if ($donationSuccess) {
             echo "Monetary donation of $" . $amount . " recorded for donor " . $donor->getFirstName() . ".";
         } else {

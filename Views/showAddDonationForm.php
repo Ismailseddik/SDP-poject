@@ -78,6 +78,19 @@
             </select>
         <?php endif; ?>
 
+        <label for="donor">Select Donation:</label>
+        <?php if (empty($donations)): ?>
+            <p>No donations available. Please add donations before making a donation.</p>
+        <?php else: ?>
+            <select name="donation_id" id="donation" class="form-control">
+                <option value="">Select Donation</option>
+                <?php foreach ($donations as $donation): ?>
+                    <option value="<?= htmlspecialchars($donation->getDonationId()); ?>">
+                        <?= htmlspecialchars($donation->getDonationId()); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        <?php endif; ?>
         <label for="amount">Amount Donated:</label>
         <input type="number" name="amount" id="amount" class="form-control" placeholder="Enter Amount" required />
 

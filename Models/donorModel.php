@@ -14,7 +14,7 @@ class Donor extends Person
     private ?int $person_id;
     private ?float $amount;
     private ?String $tier;
-    // private DonationStrategy $donationStrategy;
+    private DonationStrategy $donationStrategy;
 
     private DonorTierStrategy $tierStrategy;
 
@@ -88,9 +88,9 @@ class Donor extends Person
      }
 
      //Execute donation using the current strategy
-     public function donate(): void
+     public function donate(int $donation_id, float $donation_amount): void
      {
-         $this->donationStrategy->donate($this->amount, $this);
+         $this->donationStrategy->donate(($this->amount+$donation_amount), $this,$donation_id);
      }
 
 
