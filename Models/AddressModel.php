@@ -1,13 +1,86 @@
 <?php
 include_once ($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 
-class Address{
+// CRUD
+include_once($_SERVER["DOCUMENT_ROOT"] . "\CRUD\Create.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "\CRUD\Update.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "\CRUD\Delete.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "\CRUD\Read.php");
 
-    public static function add_address($name , $parent_id):bool
+class Address implements Create, Update, Delete, Read{
+    
+    private ?int $id;
+    private ?String $name; 
+    private ?int $parent_id;
+
+    public function __construct(array $data)
+    {
+        $this->id = $data['id'];
+        $this->name = $data['name']; 
+        $this->parent_id = $data['parent_id'];
+    }
+
+    // Getters 
+    public function getID()      {return $this->id;}
+    public function getName()    {return $this->name;}
+    public function getParentID(){return $this->parent_id;}
+
+    // Setters
+    public function setID($id)              { $this->id = $id;}
+    public function setName($name)          { $this->name = $name;}
+    public function setParentID($parent_id) { $this->parent_id = $parent_id;}
+
+
+    public static function Read_All()
+    {
+
+    } 
+    public static function Read($id)
+    {
+
+    }
+    
+    public static function Create($array):bool
     { 
-        $query = "INSERT INTO `address` (`name`, `parent_id`) VALUES ('$name', '$parent_id)";
+        // only two because the key is auto increment so it will not be in the array elements
+        if (!array_check($array, 2)){
+            return false;
+        }
+
+        // check if the parent_id exists as a key in the 'address' table 
+        if (!does_exist("SELECT * FROM `address` WHERE id = '$array[1]'")){
+            return false;
+        }
+
+        $query = "INSERT INTO `address` (`name`, `parent_id`) VALUES ('$array[0]', '$array[1])";
         return run_query($query,true);
     }
+    public static function Update($array)
+    {
+        if (!array_check($array, 3)){
+            return false;
+        }
+
+        // check if the they key passed already exists
+        if (!does_exist("SELECT * FROM `address` WHERE id = '$array[0]'")){
+            return false;
+        }
+
+        // check if the parent_id exists as a key in the 'address' table 
+        if (!does_exist("SELECT * FROM `address` WHERE id = '$array[2]'")){
+            return false;
+        }
+
+        $query = "UPDATE `address` SET `name` = '$array[1]', `parent_id` = '$array[2]'  WHERE `id` ='$array[0]'";
+        
+        return run_query($query, true);
+    }
+    public static function ConditionedUpdate($id, $column_name, $new_attribute_value)
+    {}
+    public static function VirtualDelete($id)
+    {}
+    public static function Delete($id)
+    {}
     public static function get_address_by_id(int $id, array &$address_list):void
     {
         if($id === 0){return;}
@@ -40,6 +113,8 @@ class Address{
         
 
     }
+
+
     public static function get_address_by_name(int $id , string $name):bool
     {
         if($id === 0){return false;}

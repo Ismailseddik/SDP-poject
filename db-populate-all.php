@@ -71,14 +71,14 @@ run_queries([
   `amount` float,
   `donation_type_id` int(11) NOT NULL,
   `donation_date` datetime NOT NULL,
-  `organ`  varchar(150)
+  `organ_id`  int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
-"INSERT INTO `donation` (`amount`, `donation_type_id`, `donation_date`, `organ`) VALUES 
-('200', '1', '2024-11-13 12:52:39.000000', 'Kidney'),
-('150', '2', '2024-11-14 09:30:00.000000', 'Pancreas'),
-('300', '2', '2024-11-15 15:45:20.000000', 'Heart'),
-('500', '1', '2024-11-16 10:20:10.000000', 'Liver');",
+"INSERT INTO `donation` (`amount`, `donation_type_id`, `donation_date`, `organ_id`) VALUES 
+(NULL, '1', '2024-11-13 12:52:39.000000', '1'),
+('150', '2', '2024-11-14 09:30:00.000000', '5'),
+('300', '2', '2024-11-15 15:45:20.000000', '5'),
+(NULL, '1', '2024-11-16 10:20:10.000000', '4');",
 
 "CREATE TABLE `donation_type` (
   `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -129,6 +129,18 @@ run_queries([
   `document_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
+"CREATE TABLE `Organ` (
+  `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `organ_name`  varchar(150) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+
+"INSERT INTO `Organ` (`id`, `organ_name`) VALUES ('1', 'Kidney');",
+"INSERT INTO `Organ` (`id`, `organ_name`) VALUES ('2', 'Pancreas');",
+"INSERT INTO `Organ` (`id`, `organ_name`) VALUES ('3', 'Heart');",
+"INSERT INTO `Organ` (`id`, `organ_name`) VALUES ('4', 'Liver');",
+"INSERT INTO `Organ` (`id`, `organ_name`) VALUES ('5', NULL);",
+
+
 
 "CREATE TABLE `patient` (
   `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -155,9 +167,9 @@ run_queries([
   `aid_type_id` INT NOT NULL
 );", 
 
-"INSERT INTO `patient_medical_aid_application_aid_type` (`patient_application_id`, `aid_type_id`) VALUES ('1', '1');",
-"INSERT INTO `patient_medical_aid_application_aid_type` (`patient_application_id`, `aid_type_id`) VALUES ('1', '2');",
-"INSERT INTO `patient_medical_aid_application_aid_type` (`patient_application_id`, `aid_type_id`) VALUES ('1', '3');",
+// "INSERT INTO `patient_medical_aid_application_aid_type` (`patient_application_id`, `aid_type_id`) VALUES ('1', '1');",
+// "INSERT INTO `patient_medical_aid_application_aid_type` (`patient_application_id`, `aid_type_id`) VALUES ('1', '2');",
+// "INSERT INTO `patient_medical_aid_application_aid_type` (`patient_application_id`, `aid_type_id`) VALUES ('1', '3');",
 
 
 "CREATE TABLE `person` (
@@ -238,7 +250,9 @@ run_queries([
   ADD FOREIGN KEY (`tier_id`) REFERENCES `donor_tier` (`id`);",
 
 "ALTER TABLE `donation`
-  ADD FOREIGN KEY (`donation_type_id`) REFERENCES `donation_type` (`id`);",
+  ADD FOREIGN KEY (`donation_type_id`) REFERENCES `donation_type` (`id`),
+  ADD FOREIGN KEY (`organ_id`) REFERENCES `Organ` (`id`);",
+  
   
 "ALTER TABLE `donor_donation`
   ADD FOREIGN KEY (`donation_id`) REFERENCES `donation` (`id`),

@@ -1,0 +1,5 @@
+1- me7tar a3mel CRUD interfaces as each function takes different parameters (Solved)
+2- 3ayzeen ne7el moshkelet el duplicate rows fel database ashan el key auto increment fa msh bey recognize el duplicates
+3- we can create table for doctor notifications as an observer design pattern 
+4- esta3mel el Composite functions goa el CRUD implementations
+5- in setters we want to check if the coditional update can be processed first then change the this operator

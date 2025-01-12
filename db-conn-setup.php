@@ -29,7 +29,7 @@ class DataBase{
 }
 
 // Function to run multiple queries
-function run_queries($queries, $echo = false): array
+function run_queries($queries, $echo = false): array|mysqli_result
 {
     $conn=DataBase::getInstance()->getConn();
 
@@ -46,7 +46,7 @@ function run_queries($queries, $echo = false): array
 }
 
 // Function to run a single query
-function run_query($commandquery, $echo = false): bool
+function run_query($commandquery, $echo = false): bool|array|mysqli_result
 {
     return run_queries([$commandquery], $echo)[0];
 }
@@ -70,3 +70,38 @@ function run_select_query($commandquery, $echo = false): mysqli_result|bool
     return $result;
 }
 
+function does_exist($query):bool{
+   if (!(bool)run_select_query($query,false)->num_rows){
+        echo "This ID does not even exist in the database ";
+        return false;
+   }
+   return true;
+}
+
+function table_exist($table_name):bool{
+    // because 'like' takes string we put the name between qutations
+    $query = "SHOW TABLES LIKE '$table_name'"; 
+    $result = run_query($query);
+
+    if ($result->num_rows > 0) {return true;}
+
+    echo "The Table: '$table_name' does not even exist in the Datbase";
+    return false;
+}
+function column_exist($table_name, $column_name):bool
+{
+    if(!table_exist($table_name)){return false;}
+    
+    // here we did not put quotes on $table_name because it not meant to be read as string 
+    $query = "SHOW COLUMNS FROM $table_name"; 
+    $result = run_query($query);
+
+    while($row = $result->fetch_assoc()) 
+    {
+        if($row['Field'] == $column_name){return true;}
+    }
+    echo "The column: '$column_name', does not Exist in the Table: '$table_name'";
+    return false;
+    
+
+}
