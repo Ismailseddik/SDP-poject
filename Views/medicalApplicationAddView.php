@@ -28,6 +28,7 @@
                 <option value="3">Rejected</option>
             </select>
 
+
             <button type="submit" class="button">Submit Application</button>
         </form>
     </main>

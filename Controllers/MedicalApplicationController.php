@@ -16,6 +16,9 @@ class MedicalApplicationController implements ISubject{
             case 'addApplication':
                 $this->addApplication();
                 break;
+            case 'addAidtype':
+                $this->addAidtype();
+                break;
             // case 'updateStatus':
             //     // $this->updateStatus();
             //     break;
@@ -31,6 +34,9 @@ class MedicalApplicationController implements ISubject{
     // Display a list of all medical aid applications
     private function listApplications() {
         $applications = PatientMedicalApplicationModel::get_all_applications();
+        foreach ($applications as &$application) {
+            // $application['aid_types'] = PatientMedicalApplicationModel::get_aid_types($application['application_id']);
+        }
         include '../views/medicalApplicationView.php'; // Assume this view lists applications
     }
 
@@ -45,8 +51,13 @@ class MedicalApplicationController implements ISubject{
             $patient_id = $_POST['patient_id'];
             $doctor_id = $_POST['doctor_id'];
             $status_id = $_POST['status_id'] ?? 1;
+            $aid_types = $_POST['aid_types'] ?? [];
 
             if (PatientMedicalApplicationModel::add_patient_application($patient_id, $doctor_id)) {
+                // if (!PatientMedicalApplicationModel::add_aid_types($application_id, $aid_types)) {
+                //     echo "Error: Unable to add aid types.";
+                //     return;
+                // }
                 // Notify all doctors
                 $this->NotifyObserver($patient_id);
 
@@ -58,6 +69,25 @@ class MedicalApplicationController implements ISubject{
         } else {
             $this->showAddApplicationForm();
         }
+    }
+    private function addAidtype(){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Get the form data
+            $medicalApplicationId = $_POST['patient_application_id'];
+            $selectedAidTypes = $_POST['aid_type'];
+        
+            // Validate the data (optional, but recommended)
+            // ...
+        
+            // Process the selected aid types
+            foreach ($selectedAidTypes as $aidType) {
+                pmaAidTypeModel::add_entry((int)$medicalApplicationId,(int)$aidType);
+            }
+        
+            // Redirect to a success page or display a success message
+
+        }
+        
     }
     public function NotifyObserver(int $patient_id):void {
         $doctors = Doctor::get_all_doctors_details();

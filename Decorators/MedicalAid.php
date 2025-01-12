@@ -2,15 +2,15 @@
 
 class MedicalAid extends AidTypeDecorator
 {
-    private string $medicineType;
+    // private string $medicineType;
 
-    public function __construct(array $data, string $medicineType) {
-        parent::__construct($data); // Initialize the base properties from AidTypeModel
-        $this->medicineType = $medicineType;
+    public function __construct($ref) {
+        $this->ref = $ref;
     }
 
-    public function provideAidType(): int {
-        echo "Providing medical aid with medicine type: " . $this->medicineType;
-        return 2; // Example return value
+    public function provideAidType(): array {
+        $arr = $this->ref->provideAidType();
+        array_push($arr,2);
+        return $arr; // Example return value
     }
 }
