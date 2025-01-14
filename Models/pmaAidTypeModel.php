@@ -1,6 +1,9 @@
 <?php
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
+require_once "Models/pmaAidTypeModel.php";
+require_once "Models/aidTypeModel.php";
+
 ob_end_clean();
 
 class pmaAidTypeModel {
@@ -8,6 +11,10 @@ class pmaAidTypeModel {
     private ?int $patient_application_id;
     private ?int $aid_type_id;    
 
+
+    public function get_id(){return $this->id;}
+    public function get_patient_application_id(){return $this->patient_application_id;}
+    public function get_aid_type_id(){return $this->aid_type_id;}
 
     public function __construct(array $data){
         $this->id = $data['id'] ?? null;
@@ -21,24 +28,23 @@ class pmaAidTypeModel {
         return run_query($query, true);
     }
     
-    public static function get_aidtypes_by_application_id($application_id):array{
-        $query= "Select patient_medical_aid_application_aid_type.aid_type_id
+    public static function get_by_patient_application_id($application_id){
+        $query= "Select *
                         From patient_medical_aid_application_aid_type
                         where patient_medical_aid_application_aid_type.patient_application_id = '$application_id'";
 
         $rows = run_select_query($query);
-        $opertions=[];
+        $pmaAidTypes=[];
         foreach($rows->fetch_all(MYSQLI_ASSOC) as $row){
-            // print_r($row);
-            $aid_type_obj = AidTypeModel::get_aid_type($row["aid_type_id"]);
-            array_push($opertions,$aid_type_obj->getType());
+            $pmaAidTypes[] = new pmaAidTypeModel($row);
+            
         }
-        return $opertions;
+        return $pmaAidTypes;
     }
 
-    public function provideAidType():array{
-        return [];
-    }
+    // public function provideAidType():array{
+    //     return [];
+    // }
 
 
 }
