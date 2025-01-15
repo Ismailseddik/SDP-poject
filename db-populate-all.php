@@ -155,9 +155,9 @@ run_queries([
   `aid_type_id` INT NOT NULL
 );", 
 
-"INSERT INTO `patient_medical_aid_application_aid_type` (`patient_application_id`, `aid_type_id`) VALUES ('1', '1');",
-"INSERT INTO `patient_medical_aid_application_aid_type` (`patient_application_id`, `aid_type_id`) VALUES ('1', '2');",
-"INSERT INTO `patient_medical_aid_application_aid_type` (`patient_application_id`, `aid_type_id`) VALUES ('1', '3');",
+// "INSERT INTO `patient_medical_aid_application_aid_type` (`patient_application_id`, `aid_type_id`) VALUES ('1', '1');",
+// "INSERT INTO `patient_medical_aid_application_aid_type` (`patient_application_id`, `aid_type_id`) VALUES ('1', '2');",
+// "INSERT INTO `patient_medical_aid_application_aid_type` (`patient_application_id`, `aid_type_id`) VALUES ('1', '3');",
 
 
 "CREATE TABLE `person` (
