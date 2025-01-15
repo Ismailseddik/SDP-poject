@@ -79,6 +79,9 @@ class DonorController
     }
     private function addDonor(): void
     {
+        $workflowCompleted = false; // Flag to track if workflow completed
+        $errorMessage = ""; // Store any error message for rendering
+        $successMessage = ""; // Store any success message
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Retrieve form data
             $firstName = $_POST['donor_first_name'] ?? '';

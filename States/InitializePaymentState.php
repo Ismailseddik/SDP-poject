@@ -12,7 +12,14 @@ class InitializePaymentState implements IPaymentState {
             $this->context->setState(new ProcessPaymentState($this->context));
             $this->context->logMessage("Data received and validated. Transitioning to Process Payment.");
             $this->context->handleTransition('CallAPI', $data); // Next transition
-        } else {
+        }elseif (isset($data['donor_first_name'], $data['donor_last_name'], $data['donation_type']) 
+        && $data['donor_first_name'] !== '' && $data['donor_last_name'] !== '' && $data['donation_type'] !== '') {
+        echo "Donor data received and validated. Transitioning to Process Payment.\n";
+        $this->context->setState(new ProcessPaymentState($this->context));
+        $this->context->logMessage("Donor data received and validated. Transitioning to Process Payment.");
+        $this->context->handleTransition('CallAPI', $data); // Proceed to ProcessPaymentState
+        return; // Exit after successful validation
+    } else {
             echo "Data validation failed. Calling DataRejected.\n";
             $this->context->logMessage("Data validation failed. Calling DataRejected.");
             $this->DataRejected();
