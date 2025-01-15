@@ -36,6 +36,8 @@ run_queries([
 
 "INSERT INTO `doctor` (`person_id`, `speciality_id`, `rank_id`, `isAvailable`) VALUES ('1', '1', '1', '1');",
 "INSERT INTO `doctor` (`person_id`, `speciality_id`, `rank_id`, `isAvailable`) VALUES ('2', '1', '1', '1');",
+"INSERT INTO `doctor` (`person_id`, `speciality_id`, `rank_id`, `isAvailable`) VALUES ('5', '1', '1', '1');",
+
 
 "CREATE TABLE `doctor_rank` (
   `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -135,9 +137,9 @@ run_queries([
   `person_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
-"INSERT INTO `patient` (`id`,`person_id`) VALUES 
-(1,2),
-(2,2);",
+"INSERT INTO `patient` (`person_id`) VALUES 
+(2),
+(6);",
 
 
 "CREATE TABLE `patient_medical_aid_application` (
@@ -174,7 +176,9 @@ run_queries([
 ('ismail', 'seddik', '2001-11-05', 1),
 ('tarek', 'khaled', '2001-12-06',1),
 ('mohamed', 'ayman', '2000-12-06',1),
-('hesham', 'mohamed', '2001-09-06',1);",
+('hesham', 'mohamed', '2001-09-06',1),
+('Seif', 'khaled', '2001-09-06',1),
+('Yehia', 'mohamed', '2001-09-06',1);",
 
 "INSERT INTO `person` (`first_name`, `last_name`, `birth_date`, `address_id`, `isDeleted`) VALUES ('Ahmed', 'Khaled', '2002-02-12', '2', '0');",
 
