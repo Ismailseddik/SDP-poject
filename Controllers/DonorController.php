@@ -3,9 +3,57 @@
 require_once '../models/donorModel.php';
 require_once '../strategies/MonetaryDonation.php';
 require_once '../strategies/OrganDonation.php';
+$baseDir = realpath(__DIR__ . '/../States') . DIRECTORY_SEPARATOR;
+require_once $baseDir . 'InitializePaymentState.php';
+require_once $baseDir . 'ProcessPaymentState.php';
+require_once $baseDir . 'ReceiveResponseState.php';
+require_once $baseDir . 'DisplayResponseState.php';
+require_once $baseDir . 'FinalState.php';
+
 
 class DonorController
 {
+    private $currentState;
+    private $logs = [];
+    public function logMessage(string $message): void {
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+        if (!isset($_SESSION['logs'])) {
+            $_SESSION['logs'] = [];
+        }
+        $_SESSION['logs'][] = $message;
+    }
+    
+    public function getLogs(): array {
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+        return $_SESSION['logs'] ?? [];
+    }
+    
+    public function clearLogs(): void {
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+        $_SESSION['logs'] = [];
+    }
+    
+    public function setState(IPaymentState $state): void {
+        $this->currentState = $state;
+    }
+
+    public function getState(): IPaymentState {
+        return $this->currentState;
+    }
+    // Example of how to transition through states
+    public function handleTransition(string $transition, array $data = []): void {
+        if (method_exists($this->currentState, $transition)) {
+            $this->currentState->{$transition}($data);
+        } else {
+            echo "Invalid transition: $transition";
+        }
+    }
     public function index($action = null): void
     {
         switch ($action) {
@@ -31,6 +79,9 @@ class DonorController
     }
     private function addDonor(): void
     {
+        $workflowCompleted = false; // Flag to track if workflow completed
+        $errorMessage = ""; // Store any error message for rendering
+        $successMessage = ""; // Store any success message
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Retrieve form data
             $firstName = $_POST['donor_first_name'] ?? '';
@@ -40,7 +91,27 @@ class DonorController
             $amount = (float)($_POST['donor_amount'] ?? NULL);
             $organ = $_POST['organ'] ?? '';
             $donationType = $_POST['donation_type'] ?? 'monetary';
+            // Initialize payment
+            $this->setState(new InitializePaymentState($this));
+            $this->handleTransition('ReceiveData', $_POST);
+            // Check if the transaction reached the FinalState
+            if ($this->getState() instanceof FinalState) {
+                $workflowCompleted = true; // Indicate success
+                $successMessage = "Transaction completed successfully.";
+                $this->logMessage($successMessage);
+            } else {
+                $errorMessage = "Transaction failed or still in progress.";
+                $this->logMessage($errorMessage);
+                    // Fetch donors and donations for the view
+                $donors = Donor::getAllDonors();
+                $donations = DonationModel::get_all_donations();
+                $logs = $this->getLogs();
+                $this->clearLogs(); // Clear logs after rendering
 
+                // Include the view, passing necessary variables
+                include '../views/donorView.php';
+                return;
+            }
             if ($amount==0){
                 $amount=NULL;
             }
@@ -73,6 +144,8 @@ class DonorController
         $donations =DonationModel::get_all_donations();
         //
         //error_log(print_r($donors, true)); // Logs the array in your PHP error log
+        $logs = $this->getLogs();
+        $this->clearLogs();
         include '../views/donorView.php';
     }
     private function showAddDonorForm(): void
@@ -92,6 +165,9 @@ class DonorController
     // Method to handle form submission and add a new donation
     private function addDonation(): void
     {
+        $workflowCompleted = false; // Flag to track if workflow completed
+        $errorMessage = ""; // Store any error message for rendering
+        $successMessage = ""; // Store any success message
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Get donor ID, donation type, and amount from form
             $donorId = (int)$_POST['donor_id'] ?? 0;
@@ -99,7 +175,26 @@ class DonorController
             $donationId = (int)$_POST['donation_id'] ?? 0;
             $amount = (float)($_POST['amount'] ?? 0);
             $organ = $_POST['organ'] ?? '';
+            $this->setState(new InitializePaymentState($this));
+            $this->handleTransition('ReceiveData', $_POST);
+            // Check if the transaction reached the FinalState
+            if ($this->getState() instanceof FinalState) {
+                $workflowCompleted = true; // Indicate success
+                $successMessage = "Transaction completed successfully.";
+                $this->logMessage($successMessage);
+            } else {
+                $errorMessage = "Transaction failed or still in progress.";
+                $this->logMessage($errorMessage);
+                    // Fetch donors and donations for the view
+                $donors = Donor::getAllDonors();
+                $donations = DonationModel::get_all_donations();
+                $logs = $this->getLogs();
+                $this->clearLogs(); // Clear logs after rendering
 
+                // Include the view, passing necessary variables
+                include '../views/donorView.php';
+                return;
+            }
             // Fetch the donor by ID
             $donor = Donor::getby_id($donorId);
 //            $donationId = DonationModel::get_donation_details();
