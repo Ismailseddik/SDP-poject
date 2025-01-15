@@ -227,6 +227,20 @@ run_queries([
   ('Approved'),
   ('Rejected');",
 
+  "CREATE TABLE `user_login_information` (
+  `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `person_id` int(11) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(500) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
+
+"INSERT INTO `user_login_information` (`person_id`,`email`,`password`) VALUES 
+  ('1','ismail@gmail.com','$2a$12\$PuUfqWJYHGAL.9wHGvuQoOxoFHAsU8ZdbJKcn5EYxSQww/WBKqcx2'),
+  ('2','tarek@gmail.com','$2a$12\$PuUfqWJYHGAL.9wHGvuQoOxoFHAsU8ZdbJKcn5EYxSQww/WBKqcx2'),
+  ('3','ayman@gmail.com','$2a$12\$PuUfqWJYHGAL.9wHGvuQoOxoFHAsU8ZdbJKcn5EYxSQww/WBKqcx2'),
+  ('4','hesham@gmail.com','$2a$12\$PuUfqWJYHGAL.9wHGvuQoOxoFHAsU8ZdbJKcn5EYxSQww/WBKqcx2');",
+
+
 "ALTER TABLE `doctor`
   ADD FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
   ADD FOREIGN KEY (`rank_id`) REFERENCES `doctor_rank` (`id`),
@@ -256,6 +270,8 @@ run_queries([
   ADD FOREIGN KEY (`application_id`) REFERENCES `medical_aid_application` (`id`),
   ADD FOREIGN KEY (`document_id`) REFERENCES `document` (`id`);",
 
+"ALTER TABLE `user_login_information`
+  ADD FOREIGN KEY (`person_id`) REFERENCES `person` (`id`);",
 
 "ALTER TABLE `patient`
   ADD FOREIGN KEY (`person_id`) REFERENCES `person` (`id`);",

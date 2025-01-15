@@ -65,6 +65,17 @@ class Person implements IObserver
         return run_query($query, true);
     }
 
+    public static function getUserByEmail($email){
+        $rows = run_select_query("SELECT * FROM `user_login_information` WHERE email = '$email'");
+        if ($rows->num_rows > 0) {
+            $row = $rows->fetch_assoc();
+            return $row; 
+        } else {
+            return false;
+        }
+        
+    }
+
     // public static function get_all_by_address_name($name){
     //     $query = "
     //     SELECT

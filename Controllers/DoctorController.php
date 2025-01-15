@@ -1,8 +1,9 @@
 <?php
 
 require_once __DIR__ . '/../models/doctorModel.php';
+require_once 'TemplateController.php';
 
-class DoctorController
+class DoctorController extends TemplateController
 {
     public function index($action = null)
     {
@@ -23,6 +24,10 @@ class DoctorController
                 echo "Error: Action not recognized.";
                 break;
         }
+    }
+
+    protected function getUserByEmail($email) {
+        return Person::getUserByEmail($email);
     }
 
     private function listDoctors() {
