@@ -143,7 +143,15 @@
         </div>
         <a href="index.php?view=donor&action=showAddDonationForm">Add New Donation</a>
     </main>
-
+    <?php if (!empty($logs)): ?>
+    <div class="logs">
+        <ul>
+            <?php foreach ($logs as $log): ?>
+                <li><?= htmlspecialchars($log) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
     <footer>
         <p>&copy; 2024 Medical Aid Charity. All rights reserved.</p>
     </footer>

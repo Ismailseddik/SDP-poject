@@ -149,6 +149,17 @@ run_queries([
 
 "INSERT INTO `patient_medical_aid_application` (`patient_id`, `application_id`, `status_id`) VALUES ('1', '1', '1');",
 
+"CREATE TABLE `patient_medical_aid_application_aid_type` (
+  `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `patient_application_id` INT NOT NULL,
+  `aid_type_id` INT NOT NULL
+);", 
+
+// "INSERT INTO `patient_medical_aid_application_aid_type` (`patient_application_id`, `aid_type_id`) VALUES ('1', '1');",
+// "INSERT INTO `patient_medical_aid_application_aid_type` (`patient_application_id`, `aid_type_id`) VALUES ('1', '2');",
+// "INSERT INTO `patient_medical_aid_application_aid_type` (`patient_application_id`, `aid_type_id`) VALUES ('1', '3');",
+
+
 "CREATE TABLE `person` (
   `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `first_name` varchar(100) NOT NULL,
@@ -199,11 +210,6 @@ run_queries([
   `type` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
-"CREATE TABLE `patient_medical_aid_application_aid_type` (
-  `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `patient_application_id` INT NOT NULL,
-  `aid_type_id` INT NOT NULL
-);",
 
 // Insert sample data for aid types
 "INSERT INTO `aid_type` (`type`) VALUES 
@@ -260,6 +266,9 @@ run_queries([
   ADD FOREIGN KEY (`patient_id`) REFERENCES `patient` (`id`),
   ADD FOREIGN KEY (`status_id`) REFERENCES `application_status`(`id`);",
 
+"ALTER TABLE `patient_medical_aid_application_aid_type`
+  ADD FOREIGN KEY (`patient_application_id`) REFERENCES `patient_medical_aid_application`(`id`),
+  ADD FOREIGN KEY (`aid_type_id`) REFERENCES `aid_type`(`id`)",
 
 "ALTER TABLE `person`
   ADD FOREIGN KEY (`address_id`) REFERENCES `address` (`id`);",

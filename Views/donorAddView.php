@@ -91,7 +91,7 @@
 
         <div id="organField" class="hidden">
             <label for="organ">Donation Organ:</label>
-            <input type="text" id="organ" name="organ" placeholder="Enter Organ Name" />
+            <input type="text" id="organ" name="organ" placeholder="Enter Organ Name" required/>
         </div>
 
         <button type="submit">Add Donor</button>

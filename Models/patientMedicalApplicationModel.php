@@ -123,21 +123,7 @@ class PatientMedicalApplicationModel{
         }
         return true;
     }
-    public static function get_aid_types(int $application_id): array {
-        $query = "
-            SELECT 
-                aid_type.type AS aid_type_name
-            FROM 
-                patient_medical_aid_application
-            JOIN 
-                aid_type ON patient_medical_aid_application.aid_type_id = aid_type.id
-            WHERE 
-                patient_medical_aid_application.application_id = '$application_id'
-        ";
-    
-        $result = run_select_query($query);
-        return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
-    }
+
     
     public static function add_patient_application(int $patient_id, int $doctor_id): bool {
         $conn = DataBase::getInstance()->getConn();
