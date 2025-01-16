@@ -2,6 +2,7 @@
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 require_once 'MedicalApplicationModel.php';
+require_once 'applicationStatusModel.php';
 require_once 'doctorModel.php';
 include_once($_SERVER["DOCUMENT_ROOT"] . "\Observers\IObserver.php");
 ob_end_clean();
@@ -80,7 +81,7 @@ class PatientMedicalApplicationModel{
         }
         return $applications;
     }
-    public static function get_applications_by_patient(int $patient_id): PatientMedicalApplicationModel|bool
+    public static function get_applications_by_patient(int $patient_id): array|bool
     {
         $query = "
             SELECT 
@@ -91,6 +92,7 @@ class PatientMedicalApplicationModel{
                 person_patient.last_name AS patient_last_name,
                 person_doctor.first_name AS doctor_first_name,
                 person_doctor.last_name AS doctor_last_name,
+                application_status.id AS status_id,
                 application_status.status
             FROM patient_medical_aid_application
             JOIN medical_aid_application ON patient_medical_aid_application.application_id = medical_aid_application.id
@@ -101,17 +103,22 @@ class PatientMedicalApplicationModel{
             JOIN application_status ON patient_medical_aid_application.status_id = application_status.id
             WHERE patient_medical_aid_application.patient_id = '$patient_id'
         ";
-      
-        
-        // id x | patient id x | id(patient) | person_id | id(person) | first name x | last name x | address id | birth date | is deleted | application id x | doctor id | id(doc) | person_id |  id(person) | first name x | last name x | address id | birth date | is deleted  | speciality id | rank id | isAvailable | status id |
+
         $result = run_select_query($query);
 
+        // Check if the query returned any results
         if ($result && $result->num_rows > 0) {
-            return new self($result->fetch_assoc());
+            $applications = [];
+            while ($row = $result->fetch_assoc()) {
+                // Create a new instance for each row and add it to the applications array
+                $applications[] = new self($row);
+            }
+            return $applications;
         }
 
-        return false; 
+        return false; // Return false if no applications are found
     }
+
     public static function add_aid_types(int $application_id, array $aid_types): bool {
         foreach ($aid_types as $aid_type_id) {
             $query = "INSERT INTO `patient_medical_aid_application` (application_id, aid_type_id, status_id)
@@ -143,7 +150,9 @@ class PatientMedicalApplicationModel{
     
         return $result;
     }
-    
+    public function getApplicationStatus(): string|null {
+        return $this->application_status;
+    }
     
 
 }

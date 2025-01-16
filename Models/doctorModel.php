@@ -4,6 +4,7 @@ include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 require_once "personModel.php";
 require_once "doctorrankModel.php";
 require_once "specialityModel.php";
+require_once "../Models/patientMedicalApplicationModel.php";
 ob_end_clean();
 
 class Doctor extends Person 
@@ -163,66 +164,25 @@ class Doctor extends Person
         return run_query($query, true);
     }
 
-    public function update_obeserver(int $patient_id): void {
-        // Fetch the application data for the given patient
-        $application = PatientMedicalApplicationModel::get_applications_by_patient($patient_id);
+    public function update_obeserver(): void {
+        // Fetch applications for this doctor
+        $applications = self::getApplicationsForDoctor($this->getId());
     
-        if ($application) {
-            // Generate a notification message
-            $message = "You have a new medical aid application for Patient ID: $patient_id (Application ID: " . $application->getApplicationId() . ").";
-    
-            // Store the notification for this doctor (e.g., log or save in persistent storage)
-            error_log("Notification for Doctor ID {$this->getId()}: $message");
-    
-            // Optional: Perform further actions, such as sending an email or updating a dashboard
-        } else {
-            error_log("No application found for Patient ID: $patient_id.");
+        if (empty($applications)) {
+            error_log("No applications found for Doctor ID: {$this->getId()}.");
+            return;
         }
+    
+        // Assign the fetched applications to the doctor's applications property
+        $this->applications = $applications;
+    
+        // Log update for debugging
+        error_log("Applications for Doctor ID {$this->getId()} updated.");
     }
-    // public static function update(array $array): bool {
-        
-    //     if (!isset($array['id'])) {
-    //         echo "Error: 'id' is required to update a doctor.";
-    //         return false;
-    //     }
-
-    //     $id = $array['id'];
-
-      
-    //     $setParts = [];
-    //     if (isset($array['person_id'])) {
-    //         $setParts[] = "`person_id` = " . intval($array['person_id']);
-    //     }
-    //     if (isset($array['speciality_id'])) {
-    //         $setParts[] = "`speciality_id` = " . intval($array['speciality_id']);
-    //     }
-    //     if (isset($array['rank_id'])) {
-    //         $setParts[] = "`rank_id` = " . intval($array['rank_id']);
-    //     }
-    //     if (isset($array['isAvailable'])) {
-    //         $setParts[] = "`isAvailable` = " . intval($array['isAvailable']);
-    //     }
-
-        
-    //     if (empty($setParts)) {
-    //         echo "Error: No fields to update.";
-    //         return false;
-    //     }
-
-    //     $setClause = implode(', ', $setParts);
-        
-    //     $query = "UPDATE `doctor` SET $setClause WHERE id = '$id'";
-
-    //     return run_query($query, true);
-    // }
-
-    public static function delete($id): bool {
-        // SQL query to update the isDeleted flag to 1
-        $query = "UPDATE `person` SET `isDeleted` = 1 WHERE id = '$id'";
-
-        // Execute the query
-        return run_query($query, true);
-    }
+    
+    
+    
+    
 
     public static function getApplicationsForDoctor(int $doctor_id): array {
         $query = "
@@ -237,16 +197,17 @@ class Doctor extends Person
             JOIN person ON patient.person_id = person.id
             WHERE medical_aid_application.doctor_id = '$doctor_id'
         ";
-
-        $applications = [];
+    
         $rows = run_select_query($query);
-
+        $applications = [];
+    
         if ($rows && $rows->num_rows > 0) {
             while ($row = $rows->fetch_assoc()) {
-                $applications[] = $row;
+                $applications[] = new PatientMedicalApplicationModel($row);
             }
         }
-
+    
         return $applications;
     }
+    
 }
