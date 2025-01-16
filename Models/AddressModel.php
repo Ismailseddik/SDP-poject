@@ -27,11 +27,11 @@ class Address extends Iterators implements ISelfRefrence{
     {
         $row = run_select_query("SELECT * FROM `address` WHERE id = '$id'");
 
-        if ($row->num_rows > 0) {
-            return new self($row->fetch_assoc());
-        } else {
-            return false;
-        }
+        if ($row->num_rows > 0) 
+        {return new self($row->fetch_assoc());}
+         
+        else 
+        {return false;}
 
     }
     public static function ReadAll($id)
@@ -57,38 +57,111 @@ class Address extends Iterators implements ISelfRefrence{
         return run_query($query,true);
     }
 
-    public static function get_address_by_id(int $id, array &$address_list):void
+    public static function getFullAdressByID(int $id)
     {
-        if($id === 0){return;}
+        $FullAddress = [];
+        $PartialAddress = Address::Read($id);
 
-        $query = "
-        SELECT
-            address.name,
-            address.parent_id
-        From address
-        where address.id = '$id'
+        $itr = self::getSelfRefrenceIterator();
+        $itr->SetIterable($PartialAddress);
+        while($itr->HasNext())
+        {
+            $FullAddress [] = $PartialAddress->getName();
+            $PartialAddress = Address::Read($itr->Next());
+            $itr->SetIterable($PartialAddress);
+        }
+        // Append the Root Node Name
+        $FullAddress [] = $PartialAddress->getName();
 
-        ";
-        $rows = run_select_query($query);
-        if (!$rows) {
-            echo "Error: Query execution failed in getting_address_by_id.";
-            return ;
-        } elseif ($rows->num_rows === 0) {
-            echo "Debug: Query executed but returned no results in getting_address_by_id.";
-            return ;
-        } else {
-            echo "Debug: Query successful, fetching addresses\n";
-            foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) 
+        return $FullAddress;
+
+    }
+
+    public static function getWhoLiveIn(String $name)
+    {   
+        // Map so we could not iterate over visited IDs Twice
+        $Excluded_IDs = [];
+        $Included_IDs = [];
+        $All_People_Who_lives = [];
+
+        $People = Person::ReadAll();
+        $ArrayItr = self::getArrayIterator();
+        $ArrayItr->SetIterable($People);
+        while($ArrayItr->HasNext())
+        {
+            $Curr_Person = $ArrayItr->Next();
+            $Curr_AddressID = $Curr_Person->getAddressId();
+            if(array_key_exists($Curr_AddressID,$Included_IDs))
             {
-                array_push($address_list,$row['name']);
-                Address::get_address_by_id((int)$row['parent_id'],$address_list);
-                
+                $All_People_Who_lives [] = $Curr_Person;
+            }
+            elseif(array_key_exists($Curr_AddressID,$Excluded_IDs))
+            {
+                continue;
+            }
+            else
+            {  
+                $Found = false;
+                $AdrressOfId = Address::getFullAdressByID($Curr_AddressID);
+
+                $AddressItr = new CustomArrayIterator();
+                $AddressItr->SetIterable($AdrressOfId);
+                while($AddressItr->HasNext())
+                {
+                    if($AddressItr->Next() == $name)
+                    {
+                        $All_People_Who_lives [] = $Curr_Person;
+                        $Included_IDs[$Curr_AddressID] = $Curr_AddressID;
+                        $Found = true;
+                        break;
+                    }
+
+                }
+                if (!$Found)
+                {
+                    $Excluded_IDs[$Curr_AddressID] = $Curr_AddressID;
+                }
             }
 
         }
+
+        return $All_People_Who_lives;
+
         
 
     }
+    // public static function get_address_by_id(int $id, array &$address_list):void
+    // {
+    //     if($id === 0){return;}
+
+    //     $query = "
+    //     SELECT
+    //         address.name,
+    //         address.parent_id
+    //     From address
+    //     where address.id = '$id'
+
+    //     ";
+    //     $rows = run_select_query($query);
+    //     if (!$rows) {
+    //         echo "Error: Query execution failed in getting_address_by_id.";
+    //         return ;
+    //     } elseif ($rows->num_rows === 0) {
+    //         echo "Debug: Query executed but returned no results in getting_address_by_id.";
+    //         return ;
+    //     } else {
+    //         echo "Debug: Query successful, fetching addresses\n";
+    //         foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) 
+    //         {
+    //             array_push($address_list,$row['name']);
+    //             Address::get_address_by_id((int)$row['parent_id'],$address_list);
+                
+    //         }
+
+    //     }
+        
+
+    // }
     public static function get_address_by_name(int $id , string $name):bool
     {
         if($id === 0){return false;}

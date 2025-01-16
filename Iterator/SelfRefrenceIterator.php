@@ -17,15 +17,21 @@ class SelfRefrenceIterator implements IIterator
 
     public function HasNext()
     {
-        return $this->data->getParentID() == 0;
+        return $this->data->getParentID() != 0;
     }
     public function Next()
     {
+        if($this->HasNext()) 
+        {
+            return $this->data->getParentID();
+        }
 
+        else {return null;}
     }
+    
     public function Reset()
     {
-        
+        return;
     }
 
     
