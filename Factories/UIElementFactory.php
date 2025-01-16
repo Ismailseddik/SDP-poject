@@ -62,15 +62,30 @@ class UIElementFactory
         $type = htmlspecialchars($data['type'] ?? 'text');
         $placeholder = htmlspecialchars($data['placeholder'] ?? '');
         $value = htmlspecialchars($data['value'] ?? '');
-    
+        $required = !empty($data['required']) ? 'required' : '';
         return "
             <div class='form-group'>
                 <label for='{$name}'>{$label}</label>
-                <input type='{$type}' name='{$name}' id='{$name}' placeholder='{$placeholder}' value='{$value}' class='form-control'>
+                <input type='{$type}' name='{$name}' id='{$name}' placeholder='{$placeholder}' value='{$value}'{$required} class='form-control'>
             </div>
         ";
     }
-    
+    public static function createDropdownField(array $data): string {
+        $label = htmlspecialchars($data['label'] ?? 'Label');
+        $name = htmlspecialchars($data['name'] ?? 'dropdown');
+        $options = $data['options'] ?? [];
+        $placeholder = htmlspecialchars($data['placeholder'] ?? 'Select an option');
+        $dropdown = "<label for='{$name}'>{$label}</label>";
+        $dropdown .= "<select name='{$name}' id='{$name}' class='form-control'>";
+        $dropdown .= "<option value='' disabled selected>{$placeholder}</option>";
+
+        foreach ($options as $key => $value) {
+            $dropdown .= "<option value='" . htmlspecialchars($key) . "'>" . htmlspecialchars($value) . "</option>";
+        }
+
+        $dropdown .= "</select>";
+        return $dropdown;
+    }
     public static function createList(array $data): string {
         $items = $data['items'] ?? [];
         $listItems = array_map(fn($item) => "<li>" . htmlspecialchars($item) . "</li>", $items);
