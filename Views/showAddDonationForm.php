@@ -116,6 +116,13 @@
             <input type="number" name="amount" id="amount" class="form-control" placeholder="Enter Amount" min="1" />
         </div>
 
+        <div id="paymentType" class="hidden">
+        <label for="payment">Payment Method:</label>
+        <select name="paymentType" id="paymentType" class="form-control" onchange="toggleDonationFields()">
+            <option value="Paypal">Paypal</option>
+            <option value="Credit">Credit</option>
+        </select> 
+        </div>                   
         <!-- Organ Donation Section -->
         <div id="organFields" class="hidden">
             <label for="organ">Organ Donated:</label>
@@ -138,6 +145,7 @@
         const donationType = document.getElementById("donationType");
         const monetaryFields = document.getElementById("monetaryFields");
         const organFields = document.getElementById("organFields");
+        const paymentType = document.getElementById("paymentType");
 
         // Toggle fields based on donation type
         function toggleFields() {
@@ -145,11 +153,14 @@
             if (type === "Monetary") {
                 monetaryFields.classList.remove("hidden");
                 organFields.classList.add("hidden");
+                paymentType.classList.remove("hidden");
             } else if (type === "Organ") {
                 organFields.classList.remove("hidden");
                 monetaryFields.classList.add("hidden");
+                paymentType.classList.add("hidden");
             } else {
                 monetaryFields.classList.add("hidden");
+                paymentType.classList.add("hidden");
                 organFields.classList.add("hidden");
             }
         }
