@@ -143,12 +143,20 @@ nav ul li a:hover {
     margin: 8px 0;
 }
 
-/* Patient card styling */
+/* Patient Card Styling */
 .patient-card {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     margin-bottom: 10px;
+    background-color: #fff; /* Optional: Set a background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add subtle shadow */
+}
+
+.patient-card p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #333;
 }
 
 /* Form styling */
@@ -195,33 +203,140 @@ nav ul li a:hover {
 }
 
 /* Application card styling */
-.application-card {
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #e0fbfc;
-    border-left: 4px solid #0a9396;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+/* Application Details Styling */
+.application-card .details {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    margin-bottom: 10px;
+}
+/* Parent Container for Application List */
+.application-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Ensure proper card layout */
+    gap: 20px; /* Add spacing between cards */
+    margin: 20px 0; /* Add vertical spacing around the list */
 }
 
-/* Application form styling */
+/* Individual Application Card */
+.application-card {
+    padding: 15px; /* Add internal spacing */
+    border: 1px solid #ddd; /* Add a subtle border */
+    border-radius: 8px; /* Rounded corners for better appearance */
+    background-color: #ffffff; /* Separate card background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for separation */
+    transition: transform 0.2s ease; /* Smooth hover effect */
+}
+
+/* Hover Effect */
+.application-card:hover {
+    transform: scale(1.02); /* Slightly enlarge on hover */
+}
+
+/* Typography for Card Content */
+.application-card p {
+    margin: 8px 0; /* Add spacing between text lines */
+    font-size: 14px; /* Ensure readable font size */
+    color: #333; /* Standard text color */
+}
+
+/* Button in the Card */
+.application-card .button {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.application-card .button:hover {
+    background-color: #45a049;
+    transform: scale(1.03);
+}
+
+/* Application Status Styling */
+.application-card .status {
+    font-weight: bold;
+    color: #0a9396;
+    margin-bottom: 5px;
+}
+
+/* Application Buttons (if any inside the card) */
+.application-card .button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #007f87;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.application-card .button:hover {
+    background-color: #005f73;
+}
+
+
+/* Application Form Styling */
 .application-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .application-form label {
+    margin-bottom: 8px;
     font-weight: bold;
     color: #005f73;
 }
 
+.application-form input[type="text"],
 .application-form input[type="number"],
 .application-form select {
+    width: 100%;
     padding: 10px;
+    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
     transition: border-color 0.3s ease-in-out;
+}
+
+.application-form input[type="text"]:focus,
+.application-form input[type="number"]:focus,
+.application-form select:focus {
+    border-color: #0a9396;
+    outline: none;
+}
+
+/* Application-Specific Button */
+.application-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #0a9396;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.application-button:hover {
+    background-color: #005f73;
 }
 
 .application-form input[type="number"]:focus,
@@ -231,21 +346,42 @@ nav ul li a:hover {
 }
 
 /* Button styling */
+/* General Button Styling */
 .button {
-    padding: 10px 20px;
-    background-color: #0a9396;
+    display: inline-block;
+    width: 100%; /* Make it fit the width of the container */
+    padding: 12px 20px;
+    font-size: 16px;
     color: #fff;
+    background-color: #4CAF50;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
+    cursor: pointer;
     text-align: center;
     text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+/* Hover Effect for Buttons */
 .button:hover {
-    background-color: #007f87;
+    background-color: #45a049;
+    transform: scale(1.03); /* Slightly enlarge the button */
 }
+
+/* Focused State for Buttons */
+.button:focus {
+    outline: none;
+    box-shadow: 0 0 4px rgba(76, 175, 80, 0.8);
+}
+
+/* Disabled Button Styling */
+.button:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    transform: none; /* Remove hover effect */
+}
+
 
 /* Add button styling */
 .add-button {
@@ -282,4 +418,96 @@ nav ul li a:hover {
     font-size: 14px;
     color: #555;
     margin-bottom: 5px;
+}
+/* Form Group Wrapper */
+.form-group {
+    margin-bottom: 20px; /* Add spacing between fields */
+}
+
+/* Form Label Styling */
+.form-group label {
+    display: block;
+    margin-bottom: 8px; /* Spacing between label and input */
+    font-weight: bold;
+    color: #005f73; /* Matches existing theme */
+    font-size: 14px;
+}
+
+/* Form Input Styling */
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Focused Input State */
+.form-control:focus {
+    border-color: #0a9396; /* Highlight border color */
+    box-shadow: 0 0 4px rgba(10, 147, 150, 0.5); /* Subtle glow effect */
+    outline: none;
+}
+
+/* Disabled Input */
+.form-control:disabled {
+    background-color: #f0f0f0;
+    color: #aaa;
+    cursor: not-allowed;
+}
+/* Donor card styling */
+.donor-card {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.donor-card:hover {
+    transform: scale(1.02);
+}
+
+/* Add Donor button styling */
+.add-donor-button {
+    display: inline-block;
+    margin: 20px 0;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.add-donor-button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+/* Donation card styling */
+.donation-card {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.donation-card:hover {
+    transform: scale(1.02);
+}
+
+.donation-card p {
+    margin: 10px 0;
 }
