@@ -1,8 +1,9 @@
 <?php
 // PatientController.php
 require_once '../models/patientModel.php';
+require_once 'TemplateController.php';
 
-class PatientController
+class PatientController extends TemplateController
 {
     public function index($action = null)
     {
@@ -33,6 +34,10 @@ class PatientController
     private function showAddPatientForm()
     {
         include '../views/patientView.php';
+    }
+
+    protected function getUserByEmail($email) {
+        return Person::getUserByEmail($email);
     }
 
     // Handle the form submission for adding a new patient

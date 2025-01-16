@@ -4,7 +4,7 @@ class OperationalAid extends AidTypeDecorator
 {
     public function __construct(pmaAidTypeModel $ref) {
         $this->ref = $ref;
-        $this->WrapAidType();
+        //$this->WrapAidType();
     }
 
     public function WrapAidType() {
