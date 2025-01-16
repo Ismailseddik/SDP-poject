@@ -1,5 +1,5 @@
 <?php
-require_once "./utils.php";
+include_once($_SERVER["DOCUMENT_ROOT"] . "\utils.php");
 class SelfRefrenceIterator implements IIterator
 {
     private $data;
@@ -21,7 +21,7 @@ class SelfRefrenceIterator implements IIterator
     }
     public function Next()
     {
-        
+
     }
     public function Reset()
     {

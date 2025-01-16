@@ -1,5 +1,6 @@
 <?php
-require_once "./utils.php";
+include_once($_SERVER["DOCUMENT_ROOT"] . "\utils.php");
+
 class CustomArrayIterator implements IIterator
 {
     private $data;

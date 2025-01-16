@@ -1,5 +1,5 @@
 <?php
-require_once "./utils.php";
+include_once($_SERVER["DOCUMENT_ROOT"] . "\utils.php");
 class DataBaseIterator implements IIterator
 {
     private $data;

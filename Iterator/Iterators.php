@@ -1,9 +1,9 @@
 <?php
 
-require_once "Iterator/IIterator.php";
-require_once "Iterator/ArrayIterator.php";
-require_once "Iterator/DataBaseIterator.php";
-require_once "Iterator/SelfRefrenceIterator.php";
+require_once "IIterator.php";
+require_once "ArrayIterator.php";
+require_once "DataBaseIterator.php";
+require_once "SelfRefrenceIterator.php";
 
 class Iterators 
 {

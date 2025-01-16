@@ -12,7 +12,9 @@ class ProcessPaymentState implements IPaymentState {
         //implementation not needed
     }
     public function DataRejected(){
-        //implementation not needed
+        echo "Data rejected. Resetting to Initialize Payment.\n";
+        $this->context->setState(new InitializePaymentState($this->context));
+        $this->context->logMessage("Data rejected. Resetting to Initialize Payment..");
     }
     public function CallAPI($data) {
         // Call the simulateBankAPIResponse function directly
@@ -27,11 +29,11 @@ class ProcessPaymentState implements IPaymentState {
             $this->context->logMessage("API call successful: " . $response['message']);
             $this->context->handleTransition('ResponseRecieved', $data); // Transition to RecieveResponseState
         } elseif (isset($response['status']) && $response['status'] === 'failure') {
-            // Handle insufficient funds as a transition
+            // Handle failure with specific checks for the message
             if (strpos($response['message'], 'insufficient funds') !== false) {
                 echo "<!-- API call failed: Insufficient funds -->\n";
                 $this->context->logMessage("API call failed: " . $response['message']);
-                $this->context->handleTransition('DataRejected', $data); // Retry or reset workflow
+                $this->DataRejected(); // Reset workflow for insufficient funds
             } else {
                 echo "<!-- API call failed: General error -->\n";
                 $this->context->logMessage("API call failed: " . $response['message']);
@@ -44,6 +46,7 @@ class ProcessPaymentState implements IPaymentState {
             $this->APICallFailed($data); // Retry or reset
         }
     }
+    
     
     
     public function APICallFailed($data) {

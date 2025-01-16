@@ -3,7 +3,7 @@ ob_start();
 include_once ($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 
 
-require_once "Iterator/Iterators.php";
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Iterator\Iterators.php");
 
 ob_end_clean();
 class AidTypeModel extends Iterators{

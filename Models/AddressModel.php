@@ -1,8 +1,8 @@
 <?php
 include_once ($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 
-require_once "Iterator/Iterators.php";
-require_once "interfaces/ISelfRefrence.php";
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Iterator\Iterators.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "\interfaces\ISelfRefrence.php");
 
 
 class Address extends Iterators implements ISelfRefrence{

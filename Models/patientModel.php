@@ -3,7 +3,7 @@
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 require_once "personModel.php";
 
-require_once "Iterator/Iterators.php";
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Iterator\Iterators.php");
 
 
 class Patient extends Person

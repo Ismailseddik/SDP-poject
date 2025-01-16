@@ -3,6 +3,7 @@
 require_once '../models/donorModel.php';
 require_once '../strategies/MonetaryDonation.php';
 require_once '../strategies/OrganDonation.php';
+require_once 'TemplateController.php';
 $baseDir = realpath(__DIR__ . '/../States') . DIRECTORY_SEPARATOR;
 require_once $baseDir . 'InitializePaymentState.php';
 require_once $baseDir . 'ProcessPaymentState.php';
@@ -11,7 +12,7 @@ require_once $baseDir . 'DisplayResponseState.php';
 require_once $baseDir . 'FinalState.php';
 
 
-class DonorController
+class DonorController extends TemplateController
 {
     private $currentState;
     private $logs = [];
@@ -79,6 +80,9 @@ class DonorController
     }
     private function addDonor(): void
     {
+        $workflowCompleted = false; // Flag to track if workflow completed
+        $errorMessage = ""; // Store any error message for rendering
+        $successMessage = ""; // Store any success message
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Retrieve form data
             $firstName = $_POST['donor_first_name'] ?? '';
@@ -144,6 +148,10 @@ class DonorController
         $logs = $this->getLogs();
         $this->clearLogs();
         include '../views/donorView.php';
+    }
+
+    protected function getUserByEmail($email) {
+        return Person::getUserByEmail($email);
     }
     private function showAddDonorForm(): void
     {

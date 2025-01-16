@@ -8,7 +8,7 @@ require_once "donorModel.php";
 require_once "donationModel.php";
 require_once "donorDonationModel.php";
 
-require_once "Iterator/Iterators.php";
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Iterator\Iterators.php");
 
 
 class Donor extends Person

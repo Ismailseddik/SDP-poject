@@ -2,8 +2,7 @@
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 include_once($_SERVER["DOCUMENT_ROOT"] . "\Observers\IObserver.php");
-
-require_once "Iterator/Iterators.php";
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Iterator\Iterators.php");
 
 ob_end_clean();
 class Person extends Iterators implements IObserver
@@ -68,6 +67,17 @@ class Person extends Iterators implements IObserver
         return run_query($query, true);
     }
 
+    public static function getUserByEmail($email){
+        $rows = run_select_query("SELECT * FROM `user_login_information` WHERE email = '$email'");
+        if ($rows->num_rows > 0) {
+            $row = $rows->fetch_assoc();
+            return $row; 
+        } else {
+            return false;
+        }
+        
+    }
+
     // public static function get_all_by_address_name($name){
     //     $query = "
     //     SELECT
@@ -122,7 +132,7 @@ class Person extends Iterators implements IObserver
         return run_query($query, true);
     }
 
-    public function update_obeserver(int $id):void
+    public function update_obeserver():void
     {
         return;
     }
