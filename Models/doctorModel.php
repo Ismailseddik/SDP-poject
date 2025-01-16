@@ -179,6 +179,50 @@ class Doctor extends Person
             error_log("No application found for Patient ID: $patient_id.");
         }
     }
+    public static function update(array $array): bool {
+        
+        if (!isset($array['id'])) {
+            echo "Error: 'id' is required to update a doctor.";
+            return false;
+        }
+
+        $id = $array['id'];
+
+      
+        $setParts = [];
+        if (isset($array['person_id'])) {
+            $setParts[] = "`person_id` = " . intval($array['person_id']);
+        }
+        if (isset($array['speciality_id'])) {
+            $setParts[] = "`speciality_id` = " . intval($array['speciality_id']);
+        }
+        if (isset($array['rank_id'])) {
+            $setParts[] = "`rank_id` = " . intval($array['rank_id']);
+        }
+        if (isset($array['isAvailable'])) {
+            $setParts[] = "`isAvailable` = " . intval($array['isAvailable']);
+        }
+
+        
+        if (empty($setParts)) {
+            echo "Error: No fields to update.";
+            return false;
+        }
+
+        $setClause = implode(', ', $setParts);
+        
+        $query = "UPDATE `doctor` SET $setClause WHERE id = '$id'";
+
+        return run_query($query, true);
+    }
+
+    public static function delete($id): bool {
+        // SQL query to update the isDeleted flag to 1
+        $query = "UPDATE `person` SET `isDeleted` = 1 WHERE id = '$id'";
+
+        // Execute the query
+        return run_query($query, true);
+    }
 
     public static function getApplicationsForDoctor(int $doctor_id): array {
         $query = "

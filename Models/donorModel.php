@@ -211,4 +211,10 @@ class Donor extends Person
 
         return true;
     }
+    public static function delete($id): bool {
+       
+        $query = "UPDATE `person` SET `isDeleted` = 1 WHERE id = '$id'";//person_id for donor
+
+        return run_query($query, true);
+    }
 }

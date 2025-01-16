@@ -104,4 +104,10 @@ class Patient extends Person
 
         return true;
     }
+    public static function delete($id)
+    {
+
+        $query = "UPDATE `person` SET isDeleted = 1 WHERE id ='$id'";//person_id for patient
+        return run_query($query, true);
+    }
 }

@@ -53,13 +53,15 @@ class AidTypeModel{
     return run_query($query, true);
     }
 
-    public static function update_aid_type($aid_id,$type): bool
+    public static function update($array): bool
     {
+        $aid_id = $array['aid_id'];
+        $type = $array['type'];
     $query = "UPDATE `aid_type` SET `type` = '$type' WHERE id = '$aid_id' ";
            
     return run_query($query, true);
     }
-    public static function delete_aid_type($aid_id): bool{
+    public static function delete($aid_id): bool{
         
     $query = "DELETE FROM `aid_type` WHERE id = '$aid_id'";
         return run_query($query, true);

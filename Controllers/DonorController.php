@@ -4,6 +4,9 @@ require_once '../models/donorModel.php';
 require_once '../strategies/MonetaryDonation.php';
 require_once '../strategies/OrganDonation.php';
 require_once 'TemplateController.php';
+require_once '../Adapter/IPayment.php';
+require_once '../Adapter/CreditAdapter.php';
+require_once '../Adapter/PaypalAdapter.php';
 $baseDir = realpath(__DIR__ . '/../States') . DIRECTORY_SEPARATOR;
 require_once $baseDir . 'InitializePaymentState.php';
 require_once $baseDir . 'ProcessPaymentState.php';
@@ -73,10 +76,30 @@ class DonorController extends TemplateController
             case 'addDonor':
                  $this->addDonor();
                  break;
+            case 'paymentType':
+                 $this->paymentType();
+                 break;
             default:
                 echo "Error: Action not recognized in DonorController.";
                 break;
         }
+    }
+
+
+    private function paymentType():void{
+        $userData = $_POST;
+        $paymentType = $userData['paymentType'];
+
+        switch ($paymentType) {
+            case 'Paypal':
+                // $ = new CreditAdapter(new );
+                break;
+            case 'Credit':
+                $controller = new DoctorController();
+                break;
+            default:
+                throw new Exception("Invalid role selected.");
+}
     }
     private function addDonor(): void
     {
