@@ -122,6 +122,8 @@ run_queries([
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
 "INSERT INTO `medical_aid_application` (`doctor_id`) VALUES ('1');",
+"INSERT INTO `medical_aid_application` (`doctor_id`) VALUES ('2');",
+
 
 "CREATE TABLE `medical_aid_documents` (
   `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -148,6 +150,8 @@ run_queries([
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;",
 
 "INSERT INTO `patient_medical_aid_application` (`patient_id`, `application_id`, `status_id`) VALUES ('1', '1', '1');",
+"INSERT INTO `patient_medical_aid_application` (`patient_id`, `application_id`, `status_id`) VALUES ('1', '2', '1');",
+
 
 "CREATE TABLE `patient_medical_aid_application_aid_type` (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,

@@ -2,8 +2,11 @@
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 include_once($_SERVER["DOCUMENT_ROOT"] . "\Observers\IObserver.php");
+
+require_once "Iterator/Iterators.php";
+
 ob_end_clean();
-class Person implements IObserver
+class Person extends Iterators implements IObserver
 {
 
     protected ?int $id = null;

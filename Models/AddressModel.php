@@ -1,13 +1,62 @@
 <?php
 include_once ($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 
-class Address{
+require_once "Iterator/Iterators.php";
+require_once "interfaces/ISelfRefrence.php";
 
-    public static function add_address($name , $parent_id):bool
+
+class Address extends Iterators implements ISelfRefrence{
+
+    private int $id;
+    private string $name;   
+    private int $parent_id;   
+
+    public function __construct(array $data)
+    {
+        $this->id = $data['id'];
+        $this->name =  $data['name'];
+        $this->parent_id =  $data['parent_id'];
+    }
+
+    public function getID() {return $this->id;}
+    public function getName() {return $this->name;}
+    public function getParentID() {return $this->parent_id;}
+    
+
+    public static function Read($id)
+    {
+        $row = run_select_query("SELECT * FROM `address` WHERE id = '$id'");
+
+        if ($row->num_rows > 0) {
+            return new self($row->fetch_assoc());
+        } else {
+            return false;
+        }
+
+    }
+    public static function ReadAll($id)
+    {
+        $Addresses = [];
+        $rows = run_select_query("SELECT * FROM `address`");
+        if ($rows && $rows->num_rows > 0) 
+        {
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $Addresses[] = new Address($itr->Next());
+            }
+        }
+
+        return $Addresses;
+    }
+
+    public static function Create($name , $parent_id):bool
     { 
         $query = "INSERT INTO `address` (`name`, `parent_id`) VALUES ('$name', '$parent_id)";
         return run_query($query,true);
     }
+
     public static function get_address_by_id(int $id, array &$address_list):void
     {
         if($id === 0){return;}

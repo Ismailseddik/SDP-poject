@@ -3,10 +3,16 @@ ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 require_once 'MedicalApplicationModel.php';
 require_once 'doctorModel.php';
+
+require_once "Iterator/Iterators.php";
+
+
+
 include_once($_SERVER["DOCUMENT_ROOT"] . "\Observers\IObserver.php");
 ob_end_clean();
   // id | typeid | patient_medical id | 
-class PatientMedicalApplicationModel{
+class PatientMedicalApplicationModel extends Iterators{
+
     private ?int $id;
     private ?int $patient_id;
     private ?int $application_id;
@@ -41,6 +47,8 @@ class PatientMedicalApplicationModel{
         $str .= "Application Status: $this->application_status<br/>";
         return $str . '</pre>';
     }
+
+
     public function getId() { return $this->id; }
     public function getPatientId() { return $this->patient_id; }
     public function getApplicationId() { return $this->application_id; }
@@ -74,12 +82,18 @@ class PatientMedicalApplicationModel{
         $rows = run_select_query($query);
     
         if ($rows && $rows->num_rows > 0) {
-            while ($row = $rows->fetch_assoc()) {
-                $applications[] = $row;
+
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $applications[] = new PatientMedicalApplicationModel($itr->Next());
             }
         }
         return $applications;
     }
+
+    // weird implementation!!!!!!!
     public static function get_applications_by_patient(int $patient_id): PatientMedicalApplicationModel|bool
     {
         $query = "

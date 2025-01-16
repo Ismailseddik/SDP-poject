@@ -1,9 +1,12 @@
 <?php
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
+
+require_once "Iterator/Iterators.php";
+
 ob_end_clean();
 
-class MedicalApplication{
+class MedicalApplication extends Iterators{
 
     private ?int $id;
     private ?int $doctor_id;
@@ -14,6 +17,7 @@ class MedicalApplication{
        $this->doctor_id = $data['doctor_id'];
 
     }
+
 
     public static function get_all_applications(){
 
@@ -30,8 +34,12 @@ class MedicalApplication{
         $rows = run_select_query($query);
     
         if ($rows && $rows->num_rows > 0) {
-            while ($row = $rows->fetch_assoc()) {
-                $applications[] = $row;
+
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $applications[] = new MedicalApplication($itr->Next());
             }
         }
         return $applications;
@@ -65,9 +73,9 @@ class MedicalApplication{
         $query = "
         INSERT INTO `medical_aid_application` (doctor_id) 
         VALUES ('$doctor_id')
-    ";
+        ";
 
-    return run_query($query, true);
+        return run_query($query, true);
         
     }
 

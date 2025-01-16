@@ -1,9 +1,12 @@
 <?php
 ob_start();
 include_once ($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
+
+require_once "Iterator/Iterators.php";
+
 ob_end_clean();
 
-class DonorTierModel{
+class DonorTierModel extends Iterators{
 
     private ?int $id;
     private ?String $tier;

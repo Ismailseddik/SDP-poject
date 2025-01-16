@@ -1,18 +1,22 @@
 <?php
 ob_start();
 include_once ($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
+
+
+require_once "Iterator/Iterators.php";
+
 ob_end_clean();
-class AidTypeModel{
+class AidTypeModel extends Iterators{
 
     private ?int $id;
     private ?String $type;
 
-    public function __construct(array $data){
-
-    // value(data) = array[key(column)]
-    $this->id = $data['id'];
-    $this->type = $data['type']; 
+    public function __construct(array $data)
+    {
+        $this->id = $data['id'];
+        $this->type = $data['type']; 
     }
+
     public function getId(): ?int{
         return $this->id;
     }
@@ -38,10 +42,17 @@ class AidTypeModel{
     }  
     public static function get_all_types():array
     {
-        $rows = run_select_query("SELECT * from `aid_type` ");
         $types = [];
-        foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) {
-            $types[] = new AidTypeModel($row);
+        $rows = run_select_query("SELECT * from `aid_type`");
+
+        if ($rows && $rows->num_rows > 0) 
+        {
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $types[] = new AidTypeModel($itr->Next());
+            }
         }
         return $types;     
     }
