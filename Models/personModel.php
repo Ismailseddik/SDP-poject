@@ -2,8 +2,10 @@
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 include_once($_SERVER["DOCUMENT_ROOT"] . "\Observers\IObserver.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Iterator\Iterators.php");
+
 ob_end_clean();
-class Person implements IObserver
+class Person extends Iterators implements IObserver
 {
 
     protected ?int $id = null;
@@ -23,18 +25,12 @@ class Person implements IObserver
         $this->isDeleted = $data['isDeleted'] ?? null;
     }
 
-    public function getId(): int|null{ return $this->id; }
+    public function getId(): int|null           { return $this->id; }
     public function getFirstName(): string|null { return $this->first_name; }
-    public function getPersonId(): int|null { return $this->id;}
-
-    public function getLastName(): string|null { return $this->last_name; }
-
-    public function getAddress():array
-    {
-        $address_tree = [];
-        Address::get_address_by_id($this->address_id, $address_tree);
-        return $address_tree;
-    } 
+    public function getPersonId(): int|null     { return $this->id;}
+    public function getLastName(): string|null  { return $this->last_name; }
+    public function getAddressId()              { return $this-> address_id;}
+    public function getAddress()                { return Address::getFullAdressByID($this->address_id); } 
 
     public function __toString(): string
     {
@@ -55,6 +51,22 @@ class Person implements IObserver
         } else {
             return false;
         }
+    }
+    public static function ReadAll()
+    {
+        $People = [];
+        $rows = run_select_query("SELECT * FROM `person`");
+        if ($rows && $rows->num_rows > 0)
+        {
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $People[] = new Person($itr->Next());
+            }  
+        }
+
+        return $People;
     }
     public static function add_person($first_name, $last_name, $birth_date, $address_id): bool
     {
@@ -91,25 +103,29 @@ class Person implements IObserver
     // }
 
 
-    public static function update(int $id, ?string $first_name = null, ?string $last_name = null, ?DateTime $birth_date = null, ?int $address_id = null): bool
+    public static function update(array $array): bool
     {
+        if (!isset($array['id'])) {
+            return false; // Ensure 'id' is provided
+        }
+        $id = $array['id'];
         $set_parts = [];
 
-    if ($first_name !== null) {
+    if ($array['first_name'] !== null) {
     
-        $set_parts[] = "`first_name` = '" . $first_name . "'";
+        $set_parts[] = "`first_name` = '" . $array['first_name'] . "'";
     }
-    if ($last_name !== null) {
+    if ($array['last_name'] !== null) {
    
-        $set_parts[] = "`last_name` = '" . $last_name . "'";
+        $set_parts[] = "`last_name` = '" . $array['last_name'] . "'";
     }
-    if ($birth_date !== null) {
+    if ($$array['birth_date'] !== null) {
         
-        $set_parts[] = "`birth_date` = '" . $birth_date->format('Y-m-d') . "'";
+        $set_parts[] = "`birth_date` = '" . $array['birth_date']->format('Y-m-d') . "'";
     }
-    if ($address_id !== null) {
+    if ($array['address_id'] !== null) {
        
-        $set_parts[] = "`address_id` = " . $address_id;
+        $set_parts[] = "`address_id` = " . $array['address_id'];
         
     }
     
@@ -126,7 +142,7 @@ class Person implements IObserver
     public static function delete($id)
     {
 
-        $query = "UPDATE `person` SET isDeleted = 1 WHERE id ='$id'";
+        $query = "UPDATE `person` SET isDeleted = 1 WHERE id ='$id'";//person_id for person
         return run_query($query, true);
     }
 

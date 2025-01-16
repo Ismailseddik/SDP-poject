@@ -1,6 +1,9 @@
 <?php
+include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 
-class DonationModel{
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Iterator\Iterators.php");
+
+class DonationModel extends Iterators{
 
     private ?int $id;
     private ?float $amount;
@@ -66,8 +69,11 @@ class DonationModel{
         $rows = run_select_query($query);
 
         if ($rows && $rows->num_rows > 0) {
-            foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) {
-                $donations[] = new DonationModel($row);
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext()) 
+            {
+                $donations[] = new DonationModel($itr->Next());
             }
         }
 
@@ -102,7 +108,11 @@ class DonationModel{
     return run_query($query, true);
     }
     
-        
+    public static function delete($donation_id): bool
+    {
+        $query = "DELETE FROM `donation` WHERE id = '$donation_id'";
+    return run_query($query, true);
+    }
 
 
 }

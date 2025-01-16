@@ -62,13 +62,29 @@ class UIElementFactory
         $type = htmlspecialchars($data['type'] ?? 'text');
         $placeholder = htmlspecialchars($data['placeholder'] ?? '');
         $value = htmlspecialchars($data['value'] ?? '');
-    
+        $required = !empty($data['required']) ? 'required' : '';
         return "
             <div class='form-group'>
                 <label for='{$name}'>{$label}</label>
-                <input type='{$type}' name='{$name}' id='{$name}' placeholder='{$placeholder}' value='{$value}' class='form-control'>
+                <input type='{$type}' name='{$name}' id='{$name}' placeholder='{$placeholder}' value='{$value}'{$required} class='form-control'>
             </div>
         ";
+    }
+    public static function createDropdownField(array $config): string
+    {
+        $html = "<div class='form-group'>";
+        $html .= "<label for='{$config['name']}'>{$config['label']}</label>";
+        $html .= "<select class='form-control' name='{$config['name']}' id='{$config['name']}'>";
+        $html .= "<option value=''>{$config['placeholder']}</option>"; // Placeholder
+    
+        // Generate options with ID as value
+        foreach ($config['options'] as $id => $text) {
+            $html .= "<option value='" . htmlspecialchars($id) . "'>" . htmlspecialchars($text) . "</option>";
+        }
+    
+        $html .= "</select>";
+        $html .= "</div>";
+        return $html;
     }
     
     public static function createList(array $data): string {

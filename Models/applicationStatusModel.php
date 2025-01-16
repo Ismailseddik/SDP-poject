@@ -1,9 +1,11 @@
 <?php
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
+
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Iterator\Iterators.php");
 ob_clean();
 
-class ApplicationStatusModel{
+class ApplicationStatusModel extends Iterators{
 
     private ?int $id;
     private ?String $status;
@@ -40,6 +42,22 @@ class ApplicationStatusModel{
     
     return run_query($query, true);
     
+    }
+
+    public static function update($array): bool
+    {
+        $status_id = $array['status_id'];
+        $status = $array['status'];
+    $query = "UPDATE `status` SET `status` = '$status' WHERE id = '$status_id' ";
+           
+    return run_query($query, true);
+    }
+
+    public static function delete($status_id): bool{
+        
+    $query = "DELETE FROM `status` WHERE id = '$status_id'";
+        return run_query($query, true);
+
     }
 
 }

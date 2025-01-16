@@ -1,13 +1,15 @@
 <?php
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
+
 require_once "personModel.php";
 require_once "doctorrankModel.php";
 require_once "specialityModel.php";
-require_once "../Models/patientMedicalApplicationModel.php";
+require_once "patientMedicalApplicationModel.php";
 ob_end_clean();
 
 class Doctor extends Person 
+
 {
     private ?int $person_id;
     private ?PatientMedicalApplicationModel $current;
@@ -19,7 +21,6 @@ class Doctor extends Person
     protected array $applications = []; // Add the applications property
 
     // Other methods...
-
     public function setApplications(array $applications): void {
         $this->applications = $applications;
     }
@@ -40,6 +41,9 @@ class Doctor extends Person
         $this->doctor_rank = $data["doctor_rank"] ?? null;
         $this->isAvailable = $data["doctor_available"] ?? false;
     }
+
+
+
 
     public function getFirstName(): string|null { return $this->first_name; }
     public function getPersonId(): int|null{ return $this->person_id;}
@@ -72,17 +76,25 @@ class Doctor extends Person
         if (!$rows) {
             echo "Error: Query execution failed in get_all_doctors_details.";
             return [];
-        } elseif ($rows->num_rows === 0) {
+        } 
+        elseif ($rows->num_rows === 0) {
             echo "Debug: Query executed but returned no results in get_all_doctors_details.";
-        } else {
-            echo "Debug: Query successful, fetching doctors in get_all_doctors_details.";
-            foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) {
-                $doctors[] = new Doctor($row);
+        } 
+        else {
+
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $doctors[] = new Doctor($itr->Next());
             }
+            echo "Debug: Query successful, fetching doctors in get_all_doctors_details.";
+
         }
 
         return $doctors;
     }
+
 
     public static function getby_id($doctor_id): Doctor|bool
     {
@@ -117,8 +129,8 @@ class Doctor extends Person
         string $doctor_last_name,
         DateTime $doctor_birth_date,
         int $doctor_address_id,
-        String $doctor_rank_name,
-        String $doctor_speciality_name
+        int $doctor_rank_id,
+        int $doctor_speciality_id
     ): bool {
         $conn=DataBase::getInstance()->getConn();
 
@@ -132,29 +144,29 @@ class Doctor extends Person
             return false;
         }
 
-        if (!DoctorRank::add_doctor_rank($doctor_rank_name)) {
-            echo "Error: Unable to add doctor rank.";
-            return false;
-        }
-        $doctor_rank = DoctorRank::get_doctor_rank($conn->insert_id);
-        if (!$doctor_rank) {
-            echo "Error: Doctor rank retrieval failed.";
-            return false;
-        }
+        // if (!DoctorRank::add_doctor_rank($doctor_rank_name)) {
+        //     echo "Error: Unable to add doctor rank.";
+        //     return false;
+        // }
+        // $doctor_rank = DoctorRank::get_doctor_rank($conn->insert_id);
+        // if (!$doctor_rank) {
+        //     echo "Error: Doctor rank retrieval failed.";
+        //     return false;
+        // }
 
-        if (!Speciality::add_speciality($doctor_speciality_name)) {
-            echo "Error: Unable to add doctor specialty.";
-            return false;
-        }
-        $doctor_speciality = Speciality::get_speciality_by_id($conn->insert_id);
-        if (!$doctor_speciality) {
-            echo "Error: Specialty retrieval failed.";
-            return false;
-        }
+        // if (!Speciality::add_speciality($doctor_speciality_name)) {
+        //     echo "Error: Unable to add doctor specialty.";
+        //     return false;
+        // }
+        // $doctor_speciality = Speciality::get_speciality_by_id($conn->insert_id);
+        // if (!$doctor_speciality) {
+        //     echo "Error: Specialty retrieval failed.";
+        //     return false;
+        // }
 
         $person_id = $person->getId();
-        $doctor_rank_id = $doctor_rank->getId();
-        $doctor_speciality_id = $doctor_speciality->getId();
+        // $doctor_rank_id = $doctor_rank->getId();
+        // $doctor_speciality_id = $doctor_speciality->getId();
 
         $query = "
             INSERT INTO `doctor` (person_id, rank_id, speciality_id) 
@@ -181,7 +193,50 @@ class Doctor extends Person
     }
     
     
-    
+    // public static function update(array $array): bool {
+        
+    //     if (!isset($array['id'])) {
+    //         echo "Error: 'id' is required to update a doctor.";
+    //         return false;
+    //     }
+
+    //     $id = $array['id'];
+
+      
+    //     $setParts = [];
+    //     if (isset($array['person_id'])) {
+    //         $setParts[] = "`person_id` = " . intval($array['person_id']);
+    //     }
+    //     if (isset($array['speciality_id'])) {
+    //         $setParts[] = "`speciality_id` = " . intval($array['speciality_id']);
+    //     }
+    //     if (isset($array['rank_id'])) {
+    //         $setParts[] = "`rank_id` = " . intval($array['rank_id']);
+    //     }
+    //     if (isset($array['isAvailable'])) {
+    //         $setParts[] = "`isAvailable` = " . intval($array['isAvailable']);
+    //     }
+
+        
+    //     if (empty($setParts)) {
+    //         echo "Error: No fields to update.";
+    //         return false;
+    //     }
+
+    //     $setClause = implode(', ', $setParts);
+        
+    //     $query = "UPDATE `doctor` SET $setClause WHERE id = '$id'";
+
+    //     return run_query($query, true);
+    // }
+
+    public static function delete($id): bool {
+        // SQL query to update the isDeleted flag to 1
+        $query = "UPDATE `person` SET `isDeleted` = 1 WHERE id = '$id'";
+
+        // Execute the query
+        return run_query($query, true);
+    }
     
 
     public static function getApplicationsForDoctor(int $doctor_id): array {
@@ -197,17 +252,21 @@ class Doctor extends Person
             JOIN person ON patient.person_id = person.id
             WHERE medical_aid_application.doctor_id = '$doctor_id'
         ";
-    
+        $application = [];
+
         $rows = run_select_query($query);
-        $applications = [];
-    
-        if ($rows && $rows->num_rows > 0) {
-            while ($row = $rows->fetch_assoc()) {
-                $applications[] = new PatientMedicalApplicationModel($row);
+
+        if ($rows && $rows->num_rows > 0) 
+        {
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $application[] = new PatientMedicalApplicationModel($itr->Next());
             }
         }
-    
-        return $applications;
+        
+        return $application;
     }
     
 }

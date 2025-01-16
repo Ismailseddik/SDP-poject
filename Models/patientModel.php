@@ -3,13 +3,16 @@
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 require_once "personModel.php";
 
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Iterator\Iterators.php");
+
+
 class Patient extends Person
 {
-
     private ?int $person_id;
     private ?string $name;
     private ?int $age;
 
+    
     public function __construct(array $data)
     {
         $this->id = $data['patient_id'] ?? null;
@@ -21,9 +24,7 @@ class Patient extends Person
     // Getters
     public function getName(): string|null { return $this->name; }
     public function getPersonId(): int|null { return $this->person_id;}
-
     public function getAge(): int|null { return $this->age; }
-
 
 
     public static function getby_id($patient_id): bool|Patient
@@ -68,9 +69,13 @@ class Patient extends Person
         $patients = [];
         $rows = run_select_query($query);
 
-        if ($rows && $rows->num_rows > 0) {
-            foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) {
-                $patients[] = new Patient($row);
+        if ($rows && $rows->num_rows > 0) 
+        {   
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $patients[] = new Patient($itr->Next());
             }
         }
 
@@ -103,5 +108,11 @@ class Patient extends Person
         }
 
         return true;
+    }
+    public static function delete($id)
+    {
+
+        $query = "UPDATE `person` SET isDeleted = 1 WHERE id ='$id'";//person_id for patient
+        return run_query($query, true);
     }
 }

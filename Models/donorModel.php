@@ -8,9 +8,11 @@ require_once "donorModel.php";
 require_once "donationModel.php";
 require_once "donorDonationModel.php";
 
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Iterator\Iterators.php");
+
+
 class Donor extends Person
 {
-   
     private ?int $person_id;
     private ?float $amount;
     private ?String $tier;
@@ -27,12 +29,10 @@ class Donor extends Person
         $this->last_name = $data['last_name'] ?? null;
         $this->amount = $data['amount'] ?? null;
         $this->organ = $data['organ'] ?? null;
-        if ($tierStrategy) {
-            $this->tierStrategy = $tierStrategy;
-        }
-
+        if ($tierStrategy) {$this->tierStrategy = $tierStrategy;}
         $this->tier = $data['tier'] ?? null;
     }
+
 
     public function __toString(): string
     {
@@ -47,10 +47,8 @@ class Donor extends Person
         return $str . '</pre>';
     }
 
-    
-    public function getFirstName(): string|null { return $this->first_name; }
     public function getPersonId(): int|null { return $this->person_id;}
-
+    public function getFirstName(): string|null { return $this->first_name; }
     public function getLastName(): string|null { return $this->last_name; }
     public function getAmount(): float|null { return $this->amount; }
     public function getOrgan(): float|null { return $this->organ; }
@@ -152,8 +150,12 @@ class Donor extends Person
         $rows = run_select_query($query);
 
         if ($rows && $rows->num_rows > 0) {
-            foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) {
-                $donors[] = new Donor($row);
+
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $donors[] = new Donor($itr->Next());
             }
         }
 
@@ -210,5 +212,11 @@ class Donor extends Person
         }
 
         return true;
+    }
+    public static function delete($id): bool {
+       
+        $query = "UPDATE `person` SET `isDeleted` = 1 WHERE id = '$id'";//person_id for donor
+
+        return run_query($query, true);
     }
 }
