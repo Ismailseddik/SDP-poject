@@ -7,10 +7,10 @@ $userData = $_POST;
 $role = $userData['role'];
 
 switch ($role) {
-    case 'doctor':
+    case 'donor':
         $controller = new DonorController();
         break;
-    case 'donor':
+    case 'doctor':
         $controller = new DoctorController();
         break;
     case 'patient':

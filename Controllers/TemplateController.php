@@ -1,5 +1,6 @@
 
 <?php
+require_once 'ProxyController.php';
 abstract class TemplateController {
    
 	public final function Login($email, $password,$role) {
@@ -7,7 +8,14 @@ abstract class TemplateController {
 
         if ($this->isValidPassword($password, $user['password'])) {
             // $this->startSession($user,$role);
-            // $this->redirectBasedOnRole($user);
+
+            // Use the proxy to handle redirection
+            $proxy = new ProxyController();
+            $proxy->redirectBasedOnRole($role);
+
+            
+            // redirectBasedOnRole function should be in each doctor, donor, patient controller
+            // $this->redirectBasedOnRole($role);
             // header("Location: ../Views/logoutView.php");
             header("Location: ../public/index.php");
             print("logged in successfully");
@@ -19,6 +27,8 @@ abstract class TemplateController {
 
     // Hook method to get user by email, to be implemented by subclasses
     protected abstract function getUserByEmail($email);
+
+    //abstract method to be overriden in each class (Doctor, Donor, Patient)
 
     // Validates the password
     private function isValidPassword($password, $hashedpassword) {
