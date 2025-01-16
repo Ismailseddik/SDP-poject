@@ -116,8 +116,8 @@ class Doctor extends Person
         string $doctor_last_name,
         DateTime $doctor_birth_date,
         int $doctor_address_id,
-        String $doctor_rank_name,
-        String $doctor_speciality_name
+        int $doctor_rank_id,
+        int $doctor_speciality_id
     ): bool {
         $conn=DataBase::getInstance()->getConn();
 
@@ -131,29 +131,29 @@ class Doctor extends Person
             return false;
         }
 
-        if (!DoctorRank::add_doctor_rank($doctor_rank_name)) {
-            echo "Error: Unable to add doctor rank.";
-            return false;
-        }
-        $doctor_rank = DoctorRank::get_doctor_rank($conn->insert_id);
-        if (!$doctor_rank) {
-            echo "Error: Doctor rank retrieval failed.";
-            return false;
-        }
+        // if (!DoctorRank::add_doctor_rank($doctor_rank_name)) {
+        //     echo "Error: Unable to add doctor rank.";
+        //     return false;
+        // }
+        // $doctor_rank = DoctorRank::get_doctor_rank($conn->insert_id);
+        // if (!$doctor_rank) {
+        //     echo "Error: Doctor rank retrieval failed.";
+        //     return false;
+        // }
 
-        if (!Speciality::add_speciality($doctor_speciality_name)) {
-            echo "Error: Unable to add doctor specialty.";
-            return false;
-        }
-        $doctor_speciality = Speciality::get_speciality_by_id($conn->insert_id);
-        if (!$doctor_speciality) {
-            echo "Error: Specialty retrieval failed.";
-            return false;
-        }
+        // if (!Speciality::add_speciality($doctor_speciality_name)) {
+        //     echo "Error: Unable to add doctor specialty.";
+        //     return false;
+        // }
+        // $doctor_speciality = Speciality::get_speciality_by_id($conn->insert_id);
+        // if (!$doctor_speciality) {
+        //     echo "Error: Specialty retrieval failed.";
+        //     return false;
+        // }
 
         $person_id = $person->getId();
-        $doctor_rank_id = $doctor_rank->getId();
-        $doctor_speciality_id = $doctor_speciality->getId();
+        // $doctor_rank_id = $doctor_rank->getId();
+        // $doctor_speciality_id = $doctor_speciality->getId();
 
         $query = "
             INSERT INTO `doctor` (person_id, rank_id, speciality_id) 

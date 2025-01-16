@@ -1,5 +1,5 @@
 <?php
-require_once 'CreditAdaptee.php';
+require_once 'PaypalAdaptee.php';
 class PaypalAdapter implements IPayment {
     private ?PaypalAdaptee $paypalAdaptee;
 

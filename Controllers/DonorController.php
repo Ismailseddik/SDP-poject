@@ -91,11 +91,11 @@ class DonorController extends TemplateController
         // $paymentType = $userData['paymentType'];
 
         switch ($paymentType) {
-            case 'Paypal':
+            case 'Credit':
                 $credit = new CreditAdapter(new CreditAdaptee);
                 $credit->request();
                 break;
-            case 'Credit':
+            case 'Paypal':
                 $paypal = new PaypalAdapter(new PaypalAdaptee);
                 $paypal->request();
                 break;
