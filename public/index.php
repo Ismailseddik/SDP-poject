@@ -1,7 +1,7 @@
 <?php
 require_once '../config.php';
 
-// Get 'view' and 'action' parameters from the URL, if present
+// Get 'view' and 'action' parameters from the URL, if presentz
 $view = $_GET['view'] ?? 'patient';
 $action = $_GET['action'] ?? null;
 
