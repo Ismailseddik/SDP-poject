@@ -44,4 +44,17 @@ class Speciality
 
         return run_query($query, true);
     }
+        // New method to fetch all specialties
+        public static function getAllSpecialties(): array
+        {
+            $query = "SELECT id, speciality_name FROM speciality";
+            $rows = run_select_query($query);
+            $specialties = [];
+            if ($rows && $rows->num_rows > 0) {
+                while ($row = $rows->fetch_assoc()) {
+                    $specialties[$row['id']] = $row['speciality_name']; // Populate id => specialty_name array
+                }
+            }
+            return $specialties;
+        }
 }
