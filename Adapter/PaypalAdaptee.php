@@ -3,6 +3,6 @@ class PaypalAdaptee {
 
     // Method declaration without 'void' keyword
     public function specifications() {
-        print('hi');
+        header('Location: index.php?view=donor&action=listDonors');
     }
 }

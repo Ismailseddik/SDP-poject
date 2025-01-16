@@ -68,12 +68,12 @@
 </header>
 
 <main class="container">
-    <form action="index.php?view=donor&action=paymentType" method="POST">
+    <!-- <form action="index.php?view=donor&action=paymentType" method="POST">
     <select name="payment_type" id="paymentType" class="form-control" onchange="toggleDonationFields()">
             <option value="Paypal">Paypal</option>
             <option value="Credit">Credit</option>
         </select>
-    <button type="submit">Choose Payment</button>
+    <button type="submit">Choose Payment</button> -->
     </form>
     <form action="index.php?view=donor&action=addDonor" method="POST">
         <label for="donor_first_name">First Name:</label>
@@ -100,7 +100,11 @@
             <label for="organ">Donation Organ:</label>
             <input type="text" id="organ" name="organ" placeholder="Enter Organ Name" required/>
         </div>
-
+        <label for="payment">Payment Method:</label>
+        <select name="paymentType" id="paymentType" class="form-control" onchange="toggleDonationFields()">
+            <option value="Paypal">Paypal</option>
+            <option value="Credit">Credit</option>
+        </select>
         <button type="submit">Add Donor</button>
     </form>
 </main>

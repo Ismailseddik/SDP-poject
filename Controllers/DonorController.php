@@ -76,9 +76,9 @@ class DonorController extends TemplateController
             case 'addDonor':
                  $this->addDonor();
                  break;
-            case 'paymentType':
-                 $this->paymentType();
-                 break;
+            // case 'paymentType':
+            //      $this->paymentType();
+            //      break;
             default:
                 echo "Error: Action not recognized in DonorController.";
                 break;
@@ -86,19 +86,21 @@ class DonorController extends TemplateController
     }
 
 
-    private function paymentType():void{
-        $userData = $_POST;
-        $paymentType = $userData['paymentType'];
+    private function paymentType($paymentType):void{
+        // $userData = $_POST;
+        // $paymentType = $userData['paymentType'];
 
         switch ($paymentType) {
             case 'Paypal':
-                // $ = new CreditAdapter(new );
+                $credit = new CreditAdapter(new CreditAdaptee);
+                $credit->request();
                 break;
             case 'Credit':
-                $controller = new DoctorController();
+                $paypal = new PaypalAdapter(new PaypalAdaptee);
+                $paypal->request();
                 break;
             default:
-                throw new Exception("Invalid role selected.");
+                throw new Exception("Invalid payment selected.");
 }
     }
     private function addDonor(): void
@@ -152,7 +154,8 @@ class DonorController extends TemplateController
 
             if ($result) {
                 // Redirect to donor list after successful addition
-                header('Location: index.php?view=donor&action=listDonors');
+                // header('Location: index.php?view=donor&action=listDonors');
+                $this->paymentType($_POST['paymentType']);
                 exit();
             } else {
                 echo "Error: Unable to add donor. Please try again.";
@@ -257,7 +260,8 @@ class DonorController extends TemplateController
 
 
                 // Redirect to donor list after donation
-                header('Location: index.php?view=donor&action=listDonors');
+                // header('Location: index.php?view=donor&action=listDonors');
+                $this->paymentType($_POST['paymentType']);
                 exit();
             } else {
                 echo "Error: Donor not found.";
