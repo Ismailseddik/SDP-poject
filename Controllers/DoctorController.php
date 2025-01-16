@@ -1,8 +1,9 @@
 <?php
 
 require_once __DIR__ . '/../models/doctorModel.php';
+require_once 'TemplateController.php';
 
-class DoctorController
+class DoctorController extends TemplateController
 {
     public function index($action = null)
     {
@@ -25,16 +26,28 @@ class DoctorController
         }
     }
 
-    private function listDoctors()
-    {
+    protected function getUserByEmail($email) {
+        return Person::getUserByEmail($email);
+    }
+
+    private function listDoctors() {
         $doctors = Doctor::get_all_doctors_details();
+    
+        // Fetch notifications for each doctor
+        foreach ($doctors as $doctor) {
+            $applications = Doctor::getApplicationsForDoctor($doctor->getId());
+            $doctor->setApplications($applications); // Use the setter to attach applications
+        }
+    
         if (empty($doctors)) {
             echo "Debug: No doctors found in listDoctors() controller method.";
         } else {
             echo "Debug: Found " . count($doctors) . " doctors in listDoctors() controller method.";
         }
+    
         include '../views/doctorView.php';
     }
+    
 
     private function showAddDoctorForm()
     {
@@ -74,7 +87,7 @@ class DoctorController
     private function viewDoctorDetails()
     {
         $doctor_id = $_GET['doctor_id'] ?? 0;
-        $doctor = Doctor::get_doctor_details((int)$doctor_id);
+        $doctor = Doctor::getby_id((int)$doctor_id);
 
         if ($doctor) {
             include '../views/doctorDetailView.php';

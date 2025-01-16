@@ -3,40 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Aid Charity</title>
+    <title>Add New Donation</title>
     <link rel="stylesheet" href="styles.css">
-</head>
-<style>
-                nav {
-            background-color: #333;
-            padding: 1em 0;
-            text-align: center;
-        }
-
-        nav ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        nav ul li {
-            display: inline;
-            margin: 0 1em;
-        }
-
-        nav ul li a {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 1.1em;
-            padding: 0.5em 1em;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        nav ul li a:hover {
-            background-color: #4CAF50;
-            color: #ffffff;
-        }
+    <style>
+        /* Styling for container and form */
         .container {
             max-width: 600px;
             margin: 50px auto;
@@ -47,57 +17,70 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        h2, h3 {
+        h1 {
             text-align: center;
             color: #333;
         }
 
-        .patient-card {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
         label {
             display: block;
-            margin-top: 10px;
+            margin: 15px 0 5px;
             font-weight: bold;
             color: #555;
         }
 
         input[type="text"],
-        input[type="number"] {
+        input[type="email"],
+        input[type="number"],
+        select {
             width: 100%;
             padding: 10px;
             margin: 5px 0 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            font-size: 16px;
         }
 
         button {
             width: 100%;
             padding: 12px;
+            margin-top: 15px;
+            font-size: 18px;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
         }
 
         button:hover {
             background-color: #45a049;
         }
     </style>
+</head>
 <body>
+    <header>
+        <h1>Add AidType</h1>
+    </header>
 
-    <main>
-        <?php include($content); ?>
+    <main class="container">
+        <form action="index.php?view=medicalApplication&action=addAidtype" method="POST">
+            <label for="Medical_application_id">Medical Application ID:</label>
+            <input type="number" id="Medical_application_id" name="Medical_application_id" placeholder="Enter ID here" required>
+
+
+            <p>Select the required aid type/s:</p>
+            <input type="checkbox" name="Financial" value="1" required>Financial<br>
+            <input type="checkbox" name="Medical" value="2">Medical<br>
+            <input type="checkbox" name="Operational" value="3">Operational<br>
+            
+            <button type="submit">Submit</button>
+            <button type="submit">Submit</button>
+        </form>
     </main>
 
     <footer>
-        <p>&copy; <?= date('Y') ?> Medical Aid Charity</p>
+        <p>&copy; 2024 Medical Aid Charity. All rights reserved.</p>
     </footer>
 </body>
 </html>

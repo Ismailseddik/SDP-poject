@@ -1,29 +1,38 @@
 <?php
 ob_start();
-include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 require_once "personModel.php";
 require_once "doctorrankModel.php";
 require_once "specialityModel.php";
 ob_end_clean();
 
-class Doctor
+class Doctor extends Person 
 {
-    private ?int $id;
     private ?int $person_id;
-    private ?string $doctor_first_name;
-    private ?string $doctor_last_name;
+    private ?PatientMedicalApplicationModel $current;
     private ?int $speciality_id;
     private ?string $doctor_speciality;
     private ?int $rank_id;
     private ?string $doctor_rank;
     private bool $isAvailable;
+    protected array $applications = []; // Add the applications property
+
+    // Other methods...
+
+    public function setApplications(array $applications): void {
+        $this->applications = $applications;
+    }
+
+    public function getApplications(): array {
+        return $this->applications;
+    }
 
     public function __construct(array $data)
     {
         $this->id = $data["doctor_id"] ?? null;
         $this->person_id = $data["person_id"] ?? null;  // Initialize person_id
-        $this->doctor_first_name = $data["doctor_first_name"] ?? null;
-        $this->doctor_last_name = $data["doctor_last_name"] ?? null;
+        $this->first_name = $data["doctor_first_name"] ?? null;
+        $this->last_name = $data["doctor_last_name"] ?? null;
         $this->speciality_id = $data["speciality_id"] ?? null;  // Initialize speciality_id
         $this->doctor_speciality = $data["doctor_speciality"] ?? null;
         $this->rank_id = $data["rank_id"] ?? null;  // Initialize rank_id
@@ -31,36 +40,20 @@ class Doctor
         $this->isAvailable = $data["doctor_available"] ?? false;
     }
 
-    public function getFirstName()
-    {
-        return $this->doctor_first_name;
-    }
-    public function getId()
-    {
-        return $this->id;
-    }
-    public function getLastName()
-    {
-        return $this->doctor_last_name;
-    }
-    public function getSpeciality()
-    {
-        return $this->doctor_speciality;
-    }
-    public function getRank()
-    {
-        return $this->doctor_rank;
-    }
-    public function isAvailable()
-    {
-        return $this->isAvailable ? "Yes" : "No";
-    }
+    public function getFirstName(): string|null { return $this->first_name; }
+    public function getPersonId(): int|null{ return $this->person_id;}
+    public function getId(): int|null {return $this->id;}
+    public function getLastName(): string|null { return $this->last_name; }
+    public function getSpeciality(): string|null { return $this->doctor_speciality; }
+    public function getRank(): string|null { return $this->doctor_rank; }
+    public function isAvailable(): string { return $this->isAvailable ? "Yes" : "No"; }
 
     public static function get_all_doctors_details(): array
     {
         $query = "
             SELECT 
                 doctor.id AS doctor_id,
+                doctor.person_id,
                 person.first_name AS doctor_first_name,
                 person.last_name AS doctor_last_name,
                 doctor_rank.rank AS doctor_rank,
@@ -90,11 +83,12 @@ class Doctor
         return $doctors;
     }
 
-    public static function get_doctor_details(int $doctor_id): Doctor|bool
+    public static function getby_id($doctor_id): Doctor|bool
     {
         $query = "
             SELECT 
                 doctor.id AS doctor_id,
+                doctor.person_id,
                 person.first_name AS doctor_first_name,
                 person.last_name AS doctor_last_name,
                 doctor_rank.rank AS doctor_rank,
@@ -122,16 +116,16 @@ class Doctor
         string $doctor_last_name,
         DateTime $doctor_birth_date,
         int $doctor_address_id,
-        string $doctor_rank_name,
-        string $doctor_speciality_name
+        String $doctor_rank_name,
+        String $doctor_speciality_name
     ): bool {
-        global $conn;
+        $conn=DataBase::getInstance()->getConn();
 
         if (!Person::add_person($doctor_first_name, $doctor_last_name, $doctor_birth_date, $doctor_address_id)) {
             echo "Error: Unable to add person record.";
             return false;
         }
-        $person = Person::get_person_by_id($conn->insert_id);
+        $person = Person::getby_id($conn->insert_id);
         if (!$person) {
             echo "Error: Person ID retrieval failed.";
             return false;
@@ -167,5 +161,48 @@ class Doctor
         ";
 
         return run_query($query, true);
+    }
+
+    public function update_obeserver(int $patient_id): void {
+        // Fetch the application data for the given patient
+        $application = PatientMedicalApplicationModel::get_applications_by_patient($patient_id);
+    
+        if ($application) {
+            // Generate a notification message
+            $message = "You have a new medical aid application for Patient ID: $patient_id (Application ID: " . $application->getApplicationId() . ").";
+    
+            // Store the notification for this doctor (e.g., log or save in persistent storage)
+            error_log("Notification for Doctor ID {$this->getId()}: $message");
+    
+            // Optional: Perform further actions, such as sending an email or updating a dashboard
+        } else {
+            error_log("No application found for Patient ID: $patient_id.");
+        }
+    }
+
+    public static function getApplicationsForDoctor(int $doctor_id): array {
+        $query = "
+            SELECT 
+                patient_medical_aid_application.id AS application_id,
+                person.first_name AS patient_first_name,
+                person.last_name AS patient_last_name,
+                patient_medical_aid_application.status_id
+            FROM patient_medical_aid_application
+            JOIN medical_aid_application ON patient_medical_aid_application.application_id = medical_aid_application.id
+            JOIN patient ON patient_medical_aid_application.patient_id = patient.id
+            JOIN person ON patient.person_id = person.id
+            WHERE medical_aid_application.doctor_id = '$doctor_id'
+        ";
+
+        $applications = [];
+        $rows = run_select_query($query);
+
+        if ($rows && $rows->num_rows > 0) {
+            while ($row = $rows->fetch_assoc()) {
+                $applications[] = $row;
+            }
+        }
+
+        return $applications;
     }
 }

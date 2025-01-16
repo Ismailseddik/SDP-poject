@@ -16,12 +16,14 @@ class AidTypeModel{
     public function getId(): ?int{
         return $this->id;
     }
+    public function getType():?string{
+        return $this->type;
+    }
     public function __toString(): string
     {
         $str = '<pre>';
         $str .= "ID: $this->id<br/>";
         $str .= "Aid Type: $this->type<br/>";
-    
         return $str . '</pre>';
     }
 
@@ -34,6 +36,15 @@ class AidTypeModel{
         }
 
     }  
+    public static function get_all_types():array
+    {
+        $rows = run_select_query("SELECT * from `aid_type` ");
+        $types = [];
+        foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) {
+            $types[] = new AidTypeModel($row);
+        }
+        return $types;     
+    }
     public static function add_aid_type($type): bool
     {
     $query = "INSERT INTO `aid_type` (`type`)

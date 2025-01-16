@@ -1,20 +1,21 @@
 <?php
 
-include_once($_SERVER["DOCUMENT_ROOT"] . "/db-conn-setup.php");
+include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 // require_once '../strategies/MonetaryDonation.php';
 // require_once '../strategies/OrganDonation.php';
+require_once "personModel.php";
+require_once "donorModel.php";
+require_once "donationModel.php";
+require_once "donorDonationModel.php";
 
-class Donor
+class Donor extends Person
 {
-    private ?int $id;
+   
     private ?int $person_id;
-    private ?string $first_name;
-    private ?string $last_name;
-    private ?string $email;
     private ?float $amount;
     private ?String $tier;
-    // private DonationStrategy $donationStrategy;
-
+    private ?String $organ;
+    private DonationStrategy $donationStrategy;
     private DonorTierStrategy $tierStrategy;
 
 
@@ -25,6 +26,7 @@ class Donor
         $this->first_name = $data['first_name'] ?? null;
         $this->last_name = $data['last_name'] ?? null;
         $this->amount = $data['amount'] ?? null;
+        $this->organ = $data['organ'] ?? null;
         if ($tierStrategy) {
             $this->tierStrategy = $tierStrategy;
         }
@@ -39,67 +41,79 @@ class Donor
         $str .= "First Name: $this->first_name <br/>";
         $str .= "Last Name: $this->last_name<br/>";
         $str .= "Amount: $this->amount<br/>";
+        $str .= "Organ: $this->organ<br/>";
         $str .= "Tier: $this->tier<br/>";
 
         return $str . '</pre>';
     }
 
     
-    public function getFirstName() { return $this->first_name; }
-    public function getLastName() { return $this->last_name; }
-    public function getAmount() { return $this->amount; }
+    public function getFirstName(): string|null { return $this->first_name; }
+    public function getPersonId(): int|null { return $this->person_id;}
+
+    public function getLastName(): string|null { return $this->last_name; }
+    public function getAmount(): float|null { return $this->amount; }
+    public function getOrgan(): float|null { return $this->organ; }
 
     //*************** tiers ****************
     // Change donor tier dynamically
-    public function setTier(DonorTierStrategy $tierStrategy)
-    {
-        $this->tierStrategy = $tierStrategy;
-    }
-
-    public function getTierBenefits(): string
-    {
-        return $this->tierStrategy->getBenefits();
-    }
-
-    public function getDiscountRate(): float
-    {
-        return $this->tierStrategy->getDiscountRate();
-    }
-
-    public function getTierName(): string
-    {
-        return $this->tierStrategy->getTierName();
-    }
-
-    public function getDonorInfo(): string
-    {
-        return "Donor Name: {$this->first_name}, Tier: {$this->getTierName()}, Benefits: {$this->getTierBenefits()}";
-    }
+//    public function setTier(DonorTierStrategy $tierStrategy)
+//    {
+//        $this->tierStrategy = $tierStrategy;
+//    }
+//
+//    public function getTierBenefits(): string
+//    {
+//        return $this->tierStrategy->getBenefits();
+//    }
+//
+//    public function getDiscountRate(): float
+//    {
+//        return $this->tierStrategy->getDiscountRate();
+//    }
+//
+//    public function getTierName(): string
+//    {
+//        return $this->tierStrategy->getTierName();
+//    }
+//
+//    public function getDonorInfo(): string
+//    {
+//        return "Donor Name: {$this->first_name}, Tier: {$this->getTierName()}, Benefits: {$this->getTierBenefits()}";
+//    }
     //*************** end of tiers ****************
 
 
     // Set the donation strategy
-    // public function setDonationStrategy(DonationStrategy $donationStrategy): void
-    // {
-    //     $this->donationStrategy = $donationStrategy;
-    // }
+     public function setDonationStrategy(DonationStrategy $donationStrategy): void
+     {
+         $this->donationStrategy = $donationStrategy;
+     }
 
-    // Execute donation using the current strategy
-    // public function donate(): void
-    // {
-    //     $this->donationStrategy->donate($this->amount, $this);
-    // }
+     //Execute donation using the current strategy
+     public function donate(int $donation_id, float $donation_amount=NULL, String $organ=NULL): void
+     {
+         $this->donationStrategy->donate($this,$donation_id,$donation_amount!=NULL?($this->amount+$donation_amount):NULL,$organ);
+     }
 
 
-    public static function get_donor_details($donor_id): Donor|bool
+    public static function getby_id($donor_id): Donor|bool
     {
         $query = "
-            SELECT donor.id, donor.person_id, person.first_name, person.last_name, donation.amount, donor_tier.tier
+            SELECT 
+                donor.id, 
+                donor.person_id, 
+                person.first_name, 
+                person.last_name, 
+                donation.amount,
+                donation.organ, 
+                donor_tier.tier
             FROM donor
             JOIN person ON donor.person_id = person.id
             JOIN donor_tier ON donor.tier_id = donor_tier.id
             JOIN donor_donation ON donor.id = donor_donation.donor_id
             JOIN donation ON donor_donation.donation_id = donation.id
+            WHERE donor.id = $donor_id
         ";
         
         
@@ -118,7 +132,14 @@ class Donor
     public static function getAllDonors(): array
     {
         $query = "
-            SELECT donor.id, donor.person_id, person.first_name, person.last_name, donation.amount, donor_tier.tier
+            SELECT 
+                donor.id, 
+                donor.person_id, 
+                person.first_name, 
+                person.last_name, 
+                donation.amount, 
+                donation.organ,
+                donor_tier.tier
             FROM donor
             JOIN person ON donor.person_id = person.id
             JOIN donor_tier ON donor.tier_id = donor_tier.id
@@ -140,13 +161,19 @@ class Donor
     }
 
    
-    public static function addDonor(string $first_name, string $last_name, float $amount): bool
+    public static function addDonor(
+    string $first_name,
+    string $last_name, 
+    ?float $amount = null,
+    DateTime $donor_birth_date,
+    ?String $organ = null,
+    int $donation_type_id): bool
     {
-        global $conn;
+        $conn=DataBase::getInstance()->getConn();
 
+        $person_state = Person::add_person($first_name,$last_name, $donor_birth_date, 1);
         // Insert into person table first
-        $query_person = "INSERT INTO person (first_name, last_name, birth_date, address_id) VALUES ('$first_name', '$last_name', CURDATE(), 1)";
-        if (!run_query($query_person, true)) {
+        if (!$person_state) {
             echo "Error: Failed to add person record.";
             return false;
         }
@@ -165,8 +192,8 @@ class Donor
         $donor_id = $conn->insert_id;
 
         // Insert donation record and associate with donor
-        $query_donation = "INSERT INTO donation (amount, donation_type_id, donation_date) VALUES ($amount, 1, NOW())";
-        if (!run_query($query_donation, true)) {
+        $donation_state = DonationModel::add_donation($amount,$donation_type_id,$organ);
+        if (!$donation_state) {
             echo "Error: Failed to add donation record.";
             return false;
         }
@@ -174,9 +201,10 @@ class Donor
         // Get the new donation_id
         $donation_id = $conn->insert_id;
 
+        
         // Link donation to donor in donor_donation table
-        $query_donor_donation = "INSERT INTO donor_donation (donation_id, donor_id) VALUES ($donation_id, $donor_id)";
-        if (!run_query($query_donor_donation, true)) {
+        $donor_donation_state = DonorDonation::add_donor_donation($donation_id,$donor_id);
+        if (!$donor_donation_state ){
             echo "Error: Failed to link donation to donor.";
             return false;
         }

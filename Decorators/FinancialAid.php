@@ -2,19 +2,29 @@
 
 class FinancialAid extends AidTypeDecorator
 {
-    private float $amountReceived;
-    private int $hospitalBankAccountNo;
-    private int $receiptNo;
+    // private float $amountReceived;
+    // private int $hospitalBankAccountNo;
+    // private int $receiptNo;
 
-    public function __construct(array $data, $amountReceived, $hospitalBankAccountNo, $receiptNo) {
-        parent::__construct($data); // Initialize the base properties from AidTypeModel
-        $this->amountReceived = $amountReceived;
-        $this->hospitalBankAccountNo = $hospitalBankAccountNo;
-        $this->receiptNo = $receiptNo;
+    public function __construct(pmaAidTypeModel $ref) {
+        // parent::__construct($data); // Initialize the base properties from AidTypeModel
+        $this->ref = $ref;
+        $this->WrapAidType();
     }
 
-    public function provideAidType(): int {
-        echo "Providing financial aid with amount: " . $this->amountReceived;
-        return 1; // Example return value
+    public function WrapAidType() {
+        try{
+            pmaAidTypeModel::add_entry($this->ref->get_patient_application_id(),1);
+        } catch(Exception $e){
+            echo "Error:".$e->getMessage();
+        }
     }
+
+    // public function provideAidType(): array {
+
+        
+    //     $arr = $this->ref->provideAidType();
+    //     array_push($arr,1);
+    //     return $arr; // Example return value
+    // }
 }

@@ -3,28 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donor Information</title>
+    <title>Donations</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Optional styling for the "Add New Donor" button */
-        .add-donor-button {
-            display: inline-block;
-            margin: 20px 0;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 4px;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .add-donor-button:hover {
-            background-color: #45a049;
-        }
-
-          nav {
+                nav {
             background-color: #333;
             padding: 1em 0;
             text-align: center;
@@ -106,12 +88,11 @@
         button:hover {
             background-color: #45a049;
         }
-    
     </style>
 </head>
 <body>
-    <header>
-        <h1>Medical Aid Charity - Donors</h1>
+<header>
+        <h1>Medical Aid Charity</h1>
         <nav>
             <ul>
                 <li><a href="index.php?view=patient&action=listPatients">Patients</a></li>
@@ -124,34 +105,60 @@
     </header>
 
     <main class="container">
-        <h2>Donor List</h2>
+        <h2>Donations</h2>
 
-        <!-- "Add New Donor" Button or Link -->
-        <a href="index.php?view=donor&action=donorAddView" class="add-donor-button">Add New Donor</a>
+        <section class="donation-list">
+            <?php if (!empty($donations) && !empty($donors)): ?>
+                <?php
+                // Ensure the number of donors and donations match
+                $numDonations = count($donations);
+                $numDonors = count($donors);
+                ?>
+                <?php foreach ($donations as $index => $donation): ?>
+                    <div class="donation-card">
+                        <p><strong>Donation ID:</strong> <?= htmlspecialchars($donation->getDonationId() ?? "N/A") ?></p>
 
-        <div class="donor-list">
-            <?php if (!empty($donors)): ?>
-                <?php foreach ($donors as $donor): ?>
-                    <div class="donor-card">
-                        <p><strong>Name:</strong> <?= htmlspecialchars($donor->getFirstName()) . ' ' . htmlspecialchars($donor->getLastName()) ?></p>
-                        <p><strong>Donation Amount:</strong> $<?= htmlspecialchars(number_format($donor->getAmount(), 2)) ?></p>
+                        <?php
+                        // Match donor by index
+                        $donorName = "Unknown Donor";
+                        if ($index < $numDonors) { // Ensure donor exists for this index
+                            $donor = $donors[$index];
+                            $donorName = htmlspecialchars($donor->getFirstName() . ' ' . $donor->getLastName());
+                        }
+                        ?>
+                        <p><strong>Donor Name:</strong> <?= $donorName ?></p>
+
+                        <?php if ($donation->getAmount() !== null): ?>
+                            <p><strong>Donation Amount:</strong> $<?= htmlspecialchars($donation->getAmount()) ?></p>
+                        <?php elseif ($donation->getOrgan() !== null): ?>
+                            <p><strong>Donation Organ:</strong> <?= htmlspecialchars($donation->getOrgan()) ?></p>
+                        <?php else: ?>
+                            <p><strong>Donation Details:</strong> Unknown</p>
+                        <?php endif; ?>
+
+                        <p><strong>Donation Date:</strong> <?= htmlspecialchars($donation->getDonationDate()?->format('Y-m-d') ?? "N/A") ?></p>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <p>No donors available.</p>
+                <p>No donations or donors available.</p>
             <?php endif; ?>
-        </div>
-        <a href="index.php?view=donor&action=showAddDonationForm">Add New Donation</a>
+        </section>
+
+
+
+
+<!--        <h3>Make a New Donation</h3>-->
+<!--        <form class="donation-form" action="addDonation.php" method="POST">-->
+<!--            <label for="donor_name">Donor Name:</label>-->
+<!--            <input type="text" id="donor_name" name="donor_name" placeholder="Enter Donor Name" required>-->
+<!---->
+<!--            <label for="donor_amount">Amount:</label>-->
+<!--            <input type="number" id="donor_amount" name="donor_amount" placeholder="Enter Donation Amount" required>-->
+<!--            -->
+<!--            <button type="submit">Donate</button>-->
+<!--        </form>-->
     </main>
-    <?php if (!empty($logs)): ?>
-    <div class="logs">
-        <ul>
-            <?php foreach ($logs as $log): ?>
-                <li><?= htmlspecialchars($log) ?></li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-    <?php endif; ?>
+
     <footer>
         <p>&copy; 2024 Medical Aid Charity. All rights reserved.</p>
     </footer>
