@@ -62,4 +62,16 @@ class DoctorRank extends Iterators
         $query = "DELETE FROM `doctor_rank` WHERE id = '$rankid'";
         return run_query($query, true);
     }
+    public static function getAllRanks(): array {
+        $rows = run_select_query("SELECT id, rank FROM doctor_rank");
+        $ranks = [];
+    
+        if ($rows && $rows->num_rows > 0) {
+            while ($row = $rows->fetch_assoc()) {
+                $ranks[$row['id']] = $row['rank'];
+            }
+        }
+    
+        return $ranks;
+    }
 }

@@ -70,22 +70,23 @@ class UIElementFactory
             </div>
         ";
     }
-    public static function createDropdownField(array $data): string {
-        $label = htmlspecialchars($data['label'] ?? 'Label');
-        $name = htmlspecialchars($data['name'] ?? 'dropdown');
-        $options = $data['options'] ?? [];
-        $placeholder = htmlspecialchars($data['placeholder'] ?? 'Select an option');
-        $dropdown = "<label for='{$name}'>{$label}</label>";
-        $dropdown .= "<select name='{$name}' id='{$name}' class='form-control'>";
-        $dropdown .= "<option value='' disabled selected>{$placeholder}</option>";
-
-        foreach ($options as $key => $value) {
-            $dropdown .= "<option value='" . htmlspecialchars($key) . "'>" . htmlspecialchars($value) . "</option>";
+    public static function createDropdownField(array $config): string
+    {
+        $html = "<div class='form-group'>";
+        $html .= "<label for='{$config['name']}'>{$config['label']}</label>";
+        $html .= "<select class='form-control' name='{$config['name']}' id='{$config['name']}'>";
+        $html .= "<option value=''>{$config['placeholder']}</option>"; // Placeholder
+    
+        // Generate options with ID as value
+        foreach ($config['options'] as $id => $text) {
+            $html .= "<option value='" . htmlspecialchars($id) . "'>" . htmlspecialchars($text) . "</option>";
         }
-
-        $dropdown .= "</select>";
-        return $dropdown;
+    
+        $html .= "</select>";
+        $html .= "</div>";
+        return $html;
     }
+    
     public static function createList(array $data): string {
         $items = $data['items'] ?? [];
         $listItems = array_map(fn($item) => "<li>" . htmlspecialchars($item) . "</li>", $items);
