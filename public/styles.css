@@ -307,9 +307,10 @@ nav ul li a:hover {
 .application-form select {
     width: 100%;
     padding: 10px;
-    margin-bottom: 15px;
+    margin: 5px 0 15px; /* Updated margin for better spacing */
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 16px; /* Ensure uniform font size */
     transition: border-color 0.3s ease-in-out;
 }
 
