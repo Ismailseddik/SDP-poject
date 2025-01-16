@@ -119,7 +119,7 @@ class Person implements IObserver
         return run_query($query, true);
     }
 
-    public function update_obeserver(int $id):void
+    public function update_obeserver():void
     {
         return;
     }
