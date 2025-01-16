@@ -1,9 +1,11 @@
 <?php
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
+
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Iterator\Iterators.php");
 ob_clean();
 
-class ApplicationStatusModel{
+class ApplicationStatusModel extends Iterators{
 
     private ?int $id;
     private ?String $status;

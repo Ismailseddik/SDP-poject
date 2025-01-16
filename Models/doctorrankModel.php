@@ -1,9 +1,12 @@
 <?php
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
+
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Iterator\Iterators.php");
+
 ob_end_clean();
 
-class DoctorRank
+class DoctorRank extends Iterators
 {
 
     private ?int $id;
@@ -20,6 +23,10 @@ class DoctorRank
     {
         return $this->id;
     }
+    public function getRank()
+    {
+        return $this->rank;
+    }
     public function __toString(): string
     {
         $str = '<pre>';
@@ -29,6 +36,28 @@ class DoctorRank
         return $str . '</pre>';
     }
 
+    public static function getAllRanks(): array {
+        $rows = run_select_query("SELECT id, rank FROM doctor_rank");
+        $ranks = [];
+    
+        if ($rows && $rows->num_rows > 0) {
+
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+
+            while($itr->HasNext())
+            {
+                $rank = $itr->Next();
+                $ranks[$rank['id']] = $rank['rank'];
+
+            }
+            // while ($row = $rows->fetch_assoc()) {
+            //     $ranks[$row['id']] = $row['rank'];
+            // }
+        }
+    
+        return $ranks;
+    }
     public static function get_doctor_rank($rankid): bool|DoctorRank
     {
         $rows = run_select_query("SELECT * FROM `doctor_rank` WHERE id = '$rankid'");
@@ -59,16 +88,5 @@ class DoctorRank
         $query = "DELETE FROM `doctor_rank` WHERE id = '$rankid'";
         return run_query($query, true);
     }
-    public static function getAllRanks(): array {
-        $rows = run_select_query("SELECT id, rank FROM doctor_rank");
-        $ranks = [];
-    
-        if ($rows && $rows->num_rows > 0) {
-            while ($row = $rows->fetch_assoc()) {
-                $ranks[$row['id']] = $row['rank'];
-            }
-        }
-    
-        return $ranks;
-    }
+
 }
