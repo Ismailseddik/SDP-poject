@@ -102,7 +102,11 @@ class DonationModel{
     return run_query($query, true);
     }
     
-        
+    public static function delete($donation_id): bool
+    {
+        $query = "DELETE FROM `donation` WHERE id = '$donation_id'";
+    return run_query($query, true);
+    }
 
 
 }

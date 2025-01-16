@@ -3,6 +3,10 @@
 require_once '../models/donorModel.php';
 require_once '../strategies/MonetaryDonation.php';
 require_once '../strategies/OrganDonation.php';
+require_once 'TemplateController.php';
+require_once '../Adapter/IPayment.php';
+require_once '../Adapter/CreditAdapter.php';
+require_once '../Adapter/PaypalAdapter.php';
 $baseDir = realpath(__DIR__ . '/../States') . DIRECTORY_SEPARATOR;
 require_once $baseDir . 'InitializePaymentState.php';
 require_once $baseDir . 'ProcessPaymentState.php';
@@ -11,7 +15,7 @@ require_once $baseDir . 'DisplayResponseState.php';
 require_once $baseDir . 'FinalState.php';
 
 
-class DonorController
+class DonorController extends TemplateController
 {
     private $currentState;
     private $logs = [];
@@ -72,10 +76,32 @@ class DonorController
             case 'addDonor':
                  $this->addDonor();
                  break;
+            // case 'paymentType':
+            //      $this->paymentType();
+            //      break;
             default:
                 echo "Error: Action not recognized in DonorController.";
                 break;
         }
+    }
+
+
+    private function paymentType($paymentType):void{
+        // $userData = $_POST;
+        // $paymentType = $userData['paymentType'];
+
+        switch ($paymentType) {
+            case 'Credit':
+                $credit = new CreditAdapter(new CreditAdaptee);
+                $credit->request();
+                break;
+            case 'Paypal':
+                $paypal = new PaypalAdapter(new PaypalAdaptee);
+                $paypal->request();
+                break;
+            default:
+                throw new Exception("Invalid payment selected.");
+}
     }
     private function addDonor(): void
     {
@@ -128,7 +154,8 @@ class DonorController
 
             if ($result) {
                 // Redirect to donor list after successful addition
-                header('Location: index.php?view=donor&action=listDonors');
+                // header('Location: index.php?view=donor&action=listDonors');
+                $this->paymentType($_POST['paymentType']);
                 exit();
             } else {
                 echo "Error: Unable to add donor. Please try again.";
@@ -147,6 +174,10 @@ class DonorController
         $logs = $this->getLogs();
         $this->clearLogs();
         include '../views/donorView.php';
+    }
+
+    protected function getUserByEmail($email) {
+        return Person::getUserByEmail($email);
     }
     private function showAddDonorForm(): void
     {
@@ -229,7 +260,8 @@ class DonorController
 
 
                 // Redirect to donor list after donation
-                header('Location: index.php?view=donor&action=listDonors');
+                // header('Location: index.php?view=donor&action=listDonors');
+                $this->paymentType($_POST['paymentType']);
                 exit();
             } else {
                 echo "Error: Donor not found.";

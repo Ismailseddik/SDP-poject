@@ -65,6 +65,17 @@ class Person implements IObserver
         return run_query($query, true);
     }
 
+    public static function getUserByEmail($email){
+        $rows = run_select_query("SELECT * FROM `user_login_information` WHERE email = '$email'");
+        if ($rows->num_rows > 0) {
+            $row = $rows->fetch_assoc();
+            return $row; 
+        } else {
+            return false;
+        }
+        
+    }
+
     // public static function get_all_by_address_name($name){
     //     $query = "
     //     SELECT
@@ -80,25 +91,29 @@ class Person implements IObserver
     // }
 
 
-    public static function update(int $id, ?string $first_name = null, ?string $last_name = null, ?DateTime $birth_date = null, ?int $address_id = null): bool
+    public static function update(array $array): bool
     {
+        if (!isset($array['id'])) {
+            return false; // Ensure 'id' is provided
+        }
+        $id = $array['id'];
         $set_parts = [];
 
-    if ($first_name !== null) {
+    if ($array['first_name'] !== null) {
     
-        $set_parts[] = "`first_name` = '" . $first_name . "'";
+        $set_parts[] = "`first_name` = '" . $array['first_name'] . "'";
     }
-    if ($last_name !== null) {
+    if ($array['last_name'] !== null) {
    
-        $set_parts[] = "`last_name` = '" . $last_name . "'";
+        $set_parts[] = "`last_name` = '" . $array['last_name'] . "'";
     }
-    if ($birth_date !== null) {
+    if ($$array['birth_date'] !== null) {
         
-        $set_parts[] = "`birth_date` = '" . $birth_date->format('Y-m-d') . "'";
+        $set_parts[] = "`birth_date` = '" . $array['birth_date']->format('Y-m-d') . "'";
     }
-    if ($address_id !== null) {
+    if ($array['address_id'] !== null) {
        
-        $set_parts[] = "`address_id` = " . $address_id;
+        $set_parts[] = "`address_id` = " . $array['address_id'];
         
     }
     
@@ -115,7 +130,7 @@ class Person implements IObserver
     public static function delete($id)
     {
 
-        $query = "UPDATE `person` SET isDeleted = 1 WHERE id ='$id'";
+        $query = "UPDATE `person` SET isDeleted = 1 WHERE id ='$id'";//person_id for person
         return run_query($query, true);
     }
 

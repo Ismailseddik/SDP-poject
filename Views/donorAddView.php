@@ -68,6 +68,7 @@
 </header>
 
 <main class="container">
+    </form>
     <form action="index.php?view=donor&action=addDonor" method="POST">
         <label for="donor_first_name">First Name:</label>
         <input type="text" id="donor_first_name" name="donor_first_name" placeholder="Enter First Name" required>
@@ -93,7 +94,13 @@
             <label for="organ">Donation Organ:</label>
             <input type="text" id="organ" name="organ" placeholder="Enter Organ Name" required/>
         </div>
-
+        <div id="paymentField" class="hidden">
+        <label for="payment">Payment Method:</label>
+        <select name="paymentType" id="paymentType" class="form-control" onchange="toggleDonationFields()">
+            <option value="Paypal">Paypal</option>
+            <option value="Credit">Credit</option>
+        </select>
+        </div>
         <button type="submit">Add Donor</button>
     </form>
 </main>
@@ -108,16 +115,20 @@
         const donationType = document.getElementById('donationType').value;
         const amountField = document.getElementById('amountField');
         const organField = document.getElementById('organField');
-
+        const paymentField=document.getElementById('paymentField');
         if (donationType === 'Monetary') {
             amountField.style.display = 'block';
+            paymentField.style.display = 'block';
             organField.style.display = 'none';
             document.getElementById('donor_amount').required = true;
+            document.getElementById('paymentType').required = true;
             document.getElementById('organ').required = false;
         } else if (donationType === 'Organ') {
             amountField.style.display = 'none';
+            paymentField.style.display = 'none';
             organField.style.display = 'block';
             document.getElementById('donor_amount').required = false;
+            document.getElementById('paymentType').required = false;
             document.getElementById('organ').required = true;
         }
     }
