@@ -9,7 +9,7 @@ class FinancialAid extends AidTypeDecorator
     public function __construct(pmaAidTypeModel $ref) {
         // parent::__construct($data); // Initialize the base properties from AidTypeModel
         $this->ref = $ref;
-        $this->WrapAidType();
+        //$this->WrapAidType();
     }
 
     public function WrapAidType() {
