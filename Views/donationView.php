@@ -1,3 +1,7 @@
+<?php
+// Include the factory
+require_once __DIR__ . '/../Factories/UIElementFactory.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,162 +9,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donations</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-                nav {
-            background-color: #333;
-            padding: 1em 0;
-            text-align: center;
-        }
-
-        nav ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        nav ul li {
-            display: inline;
-            margin: 0 1em;
-        }
-
-        nav ul li a {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 1.1em;
-            padding: 0.5em 1em;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        nav ul li a:hover {
-            background-color: #4CAF50;
-            color: #ffffff;
-        }
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h2, h3 {
-            text-align: center;
-            color: #333;
-        }
-
-        .patient-card {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-        label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        input[type="text"],
-        input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
 </head>
 <body>
 <header>
-        <h1>Medical Aid Charity</h1>
-        <nav>
-            <ul>
-                <li><a href="index.php?view=patient&action=listPatients">Patients</a></li>
-                <li><a href="index.php?view=doctor&action=listDoctors">Doctors</a></li>
-                <li><a href="index.php?view=donor&action=listDonors">Donors</a></li>
-                <li><a href="index.php?view=donation&action=listDonations">Donations</a></li>
-                <li><a href="index.php?view=medicalApplication&action=listApplications">Medical Aid Applications</a></li>
-            </ul>
-        </nav>
-    </header>
+    <h1>Medical Aid Charity</h1>
+    <nav>
+        <ul>
+            <li><a href="index.php?view=patient&action=listPatients">Patients</a></li>
+            <li><a href="index.php?view=doctor&action=listDoctors">Doctors</a></li>
+            <li><a href="index.php?view=donor&action=listDonors">Donors</a></li>
+            <li><a href="index.php?view=donation&action=listDonations">Donations</a></li>
+            <li><a href="index.php?view=medicalApplication&action=listApplications">Medical Aid Applications</a></li>
+        </ul>
+    </nav>
+</header>
 
-    <main class="container">
-        <h2>Donations</h2>
+<main class="container">
+    <h2>Donations</h2>
 
-        <section class="donation-list">
-            <?php if (!empty($donations) && !empty($donors)): ?>
+    <section class="donation-list">
+        <?php if (!empty($donations) && !empty($donors)): ?>
+            <?php foreach ($donations as $index => $donation): ?>
                 <?php
-                // Ensure the number of donors and donations match
-                $numDonations = count($donations);
-                $numDonors = count($donors);
+                $donorName = $index < count($donors) 
+                    ? htmlspecialchars($donors[$index]->getFirstName() . ' ' . $donors[$index]->getLastName()) 
+                    : 'Unknown Donor';
+
+                echo UIElementFactory::createDonationCard([
+                    'donationId' => $donation->getDonationId(),
+                    'donorName' => $donorName,
+                    'amount' => $donation->getAmount(),
+                    'organ' => $donation->getOrgan(),
+                    'date' => $donation->getDonationDate()?->format('Y-m-d')
+                ]);
                 ?>
-                <?php foreach ($donations as $index => $donation): ?>
-                    <div class="donation-card">
-                        <p><strong>Donation ID:</strong> <?= htmlspecialchars($donation->getDonationId() ?? "N/A") ?></p>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No donations or donors available.</p>
+        <?php endif; ?>
+    </section>
+</main>
 
-                        <?php
-                        // Match donor by index
-                        $donorName = "Unknown Donor";
-                        if ($index < $numDonors) { // Ensure donor exists for this index
-                            $donor = $donors[$index];
-                            $donorName = htmlspecialchars($donor->getFirstName() . ' ' . $donor->getLastName());
-                        }
-                        ?>
-                        <p><strong>Donor Name:</strong> <?= $donorName ?></p>
-
-                        <?php if ($donation->getAmount() !== null): ?>
-                            <p><strong>Donation Amount:</strong> $<?= htmlspecialchars($donation->getAmount()) ?></p>
-                        <?php elseif ($donation->getOrgan() !== null): ?>
-                            <p><strong>Donation Organ:</strong> <?= htmlspecialchars($donation->getOrgan()) ?></p>
-                        <?php else: ?>
-                            <p><strong>Donation Details:</strong> Unknown</p>
-                        <?php endif; ?>
-
-                        <p><strong>Donation Date:</strong> <?= htmlspecialchars($donation->getDonationDate()?->format('Y-m-d') ?? "N/A") ?></p>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>No donations or donors available.</p>
-            <?php endif; ?>
-        </section>
-
-
-
-
-<!--        <h3>Make a New Donation</h3>-->
-<!--        <form class="donation-form" action="addDonation.php" method="POST">-->
-<!--            <label for="donor_name">Donor Name:</label>-->
-<!--            <input type="text" id="donor_name" name="donor_name" placeholder="Enter Donor Name" required>-->
-<!---->
-<!--            <label for="donor_amount">Amount:</label>-->
-<!--            <input type="number" id="donor_amount" name="donor_amount" placeholder="Enter Donation Amount" required>-->
-<!--            -->
-<!--            <button type="submit">Donate</button>-->
-<!--        </form>-->
-    </main>
-
-    <footer>
-        <p>&copy; 2024 Medical Aid Charity. All rights reserved.</p>
-    </footer>
+<footer>
+    <p>&copy; 2024 Medical Aid Charity. All rights reserved.</p>
+</footer>
 </body>
 </html>
