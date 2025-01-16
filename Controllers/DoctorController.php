@@ -33,10 +33,12 @@ class DoctorController extends TemplateController
     private function listDoctors() {
         $doctors = Doctor::get_all_doctors_details();
     
-        // Fetch notifications for each doctor
         foreach ($doctors as $doctor) {
-            $applications = Doctor::getApplicationsForDoctor($doctor->getId());
-            $doctor->setApplications($applications); // Use the setter to attach applications
+            // Update applications for each doctor using the observer pattern
+            $doctor->update_obeserver();
+    
+            // Debugging log
+            error_log("Doctor ID {$doctor->getId()} has " . count($doctor->getApplications()) . " applications.");
         }
     
         if (empty($doctors)) {
@@ -47,6 +49,7 @@ class DoctorController extends TemplateController
     
         include '../views/doctorView.php';
     }
+    
     
 
     private function showAddDoctorForm()
