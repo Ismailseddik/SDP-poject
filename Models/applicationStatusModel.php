@@ -44,4 +44,20 @@ class ApplicationStatusModel extends Iterators{
     
     }
 
+    public static function update($array): bool
+    {
+        $status_id = $array['status_id'];
+        $status = $array['status'];
+    $query = "UPDATE `status` SET `status` = '$status' WHERE id = '$status_id' ";
+           
+    return run_query($query, true);
+    }
+
+    public static function delete($status_id): bool{
+        
+    $query = "DELETE FROM `status` WHERE id = '$status_id'";
+        return run_query($query, true);
+
+    }
+
 }

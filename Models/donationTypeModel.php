@@ -64,15 +64,15 @@ class DonationTypeModel extends Iterators
         return run_query($query, true);
     }
 
-    public static function update_donation_type($donation_type_id, $donation_type): bool
-    {
+    public static function update($array): bool
+    {   $donation_type_id = $array['donation_type_id'];
+        $donation_type = $array['donation_type'];
         $query = "UPDATE `donation_type` SET donation_type = '$donation_type' WHERE id = '$donation_type_id' ";
 
         return run_query($query, true);
     }
-    public static function delete_donation_type($donation_type_id): bool
+    public static function delete($donation_type_id): bool
     {
-
         $query = "DELETE FROM `donation_type` WHERE id = '$donation_type_id'";
         return run_query($query, true);
     }

@@ -49,14 +49,16 @@ require_once __DIR__ . '/../Factories/UIElementFactory.php';
                 'label' => 'Name:',
                 'name' => 'patient_name',
                 'type' => 'text',
-                'placeholder' => 'Enter Patient Name'
+                'placeholder' => 'Enter Patient Name',
+                'required'=>true
             ]) ?>
 
             <?= UIElementFactory::createFormField([
                 'label' => 'Age:',
                 'name' => 'patient_age',
                 'type' => 'number',
-                'placeholder' => 'Enter Age'
+                'placeholder' => 'Enter Age',
+                'required'=>true
             ]) ?>
 
             <?= UIElementFactory::createSubmitButton('Add Patient') ?>

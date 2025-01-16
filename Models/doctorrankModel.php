@@ -49,13 +49,14 @@ class DoctorRank extends Iterators
         return run_query($query, true);
     }
 
-    public static function update_doctor_rank($rankid, $rank): bool
-    {
+    public static function update($array): bool
+    {   $rankid = $array['rank_id'];
+        $rank = $array['rank'];
         $query = "UPDATE `doctor_rank` SET rank = '$rank' WHERE id = '$rankid' ";
 
         return run_query($query, true);
     }
-    public static function delete_doctor_rank($rankid): bool
+    public static function delete($rankid): bool
     {
 
         $query = "DELETE FROM `doctor_rank` WHERE id = '$rankid'";
