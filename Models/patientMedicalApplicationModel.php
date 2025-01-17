@@ -119,17 +119,17 @@ class PatientMedicalApplicationModel{
         return false; // Return false if no applications are found
     }
 
-    public static function add_aid_types(int $application_id, array $aid_types): bool {
-        foreach ($aid_types as $aid_type_id) {
-            $query = "INSERT INTO `patient_medical_aid_application` (application_id, aid_type_id, status_id)
-                      VALUES ('$application_id', '$aid_type_id', 1)";
-            if (!run_query($query, true)) {
-                error_log("Error: Unable to insert aid type ID $aid_type_id for application ID $application_id.");
-                return false;
-            }
-        }
-        return true;
-    }
+    // public static function add_aid_types(int $application_id, array $aid_types): bool {
+    //     foreach ($aid_types as $aid_type_id) {
+    //         $query = "INSERT INTO `patient_medical_aid_application` (application_id, aid_type_id, status_id)
+    //                   VALUES ('$application_id', '$aid_type_id', 1)";
+    //         if (!run_query($query, true)) {
+    //             error_log("Error: Unable to insert aid type ID $aid_type_id for application ID $application_id.");
+    //             return false;
+    //         }
+    //     }
+    //     return true;
+    // }
 
     
     public static function add_patient_application(int $patient_id, int $doctor_id): bool {
@@ -153,6 +153,18 @@ class PatientMedicalApplicationModel{
     public function getApplicationStatus(): string|null {
         return $this->application_status;
     }
-    
+    public static function update($array): bool
+    {   
+        $status_id = $array['status_id'];
+        $patient_application_id = $array['patient_application_id'];
+        $query = "UPDATE `patient_medical_aid_application` SET status_id = '$status_id' WHERE id = '$patient_application_id' ";
+
+        return run_query($query, true);
+    }
+    public static function delete($patient_application_id): bool
+    {
+        $query = "DELETE FROM `patient_medical_aid_application` WHERE id = '$patient_application_id'";
+        return run_query($query, true);
+    }
 
 }

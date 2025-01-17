@@ -4,5 +4,5 @@ return (object) array(
     'DB_USER' => 'root',
     'DB_PASS' => '',
     'DB_NAME' => 'macsdb',
-    'DB_PORT' => '3306'
+    'DB_PORT' => '3307'
 );
