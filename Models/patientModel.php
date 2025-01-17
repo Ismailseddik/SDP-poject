@@ -109,6 +109,11 @@ class Patient extends Person
 
         return true;
     }
+
+    public static function update(array $array): bool {
+        
+        return Person::update($array);
+    }
     public static function delete($id)
     {
 

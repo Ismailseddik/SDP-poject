@@ -3,7 +3,7 @@
 require_once '../models/patientModel.php';
 require_once 'TemplateController.php';
 
-class PatientController extends TemplateController
+class PatientController extends TemplateController implements IRedirect
 {
     public function index($action = null)
     {
@@ -64,5 +64,10 @@ class PatientController extends TemplateController
         } else {
             $this->showAddPatientForm();
         }
+    }
+
+    function redirectBasedOnRole($role)
+    {
+        header("Location: index.php?view=$role&action=listPatients");
     }
 }

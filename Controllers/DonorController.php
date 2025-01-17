@@ -15,7 +15,7 @@ require_once $baseDir . 'DisplayResponseState.php';
 require_once $baseDir . 'FinalState.php';
 
 
-class DonorController extends TemplateController
+class DonorController extends TemplateController implements IRedirect
 {
     private $currentState;
     private $logs = [];
@@ -270,5 +270,10 @@ class DonorController extends TemplateController
             // If not a POST request, show the add donation form
             $this->showAddDonationForm();
         }
+    }
+
+    function redirectBasedOnRole($role)
+    {
+        header("Location: index.php?view=$role&action=listDonors");
     }
 }

@@ -28,19 +28,6 @@ class DonorDonation extends Iterators{
         
     }
 
-
-    public function __toString(): string
-    {
-        $str = '<pre>';
-        $str .= "ID: $this->id<br/>";
-        $str .= "Name: $this->donor_name <br/>";
-        $str .= "Amount: $this->donation_amount<br/>";
-        $str .= "Organ: $this->donation_organ<br/>";
-        $str .= "Donation Type Id: $this->donation_type_id<br/>";
-    
-        return $str . '</pre>';
-    }
-
     public static function get_all_donations_donors(){
 
         $query = "
@@ -111,14 +98,38 @@ class DonorDonation extends Iterators{
         return $donordonations;
     }
     
-
-
     public static function add_donor_donation($donation_id,$donor_id){
         $query = "INSERT INTO `donor_donation` (donation_id,donor_id)
         VALUES ('$donation_id', '$donor_id')";
 
         return run_query($query, true);
 
+    }
+
+    public static function update($array): bool
+    {   $donation_id = $array['donation_id'];
+        $donor_id = $array['donor_id'];
+        $donor_donation_id = $array['donor_donation_id'];
+        $set_parts = [];
+        if ($donor_id !== null) {
+    
+            $set_parts = "`donor_id` = '" . $donor_id . "'";
+        }
+        if ($donation_id !== null) {
+       
+            $set_parts = "`donation_id` = '" . $donation_id . "'";
+        }
+        
+    $query = "UPDATE `donor_donation` SET $set_parts WHERE id = '$donor_donation_id' ";
+    return run_query($query, true);
+    }
+
+    public static function delete($donor_donation_id): bool{
+        
+    $query = "DELETE FROM `donor_donation` WHERE id = '$donor_donation_id'";
+        return run_query($query, true);
+
+        
     }
 
 

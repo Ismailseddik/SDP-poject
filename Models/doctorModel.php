@@ -193,42 +193,38 @@ class Doctor extends Person
     }
     
     
-    // public static function update(array $array): bool {
+    public static function update(array $array): bool {
         
-    //     if (!isset($array['id'])) {
-    //         echo "Error: 'id' is required to update a doctor.";
-    //         return false;
-    //     }
+        if (!isset($array['doctor_id'])) {
+            echo "Error: 'id' is required to update a doctor.";
+            return false;
+        }
 
-    //     $id = $array['id'];
-
+        $id = $array['doctor_id'];
       
-    //     $setParts = [];
-    //     if (isset($array['person_id'])) {
-    //         $setParts[] = "`person_id` = " . intval($array['person_id']);
-    //     }
-    //     if (isset($array['speciality_id'])) {
-    //         $setParts[] = "`speciality_id` = " . intval($array['speciality_id']);
-    //     }
-    //     if (isset($array['rank_id'])) {
-    //         $setParts[] = "`rank_id` = " . intval($array['rank_id']);
-    //     }
-    //     if (isset($array['isAvailable'])) {
-    //         $setParts[] = "`isAvailable` = " . intval($array['isAvailable']);
-    //     }
-
+        if (isset($array['speciality_id'])) {
+            $setParts[] = "`speciality_id` = " . intval($array['speciality_id']);
+        }
+        if (isset($array['rank_id'])) {
+            $setParts[] = "`rank_id` = " . intval($array['rank_id']);
+        }
+        if (isset($array['isAvailable'])) {
+            $setParts[] = "`isAvailable` = " . $array['isAvailable'];
+        }
         
-    //     if (empty($setParts)) {
-    //         echo "Error: No fields to update.";
-    //         return false;
-    //     }
+        if (empty($setParts)) {
+            echo "Error: No fields to update.";
+            return false;
+        }
 
-    //     $setClause = implode(', ', $setParts);
+        $setClause = implode(', ', $setParts);
         
-    //     $query = "UPDATE `doctor` SET $setClause WHERE id = '$id'";
-
-    //     return run_query($query, true);
-    // }
+        $query = "UPDATE `doctor` SET $setClause WHERE id = '$id'";
+        $status = run_query($query, true);
+        Person::update($array);
+        return $status;
+        
+    }
 
     public static function delete($id): bool {
         // SQL query to update the isDeleted flag to 1

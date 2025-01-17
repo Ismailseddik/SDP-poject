@@ -32,17 +32,6 @@ class Person extends Iterators implements IObserver
     public function getAddressId()              { return $this-> address_id;}
     public function getAddress()                { return Address::getFullAdressByID($this->address_id); } 
 
-    public function __toString(): string
-    {
-        $str = '<pre>';
-        $str .= "ID: $this->id<br/>";
-        $str .= "First Name: $this->first_name <br/>";
-        $str .= "Last Name: $this->last_name<br/>";
-        $str .= "Date of Birth: " . ($this->birth_date ? $this->birth_date->format('Y-m-d') : 'N/A') . "<br/>";
-        $str .= "Address_ID: $this->address_id<br/>";
-
-        return $str . '</pre>';
-    }
     public static function getby_id($Id)
     {
         $rows = run_select_query("SELECT * FROM `person` WHERE id = '$Id'");
@@ -105,10 +94,10 @@ class Person extends Iterators implements IObserver
 
     public static function update(array $array): bool
     {
-        if (!isset($array['id'])) {
+        if (!isset($array['person_id'])) {
             return false; // Ensure 'id' is provided
         }
-        $id = $array['id'];
+        $id = $array['person_id'];
         $set_parts = [];
 
     if ($array['first_name'] !== null) {
