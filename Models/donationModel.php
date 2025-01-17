@@ -48,7 +48,7 @@ class DonationModel extends Iterators{
         if ($rows && $rows->num_rows > 0) {
             return new self($rows->fetch_assoc());
         } else {
-            echo "Error: Donation with ID $donation_id not found.";
+           
             return false;
         }
     }
