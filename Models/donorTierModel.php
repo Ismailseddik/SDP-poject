@@ -46,13 +46,13 @@ class DonorTierModel extends Iterators{
     return run_query($query, true);
     }
 
-    public static function update_donor_tier($tier_id,$tier): bool
-    {
+    public static function update($array): bool
+    {   $tier = $array['tier'];
+        $tier_id = $array['tier_id'];
     $query = "UPDATE `donor_tier` SET tier = '$tier' WHERE id = '$tier_id' ";
-           
     return run_query($query, true);
     }
-    public static function delete_donor_tier($tier_id): bool{
+    public static function delete($tier_id): bool{
         
     $query = "DELETE FROM `donor_tier` WHERE id = '$tier_id'";
         return run_query($query, true);

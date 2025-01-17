@@ -105,10 +105,10 @@ class Person extends Iterators implements IObserver
 
     public static function update(array $array): bool
     {
-        if (!isset($array['id'])) {
+        if (!isset($array['person_id'])) {
             return false; // Ensure 'id' is provided
         }
-        $id = $array['id'];
+        $id = $array['person_id'];
         $set_parts = [];
 
     if ($array['first_name'] !== null) {

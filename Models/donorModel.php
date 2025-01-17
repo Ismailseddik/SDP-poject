@@ -213,6 +213,33 @@ class Donor extends Person
 
         return true;
     }
+
+    public static function update(array $array): bool {
+        
+        if (!isset($array['donor_id'])) {
+            echo "Error: 'id' is required to update a doctor.";
+            return false;
+        }
+        
+        $id = $array['donor_id'];
+      
+        if (isset($array['tier_id'])) {
+            $setParts[] = "`tier_id` = " . intval($array['tier_id']);
+        }
+        
+        if (empty($setParts)) {
+            echo "Error: No fields to update.";
+            return false;
+        }
+
+        $setClause = implode(', ', $setParts);
+        
+        $query = "UPDATE `donor` SET $setClause WHERE id = '$id'";
+
+        $status = run_query($query, true);
+        Person::update($array);
+        return $status;
+    }
     public static function delete($id): bool {
        
         $query = "UPDATE `person` SET `isDeleted` = 1 WHERE id = '$id'";//person_id for donor

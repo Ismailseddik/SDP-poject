@@ -79,6 +79,21 @@ class MedicalApplication extends Iterators{
         
     }
 
+    public static function update(array $array)
+    {  
+        $doctor_id = $array['doctor_id'];
+        $application_id = $array['application_id'];
+        $query = "UPDATE `medical_aid_application` SET doctor_id = '$doctor_id' WHERE `id` = '$application_id' ";
+
+    return run_query($query, true);
+        
+    }
+    public static function delete(int $application_id)
+    {  
+        $query = "DELETE FROM `medical_aid_application` WHERE id = '$application_id'";
+       return run_query($query, true);
+        
+    }
 
     
 

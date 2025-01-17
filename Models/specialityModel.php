@@ -83,5 +83,18 @@ class Speciality extends Iterators
 
         return run_query($query, true);
     }
+    public static function update($array): bool
+    {   
+        $speciality_name = $array['speciality_name'];
+        $speciality_id = $array['speciality_id'];
+        $query = "UPDATE `speciality` SET speciality_name = '$speciality_name' WHERE id = '$speciality_id' ";
 
+        return run_query($query, true);
+    }
+    public static function delete($speciality_id): bool
+    {
+
+        $query = "DELETE FROM `speciality` WHERE id = '$speciality_id'";
+        return run_query($query, true);
+    }
 }
