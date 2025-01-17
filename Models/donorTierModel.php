@@ -20,15 +20,6 @@ class DonorTierModel extends Iterators{
     public function getId(): ?int{
         return $this->id;
     }
-    public function __toString(): string
-    {
-        $str = '<pre>';
-        $str .= "ID: $this->id<br/>";
-        $str .= "Donor's Tier: $this->tier<br/>";
-    
-        return $str . '</pre>';
-    }
-
     public static function get_donor_tier($tier_id): bool|DonorTierModel{
         $rows= run_select_query("SELECT * FROM `donor_tier` WHERE id = '$tier_id'");
         if($rows->num_rows > 0){

@@ -33,21 +33,6 @@ class PatientMedicalApplicationModel extends Iterators{
         $this->application_status = $data['status'] ?? null;
     }
 
-    public function __toString(): string
-    {
-        $str = '<pre>';
-        $str .= "ID: $this->id<br/>";
-        $str .= "patient_id: $this->patient_id <br/>";
-        $str .= "application_id: $this->application_id<br/>";
-        $str .= "patient_first_name: $this->patient_first_name<br/>";
-        $str .= "patient_last_name: $this->patient_last_name<br/>";
-        $str .= "doctor first name:  $this->doctor_first_name<br/>";
-        $str .= "doctor last name: $this->doctor_last_name<br/>";
-        $str .= "Application Status: $this->application_status<br/>";
-        return $str . '</pre>';
-    }
-
-
     public function getId() { return $this->id; }
     public function getPatientId() { return $this->patient_id; }
     public function getApplicationId() { return $this->application_id; }
@@ -93,7 +78,7 @@ class PatientMedicalApplicationModel extends Iterators{
     }
 
     // weird implementation!!!!!!!
-    public static function get_applications_by_patient(int $patient_id): PatientMedicalApplicationModel|bool
+    public static function get_applications_by_patient(int $patient_id)
     {
         $query = "
             SELECT 
