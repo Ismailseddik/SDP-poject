@@ -1,5 +1,5 @@
 <?php
-
+require_once '../interfaces/IRedirect.php';
 class ProxyController implements IRedirect
 {
 

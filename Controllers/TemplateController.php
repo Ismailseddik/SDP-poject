@@ -13,11 +13,11 @@ abstract class TemplateController {
             $proxy = new ProxyController();
             $proxy->redirectBasedOnRole($role);
 
-            
+
             // redirectBasedOnRole function should be in each doctor, donor, patient controller
             // $this->redirectBasedOnRole($role);
             // header("Location: ../Views/logoutView.php");
-            header("Location: ../public/index.php");
+
             print("logged in successfully");
         } else {
             // $this->handleInvalidLogin();
