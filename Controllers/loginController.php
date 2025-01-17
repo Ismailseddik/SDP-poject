@@ -74,13 +74,13 @@ class LoginController
             try {
                 $controller->Login($email, $password, $role);
                 $this->logMessage("Login successful for email: $email, role: $role");
-                if($role=='doctor'){
-                    header("Location: index.php?view=$role&action=listDoctors");
-                }elseif($role=='patient'){
-                    header("Location: index.php?view=$role&action=listPatients");
-                }else{
-                    header("Location: index.php?view=$role&action=listDonors");
-                }
+//                if($role=='doctor'){
+//                    header("Location: index.php?view=$role&action=listDoctors");
+//                }elseif($role=='patient'){
+//                    header("Location: index.php?view=$role&action=listPatients");
+//                }else{
+//                    header("Location: index.php?view=$role&action=listDonors");
+//                }
 
                 exit;
             } catch (Exception $e) {

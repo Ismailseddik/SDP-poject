@@ -111,6 +111,6 @@ class DoctorController extends TemplateController implements IRedirect
 
     function redirectBasedOnRole($role)
     {
-        // TODO: Go to doctor index view
+        header("Location: index.php?view=$role&action=listDoctors");
     }
 }
