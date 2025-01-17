@@ -274,6 +274,6 @@ class DonorController extends TemplateController implements IRedirect
 
     function redirectBasedOnRole($role)
     {
-        // TODO: Go to donor index view.
+        header("Location: index.php?view=$role&action=listDonors");
     }
 }
