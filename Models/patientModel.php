@@ -46,7 +46,6 @@ class Patient extends Person
         if ($rows && $rows->num_rows > 0) {
             return new self($rows->fetch_assoc());
         } else {
-            echo "Error: Doctor with ID $patient_id not found.";
             return false;
         }
     }
@@ -93,7 +92,6 @@ class Patient extends Person
         // Insert into person table first
         $query_person = "INSERT INTO person (first_name, last_name, birth_date, address_id) VALUES ('$first_name', '$last_name', '$birth_date', 1)";
         if (!run_query($query_person, true)) {
-            echo "Error: Failed to add person record.";
             return false;
         }
         
@@ -103,7 +101,6 @@ class Patient extends Person
         // Insert into patient table with the new person_id
         $query_patient = "INSERT INTO patient (person_id) VALUES ($person_id)";
         if (!run_query($query_patient, true)) {
-            echo "Error: Failed to add patient record.";
             return false;
         }
 

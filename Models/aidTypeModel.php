@@ -23,13 +23,6 @@ class AidTypeModel extends Iterators{
     public function getType():?string{
         return $this->type;
     }
-    public function __toString(): string
-    {
-        $str = '<pre>';
-        $str .= "ID: $this->id<br/>";
-        $str .= "Aid Type: $this->type<br/>";
-        return $str . '</pre>';
-    }
 
     public static function get_aid_type($aid_id): bool|AidTypeModel{
         $rows= run_select_query("SELECT * FROM `aid_type` WHERE id = '$aid_id'");

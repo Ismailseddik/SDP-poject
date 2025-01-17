@@ -74,11 +74,11 @@ class Doctor extends Person
         $rows = run_select_query($query);
 
         if (!$rows) {
-            echo "Error: Query execution failed in get_all_doctors_details.";
+            
             return [];
         } 
         elseif ($rows->num_rows === 0) {
-            echo "Debug: Query executed but returned no results in get_all_doctors_details.";
+           
         } 
         else {
 
@@ -88,7 +88,7 @@ class Doctor extends Person
             {
                 $doctors[] = new Doctor($itr->Next());
             }
-            echo "Debug: Query successful, fetching doctors in get_all_doctors_details.";
+           
 
         }
 
@@ -119,7 +119,6 @@ class Doctor extends Person
         if ($rows && $rows->num_rows > 0) {
             return new self($rows->fetch_assoc());
         } else {
-            echo "Error: Doctor with ID $doctor_id not found.";
             return false;
         }
     }
@@ -135,12 +134,12 @@ class Doctor extends Person
         $conn=DataBase::getInstance()->getConn();
 
         if (!Person::add_person($doctor_first_name, $doctor_last_name, $doctor_birth_date, $doctor_address_id)) {
-            echo "Error: Unable to add person record.";
+    
             return false;
         }
         $person = Person::getby_id($conn->insert_id);
         if (!$person) {
-            echo "Error: Person ID retrieval failed.";
+        
             return false;
         }
 
@@ -196,7 +195,7 @@ class Doctor extends Person
     public static function update(array $array): bool {
         
         if (!isset($array['doctor_id'])) {
-            echo "Error: 'id' is required to update a doctor.";
+           
             return false;
         }
 
@@ -213,7 +212,7 @@ class Doctor extends Person
         }
         
         if (empty($setParts)) {
-            echo "Error: No fields to update.";
+
             return false;
         }
 

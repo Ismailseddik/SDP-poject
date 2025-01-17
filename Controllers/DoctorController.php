@@ -42,9 +42,9 @@ class DoctorController extends TemplateController implements IRedirect
         }
     
         if (empty($doctors)) {
-            echo "Debug: No doctors found in listDoctors() controller method.";
+            //echo "Debug: No doctors found in listDoctors() controller method.";
         } else {
-            echo "Debug: Found " . count($doctors) . " doctors in listDoctors() controller method.";
+            //echo "Debug: Found " . count($doctors) . " doctors in listDoctors() controller method.";
         }
     
         include '../views/doctorView.php';
