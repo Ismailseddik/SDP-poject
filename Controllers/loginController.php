@@ -81,14 +81,16 @@ class LoginController
 //                }else{
 //                    header("Location: index.php?view=$role&action=listDonors");
 //                }
-
+                $this->clearLogs();
                 exit;
             } catch (Exception $e) {
                 $this->logMessage("Login failed: " . $e->getMessage());
                 $this->showLoginForm();
+                $this->clearLogs();
             }
         } else {
             $this->showLoginForm();
+            $this->clearLogs();
         }
     }
 }

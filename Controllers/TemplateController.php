@@ -18,10 +18,10 @@ abstract class TemplateController {
             // $this->redirectBasedOnRole($role);
             // header("Location: ../Views/logoutView.php");
 
-            print("logged in successfully");
+            //print("logged in successfully");
         } else {
             // $this->handleInvalidLogin();
-            print("error in logging in");
+            //print("error in logging in");
         }
     }
 
@@ -32,7 +32,7 @@ abstract class TemplateController {
 
     // Validates the password
     private function isValidPassword($password, $hashedpassword) {
-        print($hashedpassword);
+        //print($hashedpassword);
         return password_verify($password, $hashedpassword);
     }
 
