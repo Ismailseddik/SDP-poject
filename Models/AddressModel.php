@@ -1,21 +1,25 @@
 <?php
 include_once ($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
 
+include_once($_SERVER["DOCUMENT_ROOT"] . "\interfaces\IComposite.php");
+
 include_once($_SERVER["DOCUMENT_ROOT"] . "\Iterator\Iterators.php");
 include_once($_SERVER["DOCUMENT_ROOT"] . "\interfaces\ISelfRefrence.php");
 
 
-class Address extends Iterators implements ISelfRefrence{
+class Address extends Iterators implements ISelfRefrence, IComposite{
 
     private int $id;
     private string $name;   
-    private int $parent_id;   
+    private int $parent_id;
+    private array $Children;   
 
     public function __construct(array $data)
     {
         $this->id = $data['id'];
         $this->name =  $data['name'];
         $this->parent_id =  $data['parent_id'];
+        $this->Children = [];
     }
 
     public function getID() {return $this->id;}
@@ -130,6 +134,15 @@ class Address extends Iterators implements ISelfRefrence{
         
 
     }
+
+    public function AddChild(object $Child)
+    {
+        $this->Children [] = $Child;
+    }
+    public function getChildren()
+    {
+        return $this->Children;
+    }
     // public static function get_address_by_id(int $id, array &$address_list):void
     // {
     //     if($id === 0){return;}
@@ -162,45 +175,45 @@ class Address extends Iterators implements ISelfRefrence{
         
 
     // }
-    public static function get_address_by_name(int $id , string $name):bool
-    {
-        if($id === 0){return false;}
+    // public static function get_address_by_name(int $id , string $name):bool
+    // {
+    //     if($id === 0){return false;}
 
-        $query = "
-        SELECT
-            address.name,
-            address.parent_id
-        From address
-        where address.id = '$id'
+    //     $query = "
+    //     SELECT
+    //         address.name,
+    //         address.parent_id
+    //     From address
+    //     where address.id = '$id'
 
-        ";
-        $rows = run_select_query($query);
-        if (!$rows) {
-            echo "Error: Query execution failed in getting_address_by_id.";
-            return false;
-        } elseif ($rows->num_rows === 0) {
-            echo "Debug: Query executed but returned no results in getting_address_by_id.";
-            return false;
-        } else {
-            echo "Debug: Query successful, fetching addresses\n";
-            foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) 
-            {
-                if ((string)$row["name"] === (string)$name)
-                {
-                    return true;
-                }
-                else 
-                {
-                    if(Address::get_address_by_name((int)$row['parent_id'], $name))
-                    {
-                        return true;
-                    }
-                }
+    //     ";
+    //     $rows = run_select_query($query);
+    //     if (!$rows) {
+    //         echo "Error: Query execution failed in getting_address_by_id.";
+    //         return false;
+    //     } elseif ($rows->num_rows === 0) {
+    //         echo "Debug: Query executed but returned no results in getting_address_by_id.";
+    //         return false;
+    //     } else {
+    //         echo "Debug: Query successful, fetching addresses\n";
+    //         foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) 
+    //         {
+    //             if ((string)$row["name"] === (string)$name)
+    //             {
+    //                 return true;
+    //             }
+    //             else 
+    //             {
+    //                 if(Address::get_address_by_name((int)$row['parent_id'], $name))
+    //                 {
+    //                     return true;
+    //                 }
+    //             }
                 
-            }
+    //         }
 
-        }
+    //     }
         
-        return false;
-    }
+    //     return false;
+    // }
 }
