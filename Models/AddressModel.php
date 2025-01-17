@@ -19,12 +19,13 @@ class Address extends Iterators implements ISelfRefrence, IComposite{
         $this->id = $data['id'];
         $this->name =  $data['name'];
         $this->parent_id =  $data['parent_id'];
-        $this->Children = [];
+        $this->setChildren();
     }
 
-    public function getID() {return $this->id;}
-    public function getName() {return $this->name;}
+    public function getID()       {return $this->id;}
+    public function getName()     {return $this->name;}
     public function getParentID() {return $this->parent_id;}
+    public function getChildren() {return $this->Children;}
     
 
     public static function Read($id)
@@ -38,7 +39,7 @@ class Address extends Iterators implements ISelfRefrence, IComposite{
         {return false;}
 
     }
-    public static function ReadAll($id)
+    public static function ReadAll()
     {
         $Addresses = [];
         $rows = run_select_query("SELECT * FROM `address`");
@@ -135,14 +136,46 @@ class Address extends Iterators implements ISelfRefrence, IComposite{
 
     }
 
+    private function setChildren()
+    {
+        $my_id = $this->getID();
+        $rows = run_select_query("SELECT * FROM `address` WHERE parent_id = '$my_id'");
+        if ($rows && $rows->num_rows > 0) 
+        {
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $this->Children [] = new Address($itr->Next());
+            }
+        }
+        else {$this->Children = [];}
+
+
+    }
+
     public function AddChild(object $Child)
     {
         $this->Children [] = $Child;
     }
-    public function getChildren()
+
+    public function IterateChildren()
     {
-        return $this->Children;
+        $Tree = [];
+        $ArrayItr = self::getArrayIterator();
+        $ArrayItr->SetIterable($this->getChildren());
+
+        $CompositeItr = self::getCompositeIterator();
+        $CompositeItr->SetIterable($ArrayItr);
+
+        while($CompositeItr->HasNext())
+        {
+            $Tree [] = $CompositeItr->Next()->getName();
+        }
+
+        return $Tree;
     }
+
     // public static function get_address_by_id(int $id, array &$address_list):void
     // {
     //     if($id === 0){return;}

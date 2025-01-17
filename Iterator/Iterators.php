@@ -4,12 +4,16 @@ require_once "IIterator.php";
 require_once "ArrayIterator.php";
 require_once "DataBaseIterator.php";
 require_once "SelfRefrenceIterator.php";
+require_once "CompositeIterator.php";
+
 
 class Iterators 
 {
     private static IIterator $ArrayIterator;
     private static IIterator $DataBaseIterator;
     private static IIterator $SelfRefrenceIterator;
+    private static IIterator $CompositeIterator;
+
 
     private static function intialize_ArrayIterator()
     {
@@ -46,6 +50,18 @@ class Iterators
         }
         return self::$SelfRefrenceIterator;
     } 
+
+    private static function intialize_CompositeIterator()
+    {
+        self::$CompositeIterator = new CompositeIterator(); 
+    }
+
+    public static function getCompositeIterator(): IIterator {
+        if (!isset(self::$CompositeIterator)) {
+            self::intialize_CompositeIterator();
+        }
+        return self::$CompositeIterator;
+    }
 
 
 }
