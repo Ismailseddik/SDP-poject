@@ -46,7 +46,7 @@ class CompositeIterator implements IIterator
         {
             $ParentIterator = $this->stack->peek();
             $Child = $ParentIterator->Next();
-            $ChildIterator = $Child::getArrayIterator();
+            $ChildIterator = new CustomArrayIterator();
             $ChildIterator->SetIterable($Child->getChildren());
             $this->SetIterable($ChildIterator);
             

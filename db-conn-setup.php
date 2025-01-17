@@ -19,7 +19,7 @@ class DataBase{
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
         }
-        echo "Connected successfully<br/><hr/>";
+        // echo "Connected successfully<br/><hr/>";
     }
 
     public function getConn(): mysqli
