@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../models/doctorModel.php';
 require_once 'TemplateController.php';
 
-class DoctorController extends TemplateController
+class DoctorController extends TemplateController implements IRedirect
 {
     public function index($action = null)
     {
@@ -107,5 +107,10 @@ class DoctorController extends TemplateController
         } else {
             echo "Error: Doctor not found.";
         }
+    }
+
+    function redirectBasedOnRole($role)
+    {
+        // TODO: Go to doctor index view
     }
 }

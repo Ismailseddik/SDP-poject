@@ -14,14 +14,14 @@ class LoginController
         }
         $_SESSION['logs'][] = $message;
     }
-    
+
     public function getLogs(): array {
         if (!isset($_SESSION)) {
             session_start();
         }
         return $_SESSION['logs'] ?? [];
     }
-    
+
     public function clearLogs(): void {
         if (!isset($_SESSION)) {
             session_start();
@@ -81,7 +81,7 @@ class LoginController
                 }else{
                     header("Location: index.php?view=$role&action=listDonors");
                 }
-                    
+
                 exit;
             } catch (Exception $e) {
                 $this->logMessage("Login failed: " . $e->getMessage());
