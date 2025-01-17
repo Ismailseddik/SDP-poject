@@ -1,11 +1,14 @@
 <?php
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
+
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Iterator\Iterators.php");
+
+
 ob_end_clean();
 
-class Speciality
+class Speciality extends Iterators
 {
-
     private ?int $id;
     private ?String $name;
 
@@ -15,6 +18,7 @@ class Speciality
         $this->id = $data["id"];
         $this->name = $data["speciality_name"];
     }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -36,6 +40,41 @@ class Speciality
         } else {
             return false;
         }
+    }
+    // New method to fetch all specialties
+    public static function getAllSpecialties(): array
+    {
+        $query = "SELECT id, speciality_name FROM speciality";
+        $rows = run_select_query($query);
+        $specialties = [];
+        if ($rows && $rows->num_rows > 0) {
+            
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $speciality = $itr->Next();
+                $specialties[$speciality['id']] = $speciality['speciality_name']; // Populate id => specialty_name array
+
+            }
+        }
+        return $specialties;
+    }
+    public static function get_all_specialites()
+    {
+        $Specialties = [];
+        $rows = run_select_query("SELECT * from `aid_type`");
+
+        if ($rows && $rows->num_rows > 0) 
+        {
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $Specialties[] = new Speciality($itr->Next());
+            }
+        }
+        return $Specialties;     
     }
     public static function add_speciality($speciality_name): bool
     {

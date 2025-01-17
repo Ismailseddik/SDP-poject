@@ -1,13 +1,15 @@
 <?php
 ob_start();
 include_once($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
+
 require_once "personModel.php";
 require_once "doctorrankModel.php";
 require_once "specialityModel.php";
-require_once "../Models/patientMedicalApplicationModel.php";
+require_once "patientMedicalApplicationModel.php";
 ob_end_clean();
 
 class Doctor extends Person 
+
 {
     private ?int $person_id;
     private ?PatientMedicalApplicationModel $current;
@@ -19,7 +21,6 @@ class Doctor extends Person
     protected array $applications = []; // Add the applications property
 
     // Other methods...
-
     public function setApplications(array $applications): void {
         $this->applications = $applications;
     }
@@ -40,6 +41,9 @@ class Doctor extends Person
         $this->doctor_rank = $data["doctor_rank"] ?? null;
         $this->isAvailable = $data["doctor_available"] ?? false;
     }
+
+
+
 
     public function getFirstName(): string|null { return $this->first_name; }
     public function getPersonId(): int|null{ return $this->person_id;}
@@ -72,17 +76,25 @@ class Doctor extends Person
         if (!$rows) {
             echo "Error: Query execution failed in get_all_doctors_details.";
             return [];
-        } elseif ($rows->num_rows === 0) {
+        } 
+        elseif ($rows->num_rows === 0) {
             echo "Debug: Query executed but returned no results in get_all_doctors_details.";
-        } else {
-            echo "Debug: Query successful, fetching doctors in get_all_doctors_details.";
-            foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) {
-                $doctors[] = new Doctor($row);
+        } 
+        else {
+
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $doctors[] = new Doctor($itr->Next());
             }
+            echo "Debug: Query successful, fetching doctors in get_all_doctors_details.";
+
         }
 
         return $doctors;
     }
+
 
     public static function getby_id($doctor_id): Doctor|bool
     {
@@ -236,17 +248,21 @@ class Doctor extends Person
             JOIN person ON patient.person_id = person.id
             WHERE medical_aid_application.doctor_id = '$doctor_id'
         ";
-    
+        $application = [];
+
         $rows = run_select_query($query);
-        $applications = [];
-    
-        if ($rows && $rows->num_rows > 0) {
-            while ($row = $rows->fetch_assoc()) {
-                $applications[] = new PatientMedicalApplicationModel($row);
+
+        if ($rows && $rows->num_rows > 0) 
+        {
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $application[] = new PatientMedicalApplicationModel($itr->Next());
             }
         }
-    
-        return $applications;
+        
+        return $application;
     }
     
 }

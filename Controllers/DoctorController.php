@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../models/doctorModel.php';
 require_once 'TemplateController.php';
 
-class DoctorController extends TemplateController
+class DoctorController extends TemplateController implements IRedirect
 {
     public function index($action = null)
     {
@@ -53,29 +53,40 @@ class DoctorController extends TemplateController
     
 
     private function showAddDoctorForm()
-    {
+    {   $ranks = DoctorRank::getAllRanks(); // Fetch all ranks
+        $specialties = Speciality::getAllSpecialties(); // Fetch all specialties
         include '../views/doctorAddView.php';
     }
 
     private function addDoctor()
     {
+        $ranks = DoctorRank::getAllRanks(); // Fetch all ranks
+        $specialties = Speciality::getAllSpecialties(); // Fetch all specialties
+    
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $doctor_first_name = $_POST['doctor_first_name'] ?? '';
             $doctor_last_name = $_POST['doctor_last_name'] ?? '';
             $doctor_birth_date = DateTime::createFromFormat('Y-m-d', $_POST['doctor_birth_date'] ?? '');
             $doctor_address_id = (int)($_POST['doctor_address_id'] ?? 0);
-            $doctor_rank_name = $_POST['doctor_rank_name'] ?? '';
-            $doctor_speciality_name = $_POST['doctor_speciality_name'] ?? '';
-
+    
+            $doctor_rank_id = $_POST['doctor_rank_id'] ?? '';
+            $doctor_speciality_id = $_POST['doctor_speciality_id'] ?? '';
+    
+            // Validate rank and specialty IDs
+            if (!array_key_exists($doctor_rank_id, $ranks) || !array_key_exists($doctor_speciality_id, $specialties)) {
+                echo "Error: Invalid rank or specialty selected.";
+                return;
+            }
+    
             $result = Doctor::add_doctor(
                 $doctor_first_name,
                 $doctor_last_name,
                 $doctor_birth_date,
                 $doctor_address_id,
-                $doctor_rank_name,
-                $doctor_speciality_name
+                (int)$doctor_rank_id,
+                (int)$doctor_speciality_id
             );
-
+    
             if ($result) {
                 header('Location: index.php?view=doctor&action=listDoctors');
                 exit();
@@ -86,7 +97,6 @@ class DoctorController extends TemplateController
             $this->showAddDoctorForm();
         }
     }
-
     private function viewDoctorDetails()
     {
         $doctor_id = $_GET['doctor_id'] ?? 0;
@@ -97,5 +107,10 @@ class DoctorController extends TemplateController
         } else {
             echo "Error: Doctor not found.";
         }
+    }
+
+    function redirectBasedOnRole($role)
+    {
+        // TODO: Go to doctor index view
     }
 }

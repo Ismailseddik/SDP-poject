@@ -59,32 +59,43 @@
 </head>
 <body>
 
-    <header>
-        <h2>Login</h2>
-    </header>
+<header>
+    <h2>Login</h2>
+</header>
 
-    <main class="container">
-        <form method="POST" action="../Controllers/loginController.php">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" placeholder="Enter your email" required />
+<main class="container">
+    <?php if (!empty($logs)) : ?>
+        <div class="log-container">
+            <h4>Log Messages:</h4>
+            <ul>
+                <?php foreach ($logs as $log) : ?>
+                    <li><?= htmlspecialchars($log) ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" placeholder="Enter your password" required />
+    <form method="POST" action="index.php?view=login&action=processLogin">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required />
 
-            <label for="role">Position:</label>
-            <select id="role" name="role">
-                <option value="doctor">Doctor</option>
-                <option value="donor">Donor</option>
-                <option value="patient">Patient</option>
-            </select>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required />
 
-            <button type="submit">Login</button>
-        </form>
-    </main>
+        <label for="role">Position:</label>
+        <select id="role" name="role">
+            <option value="doctor">Doctor</option>
+            <option value="donor">Donor</option>
+            <option value="patient">Patient</option>
+        </select>
 
-    <footer>
-        <p>&copy; 2024 Medical Aid Charity. All rights reserved.</p>
-    </footer>
+        <button type="submit">Login</button>
+    </form>
+</main>
+
+<footer>
+    <p>&copy; 2024 Medical Aid Charity. All rights reserved.</p>
+</footer>
 
 </body>
 </html>

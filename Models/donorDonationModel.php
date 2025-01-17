@@ -1,17 +1,21 @@
 <?php
 ob_start();
 include_once ($_SERVER["DOCUMENT_ROOT"] . "\db-conn-setup.php");
+
+include_once($_SERVER["DOCUMENT_ROOT"] . "\Iterator\Iterators.php");
+
+
 ob_end_clean();
 
-class DonorDonation{
+class DonorDonation extends Iterators{
 
+    private static IIterator $DBIterator;
     private ?int $id;
     private ?int $donation_id;
     private ?float $donation_amount;
     private ?String $donation_organ;
     private ?int $donation_type_id;
     private ?String $donor_name;
-   
     private ?int $donor_id;
 
     public function __construct(array $data){
@@ -23,6 +27,7 @@ class DonorDonation{
       $this->donor_name = $data['first_name'] . ' ' .$data['last_name'];       
         
     }
+
 
     public function __toString(): string
     {
@@ -57,8 +62,11 @@ class DonorDonation{
         $rows = run_select_query($query);
 
         if ($rows && $rows->num_rows > 0) {
-            foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) {
-                $donations[] = new DonorDonation($row);
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $donations[] = new DonorDonation($itr->Next());
             }
         }
 
@@ -91,8 +99,11 @@ class DonorDonation{
         $rows = run_select_query($query);
 
         if ($rows && $rows->num_rows > 0) {
-            foreach ($rows->fetch_all(MYSQLI_ASSOC) as $row) {
-                $donordonations[] = new DonorDonation($row);
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext())
+            {
+                $donordonations[] = new DonorDonation($itr->Next());
             }
         }
 

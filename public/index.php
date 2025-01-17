@@ -1,12 +1,18 @@
 <?php
 require_once '../config.php';
 
-// Get 'view' and 'action' parameters from the URL, if present
-$view = $_GET['view'] ?? 'patient';
+// Get 'view' and 'action' parameters from the URL, if presentz
+$view = $_GET['view'] ?? 'login';
 $action = $_GET['action'] ?? null;
 
 // Dynamically set defaults based on view
 switch ($view) {
+    case 'login':
+        require '../controllers/LoginController.php';
+        $controller = new LoginController();
+        $action = $action ?? 'showLoginForm';
+        break;
+
     case 'doctor':
         require '../controllers/DoctorController.php';
         $controller = new DoctorController();

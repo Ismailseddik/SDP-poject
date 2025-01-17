@@ -9,7 +9,9 @@ require_once '../Decorators/FinancialAid.php';
 require_once '../Decorators/MedicalAid.php';
 require_once '../Decorators/OperationalAid.php';
 require_once '../Commands/AddAidTypeCommand.php';
-class MedicalApplicationController implements ISubject{
+require_once '../Iterator/Iterators.php';
+
+class MedicalApplicationController extends Iterators implements ISubject{
     private $logs = [];
     public function logMessage(string $message): void {
         if (!isset($_SESSION)) {
@@ -148,8 +150,13 @@ class MedicalApplicationController implements ISubject{
             );
     
             // Step 3: Add only non-duplicate aid types
-            foreach ($selectedAidTypes as $aidType) {
-                if (in_array((int)$aidType, $existingAidTypes)) {
+            $itr = self::getArrayIterator();
+            $itr->SetIterable($selectedAidTypes);
+            while($itr->HasNext()) 
+            {
+                $aidType = $itr->Next();
+                if (in_array((int)$aidType, $existingAidTypes)) 
+                {
                     $this->logMessage("Skipping duplicate aid type: $aidType");
                     continue;
                 }
@@ -160,7 +167,8 @@ class MedicalApplicationController implements ISubject{
                 ];
     
                 // Dynamically assign the appropriate concrete class to the decorator
-                switch ((int)$aidType) {
+                switch ((int)$aidType) 
+                {
                     case 1:
                         $this->logMessage("Creating FinancialAid decorator");
                         $decorator = new FinancialAid(new pmaAidTypeModel($data));
@@ -179,13 +187,16 @@ class MedicalApplicationController implements ISubject{
                         return;
                 }
     
-                if ($decorator instanceof AidTypeDecorator) {
+                if ($decorator instanceof AidTypeDecorator)
+                {
                     $this->logMessage("Executing command for aid type: $aidType");
                     $command = new AddAidTypeCommand($decorator, (int)$aidType,$medicalApplicationId);
                     $command->execute();
                     $this->history->push($command);
                     $this->logMessage("Successfully added aid type: $aidType");
-                } else {
+                } 
+                else 
+                {
                     $this->logMessage("Failed to create a valid decorator for aid type: $aidType");
                     echo "Error: Failed to create a valid decorator.";
                     return;
@@ -221,9 +232,13 @@ class MedicalApplicationController implements ISubject{
         // Fetch all doctors
         $doctors = Doctor::get_all_doctors_details();
         // Distribute the applications to the relevant doctors
-        foreach ($doctors as $doctor) {
-                    $doctor->update_obeserver();
+        $itr = self::getArrayIterator();
+        $itr->SetIterable($doctors);
+        while($itr->HasNext())
+        {
+            $itr->Next()->update_obeserver();
         }
+        // foreach ($doctors as $doctor) { $doctor->update_obeserver();}
     }
     
     // Update the status of an existing medical aid application
