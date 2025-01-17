@@ -162,7 +162,7 @@ class Donor extends Person
         $person_state = Person::add_person($first_name,$last_name, $donor_birth_date, 1);
         // Insert into person table first
         if (!$person_state) {
-            echo "Error: Failed to add person record.";
+
             return false;
         }
         
@@ -172,7 +172,6 @@ class Donor extends Person
         // Insert into donor table with the new person_id
         $query_donor = "INSERT INTO donor (person_id, tier_id) VALUES ($person_id, 1)";
         if (!run_query($query_donor, true)) {
-            echo "Error: Failed to add donor record.";
             return false;
         }
 
@@ -182,7 +181,6 @@ class Donor extends Person
         // Insert donation record and associate with donor
         $donation_state = DonationModel::add_donation($amount,$donation_type_id,$organ);
         if (!$donation_state) {
-            echo "Error: Failed to add donation record.";
             return false;
         }
 
@@ -193,7 +191,6 @@ class Donor extends Person
         // Link donation to donor in donor_donation table
         $donor_donation_state = DonorDonation::add_donor_donation($donation_id,$donor_id);
         if (!$donor_donation_state ){
-            echo "Error: Failed to link donation to donor.";
             return false;
         }
 
@@ -203,7 +200,6 @@ class Donor extends Person
     public static function update(array $array): bool {
         
         if (!isset($array['donor_id'])) {
-            echo "Error: 'id' is required to update a doctor.";
             return false;
         }
         
@@ -214,7 +210,6 @@ class Donor extends Person
         }
         
         if (empty($setParts)) {
-            echo "Error: No fields to update.";
             return false;
         }
 

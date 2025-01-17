@@ -77,7 +77,6 @@ class PatientMedicalApplicationModel extends Iterators{
         return $applications;
     }
 
-    // weird implementation!!!!!!!
     public static function get_applications_by_patient(int $patient_id)
     {
         $query = "

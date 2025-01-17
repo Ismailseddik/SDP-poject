@@ -63,7 +63,6 @@ class MedicalApplication extends Iterators{
         if ($rows && $rows->num_rows > 0) {
            return new self($rows->fetch_assoc());
         } else {
-            echo "Error: Application with ID $application_id not found.";
            return false;
         }
     }
