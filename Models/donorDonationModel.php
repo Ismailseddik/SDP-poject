@@ -28,18 +28,6 @@ class DonorDonation extends Iterators{
         
     }
 
-
-    public function __toString(): string
-    {
-        $str = '<pre>';
-        $str .= "ID: $this->id<br/>";
-        $str .= "Name: $this->donor_name <br/>";
-        $str .= "Amount: $this->donation_amount<br/>";
-        $str .= "Organ: $this->donation_organ<br/>";
-        $str .= "Donation Type Id: $this->donation_type_id<br/>";
-    
-        return $str . '</pre>';
-    }
     public static function get_all_donations_donors(){
 
         $query = "

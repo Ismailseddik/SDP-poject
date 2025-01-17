@@ -23,14 +23,7 @@ class Speciality extends Iterators
     {
         return $this->id;
     }
-
-    public function __toString()
-    {
-        $str = '<pre>';
-        $str .= "ID: $this->id<br/>";
-        $str .= "First Name: $this->name <br/>";
-        return $str . '</pre>';
-    }
+    
     public static function get_speciality_by_id($speciality_id)
     {
 

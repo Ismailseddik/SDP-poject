@@ -19,13 +19,6 @@ class ApplicationStatusModel extends Iterators{
         return $this->id;
     }
 
-    public function __toString()
-    {
-        $str = '<pre>';
-        $str .= "ID: $this->id<br/>";
-        $str .= "Application Status: $this->status <br/>";
-        return $str . '</pre>';
-    }
     public static function get_status_by_id($status_id){
 
         $rows= run_select_query("SELECT * FROM `status` WHERE id = '$status_id'");

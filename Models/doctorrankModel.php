@@ -27,14 +27,6 @@ class DoctorRank extends Iterators
     {
         return $this->rank;
     }
-    public function __toString(): string
-    {
-        $str = '<pre>';
-        $str .= "ID: $this->id<br/>";
-        $str .= "Doctor's Rank: $this->rank<br/>";
-
-        return $str . '</pre>';
-    }
 
     public static function getAllRanks(): array {
         $rows = run_select_query("SELECT id, rank FROM doctor_rank");

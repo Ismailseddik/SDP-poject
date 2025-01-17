@@ -22,14 +22,6 @@ class DonationTypeModel extends Iterators
     {
         return $this->id;
     }
-    public function __toString(): string
-    {
-        $str = '<pre>';
-        $str .= "ID: $this->id<br/>";
-        $str .= "Donation's Type: $this->donation_type<br/>";
-
-        return $str . '</pre>';
-    }
 
     public static function get_donation_type($donation_type_id): bool|DonationTypeModel
     {

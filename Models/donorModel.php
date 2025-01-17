@@ -33,20 +33,6 @@ class Donor extends Person
         $this->tier = $data['tier'] ?? null;
     }
 
-
-    public function __toString(): string
-    {
-        $str = '<pre>';
-        $str .= "ID: $this->id<br/>";
-        $str .= "First Name: $this->first_name <br/>";
-        $str .= "Last Name: $this->last_name<br/>";
-        $str .= "Amount: $this->amount<br/>";
-        $str .= "Organ: $this->organ<br/>";
-        $str .= "Tier: $this->tier<br/>";
-
-        return $str . '</pre>';
-    }
-
     public function getPersonId(): int|null { return $this->person_id;}
     public function getFirstName(): string|null { return $this->first_name; }
     public function getLastName(): string|null { return $this->last_name; }
