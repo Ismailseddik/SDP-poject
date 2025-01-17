@@ -23,8 +23,11 @@ run_queries([
 ('Egypt', 0),
 ('Iraq', 0),
 ('Cairo', 1),
+('Alexandira', 1),
 ('Basra', 2),
+('NasrCity', 3),
 ('Heliopolis', 3);",
+
 
 "CREATE TABLE `doctor` (
   `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,

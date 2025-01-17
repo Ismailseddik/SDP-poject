@@ -29,10 +29,7 @@ class SelfRefrenceIterator implements IIterator
         else {return null;}
     }
     
-    public function Reset()
-    {
-        return;
-    }
+
 
     
 }
