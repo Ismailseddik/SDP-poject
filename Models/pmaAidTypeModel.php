@@ -28,6 +28,36 @@ class pmaAidTypeModel extends Iterators{
         $this->aid_type_id = isset($data['aid_type_id']) ? (int) $data['aid_type_id'] : null;
     }
 
+    public static function Read_All()
+    {   
+        $PmaAidTpes = []; 
+        $rows = run_select_query("SELECT * FROM `patient_medical_aid_application_aid_type`");
+        if ($rows->num_rows > 0) 
+        {
+            $itr = self::getDBIterator();
+            $itr->SetIterable($rows);
+            while($itr->HasNext()) 
+            {
+                $PmaAidTpes[] = new pmaAidTypeModel($itr->Next());
+            }        
+        } 
+        else 
+        {
+            return false;
+        }
+
+        return $PmaAidTpes;
+    }
+    public static function Read($id)
+    {
+        $query = "SELECT * FROM `patient_medical_aid_application_aid_type` WHERE id = '$id'";
+
+
+        
+        $rows = run_select_query($query);
+        return new self($rows->fetch_assoc());
+
+    }
 
     public static function add_entry($patient_application_id, $aid_type_id):bool
     {
@@ -35,6 +65,20 @@ class pmaAidTypeModel extends Iterators{
         return run_query($query, true);
     }
     
+    public static function Update($array): bool
+    {
+
+        $query = "UPDATE `patient_medical_aid_application_aid_type` SET `patient_application_id` = '$array[1]', `aid_type_id` = '$array[2]'   WHERE `id` ='$array[0]'";
+        
+        return run_query($query, true);
+    }
+
+    public static function remove_entry(int $applicationId, int $aidTypeId): bool {
+        $query = "DELETE FROM patient_medical_aid_application_aid_type 
+                  WHERE patient_application_id = '$applicationId' AND aid_type_id = '$aidTypeId'";
+        return run_query($query, true);
+    }
+
     public static function get_by_patient_application_id($application_id){
         $query= "Select *
                         From patient_medical_aid_application_aid_type
@@ -53,11 +97,6 @@ class pmaAidTypeModel extends Iterators{
             }
         }
         return $pmaAidTypes;
-    }
-    public static function remove_entry(int $applicationId, int $aidTypeId): bool {
-        $query = "DELETE FROM patient_medical_aid_application_aid_type 
-                  WHERE patient_application_id = '$applicationId' AND aid_type_id = '$aidTypeId'";
-        return run_query($query, true);
     }
     
     public static function check_patient_application_exists($patientApplicationId): bool {

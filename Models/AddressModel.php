@@ -62,6 +62,22 @@ class Address extends Iterators implements ISelfRefrence, IComposite{
         return run_query($query,true);
     }
 
+    public static function Update($array)
+    {
+        // private int $id;
+        // private string $name;   
+        // private int $parent_id;
+        $query =  $query = "UPDATE `address` SET  `name` = $array[1], `parent_id`=$array[2]  WHERE id = '$array[0]' ";
+    
+        return run_query($query, true);
+    }
+
+    public static function Delete($id)
+    {
+        $query = "DELETE FROM `address` WHERE id = '$id'";
+        return run_query($query, true);
+    }
+
     public static function getFullAdressByID(int $id)
     {
         $FullAddress = [];
